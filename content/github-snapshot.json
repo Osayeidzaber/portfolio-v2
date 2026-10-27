@@ -1,0 +1,1826 @@
+{
+  "fetchedAt": "2026-10-27T00:37:39.689Z",
+  "origin": "snapshot",
+  "profile": {
+    "login": "Osayeidzaber",
+    "name": "Osayeid Zaber",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/187246602?v=4",
+    "bio": "i code",
+    "location": "Bangladesh, Dhaka, Uttara",
+    "blog": "https://osayeed.dev",
+    "followers": 2,
+    "publicRepos": 11,
+    "createdAt": "2024-11-04T06:29:38Z",
+    "htmlUrl": "https://github.com/Osayeidzaber"
+  },
+  "repos": [
+    {
+      "name": "portfolio-v2",
+      "fullName": "Osayeidzaber/portfolio-v2",
+      "description": "Osayeed Zaber’s personal portfolio — a Black Press interface, interactive WebGL, GitHub-powered case studies, and a private content studio. Built with Next.js, React, and TypeScript.",
+      "htmlUrl": "https://github.com/Osayeidzaber/portfolio-v2",
+      "homepage": "",
+      "language": "",
+      "languages": {},
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2026-10-27T00:36:42Z",
+      "updatedAt": "2026-10-27T00:36:43Z",
+      "pushedAt": "2026-10-27T00:36:43Z",
+      "fork": false,
+      "archived": false,
+      "size": 0
+    },
+    {
+      "name": "Corso-Velle-V2",
+      "fullName": "Osayeidzaber/Corso-Velle-V2",
+      "description": "A Shopify Online Store 2.0 theme built for Corsovelle.",
+      "htmlUrl": "https://github.com/Osayeidzaber/Corso-Velle-V2",
+      "homepage": "https://corsovelle.com",
+      "language": "Liquid",
+      "languages": {
+        "Liquid": 1016796,
+        "TypeScript": 693283,
+        "CSS": 254554,
+        "JavaScript": 20552,
+        "Python": 12873
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2026-10-21T23:01:01Z",
+      "updatedAt": "2026-10-26T23:44:17Z",
+      "pushedAt": "2026-10-26T11:57:12Z",
+      "fork": false,
+      "archived": false,
+      "size": 1753
+    },
+    {
+      "name": "Corso-Velle",
+      "fullName": "Osayeidzaber/Corso-Velle",
+      "description": "A custom Shopify theme for a clothing brand",
+      "htmlUrl": "https://github.com/Osayeidzaber/Corso-Velle",
+      "homepage": "https://corsovelle.com",
+      "language": "Liquid",
+      "languages": {
+        "Liquid": 2264913,
+        "JavaScript": 728414,
+        "CSS": 65382
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2026-08-25T16:16:39Z",
+      "updatedAt": "2026-10-21T16:39:40Z",
+      "pushedAt": "2026-10-21T16:39:36Z",
+      "fork": false,
+      "archived": false,
+      "size": 1280
+    },
+    {
+      "name": "Osayeedjaber",
+      "fullName": "Osayeidzaber/Osayeedjaber",
+      "description": "My Readme <3",
+      "htmlUrl": "https://github.com/Osayeidzaber/Osayeedjaber",
+      "homepage": "",
+      "language": "",
+      "languages": {},
+      "stars": 1,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2024-11-04T09:40:12Z",
+      "updatedAt": "2026-08-25T16:24:56Z",
+      "pushedAt": "2026-08-25T16:11:03Z",
+      "fork": false,
+      "archived": false,
+      "size": 16
+    },
+    {
+      "name": "igac-webite",
+      "fullName": "Osayeidzaber/igac-webite",
+      "description": "The website for igac",
+      "htmlUrl": "https://github.com/Osayeidzaber/igac-webite",
+      "homepage": "https://www.igac.info",
+      "language": "TypeScript",
+      "languages": {
+        "TypeScript": 1168993,
+        "CSS": 7783,
+        "JavaScript": 559
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2026-02-03T01:02:44Z",
+      "updatedAt": "2026-10-26T23:43:19Z",
+      "pushedAt": "2026-05-02T15:02:13Z",
+      "fork": false,
+      "archived": false,
+      "size": 55859
+    },
+    {
+      "name": "tajwater",
+      "fullName": "Osayeidzaber/tajwater",
+      "description": "a website for a water company with backend",
+      "htmlUrl": "https://github.com/Osayeidzaber/tajwater",
+      "homepage": "https://tajwater.vercel.app",
+      "language": "TypeScript",
+      "languages": {
+        "TypeScript": 824415,
+        "PLpgSQL": 23103,
+        "CSS": 7599,
+        "JavaScript": 559
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2026-02-26T15:58:52Z",
+      "updatedAt": "2026-10-26T23:39:03Z",
+      "pushedAt": "2026-03-17T19:14:49Z",
+      "fork": false,
+      "archived": false,
+      "size": 627
+    },
+    {
+      "name": "Arz",
+      "fullName": "Osayeidzaber/Arz",
+      "description": "A custom Shopify theme built for the ARZ brand, a traditional clothing store offering Panjabi, Shackets, and Pants. ",
+      "htmlUrl": "https://github.com/Osayeidzaber/Arz",
+      "homepage": "https://arzlifestyle.com/",
+      "language": "",
+      "languages": {},
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2026-02-20T17:59:38Z",
+      "updatedAt": "2026-10-26T23:44:58Z",
+      "pushedAt": "2026-02-20T18:08:55Z",
+      "fork": false,
+      "archived": false,
+      "size": 8
+    },
+    {
+      "name": "igacmun-session-3",
+      "fullName": "Osayeidzaber/igacmun-session-3",
+      "description": "IGACMUN Session III, the official website of the International Global Affairs Council’s Model UN conference. ",
+      "htmlUrl": "https://github.com/Osayeidzaber/igacmun-session-3",
+      "homepage": "https://igacmun.vercel.app",
+      "language": "HTML",
+      "languages": {
+        "HTML": 1049776,
+        "TypeScript": 374227,
+        "JavaScript": 274571,
+        "RouterOS Script": 143974,
+        "CSS": 2145
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2025-09-29T16:13:35Z",
+      "updatedAt": "2026-10-26T23:45:13Z",
+      "pushedAt": "2025-12-24T19:55:14Z",
+      "fork": false,
+      "archived": false,
+      "size": 107431
+    },
+    {
+      "name": "IGAC-ADMIN-PORTAL-CERTIFICATES",
+      "fullName": "Osayeidzaber/IGAC-ADMIN-PORTAL-CERTIFICATES",
+      "description": "🎓 Admin dashboard for IGAC MUN certificate management - Issue, sync & manage MUN certificates with Google Sheets integration, role-based access control, and real-time verification tracking. Built with Next.js 15, Supabase & Tailwind CSS.",
+      "htmlUrl": "https://github.com/Osayeidzaber/IGAC-ADMIN-PORTAL-CERTIFICATES",
+      "homepage": "",
+      "language": "TypeScript",
+      "languages": {
+        "TypeScript": 378966,
+        "CSS": 5145,
+        "JavaScript": 101
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2025-11-27T16:09:08Z",
+      "updatedAt": "2026-10-26T23:32:54Z",
+      "pushedAt": "2025-11-27T16:13:15Z",
+      "fork": false,
+      "archived": false,
+      "size": 361
+    },
+    {
+      "name": "Portfolio",
+      "fullName": "Osayeidzaber/Portfolio",
+      "description": "A portfolio",
+      "htmlUrl": "https://github.com/Osayeidzaber/Portfolio",
+      "homepage": "https://github.com/Osayeedjaber/Portfolio.git",
+      "language": "TypeScript",
+      "languages": {
+        "TypeScript": 138040,
+        "CSS": 4290,
+        "JavaScript": 1982
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2025-02-04T17:44:09Z",
+      "updatedAt": "2026-10-26T23:32:05Z",
+      "pushedAt": "2025-03-08T07:28:46Z",
+      "fork": false,
+      "archived": false,
+      "size": 1338
+    },
+    {
+      "name": "todolist",
+      "fullName": "Osayeidzaber/todolist",
+      "description": "a todolist with Glassmorphism ui that took me 2 days to make",
+      "htmlUrl": "https://github.com/Osayeidzaber/todolist",
+      "homepage": "",
+      "language": "JavaScript",
+      "languages": {
+        "JavaScript": 13074,
+        "HTML": 628,
+        "CSS": 554
+      },
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "createdAt": "2025-02-01T07:42:09Z",
+      "updatedAt": "2025-02-01T08:27:25Z",
+      "pushedAt": "2025-02-01T08:27:22Z",
+      "fork": false,
+      "archived": false,
+      "size": 13448
+    }
+  ],
+  "activity": {
+    "source": "calendar",
+    "days": [
+      {
+        "date": "2025-10-26",
+        "count": 0
+      },
+      {
+        "date": "2025-10-27",
+        "count": 0
+      },
+      {
+        "date": "2025-10-28",
+        "count": 0
+      },
+      {
+        "date": "2025-10-29",
+        "count": 0
+      },
+      {
+        "date": "2025-10-30",
+        "count": 0
+      },
+      {
+        "date": "2025-10-31",
+        "count": 0
+      },
+      {
+        "date": "2025-11-01",
+        "count": 0
+      },
+      {
+        "date": "2025-11-02",
+        "count": 0
+      },
+      {
+        "date": "2025-11-03",
+        "count": 3
+      },
+      {
+        "date": "2025-11-04",
+        "count": 0
+      },
+      {
+        "date": "2025-11-05",
+        "count": 0
+      },
+      {
+        "date": "2025-11-06",
+        "count": 1
+      },
+      {
+        "date": "2025-11-07",
+        "count": 0
+      },
+      {
+        "date": "2025-11-08",
+        "count": 0
+      },
+      {
+        "date": "2025-11-09",
+        "count": 0
+      },
+      {
+        "date": "2025-11-10",
+        "count": 0
+      },
+      {
+        "date": "2025-11-11",
+        "count": 0
+      },
+      {
+        "date": "2025-11-12",
+        "count": 0
+      },
+      {
+        "date": "2025-11-13",
+        "count": 0
+      },
+      {
+        "date": "2025-11-14",
+        "count": 2
+      },
+      {
+        "date": "2025-11-15",
+        "count": 0
+      },
+      {
+        "date": "2025-11-16",
+        "count": 0
+      },
+      {
+        "date": "2025-11-17",
+        "count": 0
+      },
+      {
+        "date": "2025-11-18",
+        "count": 0
+      },
+      {
+        "date": "2025-11-19",
+        "count": 0
+      },
+      {
+        "date": "2025-11-20",
+        "count": 0
+      },
+      {
+        "date": "2025-11-21",
+        "count": 0
+      },
+      {
+        "date": "2025-11-22",
+        "count": 0
+      },
+      {
+        "date": "2025-11-23",
+        "count": 0
+      },
+      {
+        "date": "2025-11-24",
+        "count": 0
+      },
+      {
+        "date": "2025-11-25",
+        "count": 0
+      },
+      {
+        "date": "2025-11-26",
+        "count": 1
+      },
+      {
+        "date": "2025-11-27",
+        "count": 6
+      },
+      {
+        "date": "2025-11-28",
+        "count": 0
+      },
+      {
+        "date": "2025-11-29",
+        "count": 0
+      },
+      {
+        "date": "2025-11-30",
+        "count": 0
+      },
+      {
+        "date": "2025-12-01",
+        "count": 0
+      },
+      {
+        "date": "2025-12-02",
+        "count": 0
+      },
+      {
+        "date": "2025-12-03",
+        "count": 0
+      },
+      {
+        "date": "2025-12-04",
+        "count": 0
+      },
+      {
+        "date": "2025-12-05",
+        "count": 0
+      },
+      {
+        "date": "2025-12-06",
+        "count": 0
+      },
+      {
+        "date": "2025-12-07",
+        "count": 0
+      },
+      {
+        "date": "2025-12-08",
+        "count": 0
+      },
+      {
+        "date": "2025-12-09",
+        "count": 0
+      },
+      {
+        "date": "2025-12-10",
+        "count": 0
+      },
+      {
+        "date": "2025-12-11",
+        "count": 0
+      },
+      {
+        "date": "2025-12-12",
+        "count": 0
+      },
+      {
+        "date": "2025-12-13",
+        "count": 0
+      },
+      {
+        "date": "2025-12-14",
+        "count": 0
+      },
+      {
+        "date": "2025-12-15",
+        "count": 0
+      },
+      {
+        "date": "2025-12-16",
+        "count": 0
+      },
+      {
+        "date": "2025-12-17",
+        "count": 0
+      },
+      {
+        "date": "2025-12-18",
+        "count": 0
+      },
+      {
+        "date": "2025-12-19",
+        "count": 3
+      },
+      {
+        "date": "2025-12-20",
+        "count": 0
+      },
+      {
+        "date": "2025-12-21",
+        "count": 0
+      },
+      {
+        "date": "2025-12-22",
+        "count": 0
+      },
+      {
+        "date": "2025-12-23",
+        "count": 0
+      },
+      {
+        "date": "2025-12-24",
+        "count": 2
+      },
+      {
+        "date": "2025-12-25",
+        "count": 1
+      },
+      {
+        "date": "2025-12-26",
+        "count": 5
+      },
+      {
+        "date": "2025-12-27",
+        "count": 0
+      },
+      {
+        "date": "2025-12-28",
+        "count": 0
+      },
+      {
+        "date": "2025-12-29",
+        "count": 0
+      },
+      {
+        "date": "2025-12-30",
+        "count": 0
+      },
+      {
+        "date": "2025-12-31",
+        "count": 0
+      },
+      {
+        "date": "2026-01-01",
+        "count": 0
+      },
+      {
+        "date": "2026-01-02",
+        "count": 0
+      },
+      {
+        "date": "2026-01-03",
+        "count": 0
+      },
+      {
+        "date": "2026-01-04",
+        "count": 0
+      },
+      {
+        "date": "2026-01-05",
+        "count": 0
+      },
+      {
+        "date": "2026-01-06",
+        "count": 0
+      },
+      {
+        "date": "2026-01-07",
+        "count": 0
+      },
+      {
+        "date": "2026-01-08",
+        "count": 0
+      },
+      {
+        "date": "2026-01-09",
+        "count": 0
+      },
+      {
+        "date": "2026-01-10",
+        "count": 0
+      },
+      {
+        "date": "2026-01-11",
+        "count": 0
+      },
+      {
+        "date": "2026-01-12",
+        "count": 0
+      },
+      {
+        "date": "2026-01-13",
+        "count": 0
+      },
+      {
+        "date": "2026-01-14",
+        "count": 0
+      },
+      {
+        "date": "2026-01-15",
+        "count": 0
+      },
+      {
+        "date": "2026-01-16",
+        "count": 0
+      },
+      {
+        "date": "2026-01-17",
+        "count": 0
+      },
+      {
+        "date": "2026-01-18",
+        "count": 0
+      },
+      {
+        "date": "2026-01-19",
+        "count": 0
+      },
+      {
+        "date": "2026-01-20",
+        "count": 0
+      },
+      {
+        "date": "2026-01-21",
+        "count": 0
+      },
+      {
+        "date": "2026-01-22",
+        "count": 0
+      },
+      {
+        "date": "2026-01-23",
+        "count": 0
+      },
+      {
+        "date": "2026-01-24",
+        "count": 0
+      },
+      {
+        "date": "2026-01-25",
+        "count": 0
+      },
+      {
+        "date": "2026-01-26",
+        "count": 0
+      },
+      {
+        "date": "2026-01-27",
+        "count": 0
+      },
+      {
+        "date": "2026-01-28",
+        "count": 0
+      },
+      {
+        "date": "2026-01-29",
+        "count": 0
+      },
+      {
+        "date": "2026-01-30",
+        "count": 0
+      },
+      {
+        "date": "2026-01-31",
+        "count": 0
+      },
+      {
+        "date": "2026-02-01",
+        "count": 0
+      },
+      {
+        "date": "2026-02-02",
+        "count": 0
+      },
+      {
+        "date": "2026-02-03",
+        "count": 5
+      },
+      {
+        "date": "2026-02-04",
+        "count": 0
+      },
+      {
+        "date": "2026-02-05",
+        "count": 0
+      },
+      {
+        "date": "2026-02-06",
+        "count": 0
+      },
+      {
+        "date": "2026-02-07",
+        "count": 0
+      },
+      {
+        "date": "2026-02-08",
+        "count": 0
+      },
+      {
+        "date": "2026-02-09",
+        "count": 0
+      },
+      {
+        "date": "2026-02-10",
+        "count": 2
+      },
+      {
+        "date": "2026-02-11",
+        "count": 0
+      },
+      {
+        "date": "2026-02-12",
+        "count": 0
+      },
+      {
+        "date": "2026-02-13",
+        "count": 0
+      },
+      {
+        "date": "2026-02-14",
+        "count": 0
+      },
+      {
+        "date": "2026-02-15",
+        "count": 0
+      },
+      {
+        "date": "2026-02-16",
+        "count": 0
+      },
+      {
+        "date": "2026-02-17",
+        "count": 0
+      },
+      {
+        "date": "2026-02-18",
+        "count": 0
+      },
+      {
+        "date": "2026-02-19",
+        "count": 0
+      },
+      {
+        "date": "2026-02-20",
+        "count": 2
+      },
+      {
+        "date": "2026-02-21",
+        "count": 2
+      },
+      {
+        "date": "2026-02-22",
+        "count": 0
+      },
+      {
+        "date": "2026-02-23",
+        "count": 0
+      },
+      {
+        "date": "2026-02-24",
+        "count": 0
+      },
+      {
+        "date": "2026-02-25",
+        "count": 0
+      },
+      {
+        "date": "2026-02-26",
+        "count": 2
+      },
+      {
+        "date": "2026-02-27",
+        "count": 0
+      },
+      {
+        "date": "2026-02-28",
+        "count": 4
+      },
+      {
+        "date": "2026-03-01",
+        "count": 0
+      },
+      {
+        "date": "2026-03-02",
+        "count": 0
+      },
+      {
+        "date": "2026-03-03",
+        "count": 0
+      },
+      {
+        "date": "2026-03-04",
+        "count": 2
+      },
+      {
+        "date": "2026-03-05",
+        "count": 0
+      },
+      {
+        "date": "2026-03-06",
+        "count": 0
+      },
+      {
+        "date": "2026-03-07",
+        "count": 0
+      },
+      {
+        "date": "2026-03-08",
+        "count": 0
+      },
+      {
+        "date": "2026-03-09",
+        "count": 0
+      },
+      {
+        "date": "2026-03-10",
+        "count": 0
+      },
+      {
+        "date": "2026-03-11",
+        "count": 0
+      },
+      {
+        "date": "2026-03-12",
+        "count": 0
+      },
+      {
+        "date": "2026-03-13",
+        "count": 0
+      },
+      {
+        "date": "2026-03-14",
+        "count": 0
+      },
+      {
+        "date": "2026-03-15",
+        "count": 0
+      },
+      {
+        "date": "2026-03-16",
+        "count": 0
+      },
+      {
+        "date": "2026-03-17",
+        "count": 0
+      },
+      {
+        "date": "2026-03-18",
+        "count": 0
+      },
+      {
+        "date": "2026-03-19",
+        "count": 0
+      },
+      {
+        "date": "2026-03-20",
+        "count": 0
+      },
+      {
+        "date": "2026-03-21",
+        "count": 0
+      },
+      {
+        "date": "2026-03-22",
+        "count": 0
+      },
+      {
+        "date": "2026-03-23",
+        "count": 0
+      },
+      {
+        "date": "2026-03-24",
+        "count": 0
+      },
+      {
+        "date": "2026-03-25",
+        "count": 0
+      },
+      {
+        "date": "2026-03-26",
+        "count": 0
+      },
+      {
+        "date": "2026-03-27",
+        "count": 0
+      },
+      {
+        "date": "2026-03-28",
+        "count": 0
+      },
+      {
+        "date": "2026-03-29",
+        "count": 0
+      },
+      {
+        "date": "2026-03-30",
+        "count": 0
+      },
+      {
+        "date": "2026-03-31",
+        "count": 0
+      },
+      {
+        "date": "2026-04-01",
+        "count": 0
+      },
+      {
+        "date": "2026-04-02",
+        "count": 0
+      },
+      {
+        "date": "2026-04-03",
+        "count": 0
+      },
+      {
+        "date": "2026-04-04",
+        "count": 0
+      },
+      {
+        "date": "2026-04-05",
+        "count": 3
+      },
+      {
+        "date": "2026-04-06",
+        "count": 0
+      },
+      {
+        "date": "2026-04-07",
+        "count": 0
+      },
+      {
+        "date": "2026-04-08",
+        "count": 1
+      },
+      {
+        "date": "2026-04-09",
+        "count": 5
+      },
+      {
+        "date": "2026-04-10",
+        "count": 0
+      },
+      {
+        "date": "2026-04-11",
+        "count": 1
+      },
+      {
+        "date": "2026-04-12",
+        "count": 0
+      },
+      {
+        "date": "2026-04-13",
+        "count": 0
+      },
+      {
+        "date": "2026-04-14",
+        "count": 0
+      },
+      {
+        "date": "2026-04-15",
+        "count": 0
+      },
+      {
+        "date": "2026-04-16",
+        "count": 3
+      },
+      {
+        "date": "2026-04-17",
+        "count": 0
+      },
+      {
+        "date": "2026-04-18",
+        "count": 8
+      },
+      {
+        "date": "2026-04-19",
+        "count": 0
+      },
+      {
+        "date": "2026-04-20",
+        "count": 0
+      },
+      {
+        "date": "2026-04-21",
+        "count": 0
+      },
+      {
+        "date": "2026-04-22",
+        "count": 0
+      },
+      {
+        "date": "2026-04-23",
+        "count": 0
+      },
+      {
+        "date": "2026-04-24",
+        "count": 0
+      },
+      {
+        "date": "2026-04-25",
+        "count": 0
+      },
+      {
+        "date": "2026-04-26",
+        "count": 0
+      },
+      {
+        "date": "2026-04-27",
+        "count": 0
+      },
+      {
+        "date": "2026-04-28",
+        "count": 0
+      },
+      {
+        "date": "2026-04-29",
+        "count": 0
+      },
+      {
+        "date": "2026-04-30",
+        "count": 0
+      },
+      {
+        "date": "2026-05-01",
+        "count": 0
+      },
+      {
+        "date": "2026-05-02",
+        "count": 1
+      },
+      {
+        "date": "2026-05-03",
+        "count": 0
+      },
+      {
+        "date": "2026-05-04",
+        "count": 0
+      },
+      {
+        "date": "2026-05-05",
+        "count": 0
+      },
+      {
+        "date": "2026-05-06",
+        "count": 0
+      },
+      {
+        "date": "2026-05-07",
+        "count": 0
+      },
+      {
+        "date": "2026-05-08",
+        "count": 0
+      },
+      {
+        "date": "2026-05-09",
+        "count": 0
+      },
+      {
+        "date": "2026-05-10",
+        "count": 0
+      },
+      {
+        "date": "2026-05-11",
+        "count": 0
+      },
+      {
+        "date": "2026-05-12",
+        "count": 0
+      },
+      {
+        "date": "2026-05-13",
+        "count": 0
+      },
+      {
+        "date": "2026-05-14",
+        "count": 0
+      },
+      {
+        "date": "2026-05-15",
+        "count": 0
+      },
+      {
+        "date": "2026-05-16",
+        "count": 0
+      },
+      {
+        "date": "2026-05-17",
+        "count": 0
+      },
+      {
+        "date": "2026-05-18",
+        "count": 0
+      },
+      {
+        "date": "2026-05-19",
+        "count": 0
+      },
+      {
+        "date": "2026-05-20",
+        "count": 0
+      },
+      {
+        "date": "2026-05-21",
+        "count": 0
+      },
+      {
+        "date": "2026-05-22",
+        "count": 0
+      },
+      {
+        "date": "2026-05-23",
+        "count": 0
+      },
+      {
+        "date": "2026-05-24",
+        "count": 0
+      },
+      {
+        "date": "2026-05-25",
+        "count": 0
+      },
+      {
+        "date": "2026-05-26",
+        "count": 0
+      },
+      {
+        "date": "2026-05-27",
+        "count": 0
+      },
+      {
+        "date": "2026-05-28",
+        "count": 0
+      },
+      {
+        "date": "2026-05-29",
+        "count": 0
+      },
+      {
+        "date": "2026-05-30",
+        "count": 0
+      },
+      {
+        "date": "2026-05-31",
+        "count": 0
+      },
+      {
+        "date": "2026-06-01",
+        "count": 0
+      },
+      {
+        "date": "2026-06-02",
+        "count": 0
+      },
+      {
+        "date": "2026-06-03",
+        "count": 0
+      },
+      {
+        "date": "2026-06-04",
+        "count": 0
+      },
+      {
+        "date": "2026-06-05",
+        "count": 0
+      },
+      {
+        "date": "2026-06-06",
+        "count": 0
+      },
+      {
+        "date": "2026-06-07",
+        "count": 0
+      },
+      {
+        "date": "2026-06-08",
+        "count": 0
+      },
+      {
+        "date": "2026-06-09",
+        "count": 0
+      },
+      {
+        "date": "2026-06-10",
+        "count": 0
+      },
+      {
+        "date": "2026-06-11",
+        "count": 0
+      },
+      {
+        "date": "2026-06-12",
+        "count": 0
+      },
+      {
+        "date": "2026-06-13",
+        "count": 0
+      },
+      {
+        "date": "2026-06-14",
+        "count": 0
+      },
+      {
+        "date": "2026-06-15",
+        "count": 3
+      },
+      {
+        "date": "2026-06-16",
+        "count": 0
+      },
+      {
+        "date": "2026-06-17",
+        "count": 0
+      },
+      {
+        "date": "2026-06-18",
+        "count": 0
+      },
+      {
+        "date": "2026-06-19",
+        "count": 2
+      },
+      {
+        "date": "2026-06-20",
+        "count": 0
+      },
+      {
+        "date": "2026-06-21",
+        "count": 0
+      },
+      {
+        "date": "2026-06-22",
+        "count": 0
+      },
+      {
+        "date": "2026-06-23",
+        "count": 0
+      },
+      {
+        "date": "2026-06-24",
+        "count": 0
+      },
+      {
+        "date": "2026-06-25",
+        "count": 0
+      },
+      {
+        "date": "2026-06-26",
+        "count": 5
+      },
+      {
+        "date": "2026-06-27",
+        "count": 2
+      },
+      {
+        "date": "2026-06-28",
+        "count": 0
+      },
+      {
+        "date": "2026-06-29",
+        "count": 0
+      },
+      {
+        "date": "2026-06-30",
+        "count": 0
+      },
+      {
+        "date": "2026-07-01",
+        "count": 2
+      },
+      {
+        "date": "2026-07-02",
+        "count": 0
+      },
+      {
+        "date": "2026-07-03",
+        "count": 0
+      },
+      {
+        "date": "2026-07-04",
+        "count": 0
+      },
+      {
+        "date": "2026-07-05",
+        "count": 0
+      },
+      {
+        "date": "2026-07-06",
+        "count": 0
+      },
+      {
+        "date": "2026-07-07",
+        "count": 0
+      },
+      {
+        "date": "2026-07-08",
+        "count": 0
+      },
+      {
+        "date": "2026-07-09",
+        "count": 0
+      },
+      {
+        "date": "2026-07-10",
+        "count": 0
+      },
+      {
+        "date": "2026-07-11",
+        "count": 0
+      },
+      {
+        "date": "2026-07-12",
+        "count": 0
+      },
+      {
+        "date": "2026-07-13",
+        "count": 0
+      },
+      {
+        "date": "2026-07-14",
+        "count": 0
+      },
+      {
+        "date": "2026-07-15",
+        "count": 0
+      },
+      {
+        "date": "2026-07-16",
+        "count": 0
+      },
+      {
+        "date": "2026-07-17",
+        "count": 0
+      },
+      {
+        "date": "2026-07-18",
+        "count": 0
+      },
+      {
+        "date": "2026-07-19",
+        "count": 0
+      },
+      {
+        "date": "2026-07-20",
+        "count": 0
+      },
+      {
+        "date": "2026-07-21",
+        "count": 0
+      },
+      {
+        "date": "2026-07-22",
+        "count": 0
+      },
+      {
+        "date": "2026-07-23",
+        "count": 0
+      },
+      {
+        "date": "2026-07-24",
+        "count": 0
+      },
+      {
+        "date": "2026-07-25",
+        "count": 0
+      },
+      {
+        "date": "2026-07-26",
+        "count": 0
+      },
+      {
+        "date": "2026-07-27",
+        "count": 0
+      },
+      {
+        "date": "2026-07-28",
+        "count": 0
+      },
+      {
+        "date": "2026-07-29",
+        "count": 0
+      },
+      {
+        "date": "2026-07-30",
+        "count": 0
+      },
+      {
+        "date": "2026-07-31",
+        "count": 0
+      },
+      {
+        "date": "2026-08-01",
+        "count": 0
+      },
+      {
+        "date": "2026-08-02",
+        "count": 0
+      },
+      {
+        "date": "2026-08-03",
+        "count": 0
+      },
+      {
+        "date": "2026-08-04",
+        "count": 0
+      },
+      {
+        "date": "2026-08-05",
+        "count": 0
+      },
+      {
+        "date": "2026-08-06",
+        "count": 0
+      },
+      {
+        "date": "2026-08-07",
+        "count": 0
+      },
+      {
+        "date": "2026-08-08",
+        "count": 0
+      },
+      {
+        "date": "2026-08-09",
+        "count": 0
+      },
+      {
+        "date": "2026-08-10",
+        "count": 0
+      },
+      {
+        "date": "2026-08-11",
+        "count": 0
+      },
+      {
+        "date": "2026-08-12",
+        "count": 0
+      },
+      {
+        "date": "2026-08-13",
+        "count": 0
+      },
+      {
+        "date": "2026-08-14",
+        "count": 0
+      },
+      {
+        "date": "2026-08-15",
+        "count": 0
+      },
+      {
+        "date": "2026-08-16",
+        "count": 0
+      },
+      {
+        "date": "2026-08-17",
+        "count": 0
+      },
+      {
+        "date": "2026-08-18",
+        "count": 0
+      },
+      {
+        "date": "2026-08-19",
+        "count": 0
+      },
+      {
+        "date": "2026-08-20",
+        "count": 0
+      },
+      {
+        "date": "2026-08-21",
+        "count": 0
+      },
+      {
+        "date": "2026-08-22",
+        "count": 0
+      },
+      {
+        "date": "2026-08-23",
+        "count": 0
+      },
+      {
+        "date": "2026-08-24",
+        "count": 0
+      },
+      {
+        "date": "2026-08-25",
+        "count": 7
+      },
+      {
+        "date": "2026-08-26",
+        "count": 0
+      },
+      {
+        "date": "2026-08-27",
+        "count": 0
+      },
+      {
+        "date": "2026-08-28",
+        "count": 8
+      },
+      {
+        "date": "2026-08-29",
+        "count": 3
+      },
+      {
+        "date": "2026-08-30",
+        "count": 1
+      },
+      {
+        "date": "2026-08-31",
+        "count": 1
+      },
+      {
+        "date": "2026-09-01",
+        "count": 15
+      },
+      {
+        "date": "2026-09-02",
+        "count": 0
+      },
+      {
+        "date": "2026-09-03",
+        "count": 1
+      },
+      {
+        "date": "2026-09-04",
+        "count": 2
+      },
+      {
+        "date": "2026-09-05",
+        "count": 0
+      },
+      {
+        "date": "2026-09-06",
+        "count": 0
+      },
+      {
+        "date": "2026-09-07",
+        "count": 0
+      },
+      {
+        "date": "2026-09-08",
+        "count": 0
+      },
+      {
+        "date": "2026-09-09",
+        "count": 0
+      },
+      {
+        "date": "2026-09-10",
+        "count": 0
+      },
+      {
+        "date": "2026-09-11",
+        "count": 0
+      },
+      {
+        "date": "2026-09-12",
+        "count": 0
+      },
+      {
+        "date": "2026-09-13",
+        "count": 0
+      },
+      {
+        "date": "2026-09-14",
+        "count": 0
+      },
+      {
+        "date": "2026-09-15",
+        "count": 0
+      },
+      {
+        "date": "2026-09-16",
+        "count": 0
+      },
+      {
+        "date": "2026-09-17",
+        "count": 0
+      },
+      {
+        "date": "2026-09-18",
+        "count": 0
+      },
+      {
+        "date": "2026-09-19",
+        "count": 0
+      },
+      {
+        "date": "2026-09-20",
+        "count": 0
+      },
+      {
+        "date": "2026-09-21",
+        "count": 0
+      },
+      {
+        "date": "2026-09-22",
+        "count": 0
+      },
+      {
+        "date": "2026-09-23",
+        "count": 0
+      },
+      {
+        "date": "2026-09-24",
+        "count": 0
+      },
+      {
+        "date": "2026-09-25",
+        "count": 0
+      },
+      {
+        "date": "2026-09-26",
+        "count": 0
+      },
+      {
+        "date": "2026-09-27",
+        "count": 0
+      },
+      {
+        "date": "2026-09-28",
+        "count": 0
+      },
+      {
+        "date": "2026-09-29",
+        "count": 0
+      },
+      {
+        "date": "2026-09-30",
+        "count": 0
+      },
+      {
+        "date": "2026-10-01",
+        "count": 0
+      },
+      {
+        "date": "2026-10-02",
+        "count": 0
+      },
+      {
+        "date": "2026-10-03",
+        "count": 0
+      },
+      {
+        "date": "2026-10-04",
+        "count": 2
+      },
+      {
+        "date": "2026-10-05",
+        "count": 0
+      },
+      {
+        "date": "2026-10-06",
+        "count": 1
+      },
+      {
+        "date": "2026-10-07",
+        "count": 0
+      },
+      {
+        "date": "2026-10-08",
+        "count": 0
+      },
+      {
+        "date": "2026-10-09",
+        "count": 0
+      },
+      {
+        "date": "2026-10-10",
+        "count": 0
+      },
+      {
+        "date": "2026-10-11",
+        "count": 0
+      },
+      {
+        "date": "2026-10-12",
+        "count": 0
+      },
+      {
+        "date": "2026-10-13",
+        "count": 0
+      },
+      {
+        "date": "2026-10-14",
+        "count": 0
+      },
+      {
+        "date": "2026-10-15",
+        "count": 0
+      },
+      {
+        "date": "2026-10-16",
+        "count": 0
+      },
+      {
+        "date": "2026-10-17",
+        "count": 0
+      },
+      {
+        "date": "2026-10-18",
+        "count": 0
+      },
+      {
+        "date": "2026-10-19",
+        "count": 0
+      },
+      {
+        "date": "2026-10-20",
+        "count": 0
+      },
+      {
+        "date": "2026-10-21",
+        "count": 1
+      },
+      {
+        "date": "2026-10-22",
+        "count": 12
+      },
+      {
+        "date": "2026-10-23",
+        "count": 2
+      },
+      {
+        "date": "2026-10-24",
+        "count": 0
+      },
+      {
+        "date": "2026-10-25",
+        "count": 1
+      },
+      {
+        "date": "2026-10-26",
+        "count": 20
+      },
+      {
+        "date": "2026-10-27",
+        "count": 1
+      }
+    ],
+    "total": 157
+  },
+  "events": [
+    {
+      "id": "18289316757",
+      "type": "PublicEvent",
+      "repo": "Osayeidzaber/Portfolio",
+      "date": "2025-02-04T17:44:09Z",
+      "summary": "Made public"
+    },
+    {
+      "id": "18289169948",
+      "type": "PublicEvent",
+      "repo": "Osayeidzaber/igac-crm",
+      "date": "2026-10-04T15:08:22Z",
+      "summary": "Made public"
+    },
+    {
+      "id": "25253023007",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T11:57:09Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25252343142",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T11:50:00Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25243454477",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-25T18:50:00Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25243359314",
+      "type": "DeleteEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-25T18:48:44Z",
+      "summary": "Delete"
+    },
+    {
+      "id": "25232019360",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T11:57:13Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25220447015",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T09:58:08Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25220194834",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T09:58:13Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25212359323",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T04:03:07Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25212345144",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T04:02:54Z",
+      "summary": "Pushed commits"
+    },
+    {
+      "id": "25193814010",
+      "type": "PushEvent",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "date": "2026-10-26T04:21:46Z",
+      "summary": "Pushed commits"
+    }
+  ],
+  "readmes": {
+    "osayeidzaber/portfolio-v2": "",
+    "osayeidzaber/corso-velle-v2": "# Corso Velle\n\n![Corso Velle wordmark](docs/readme-cover.svg)\n\nA Shopify Online Store 2.0 theme built for [Corsovelle](https://corsovelle.com). Liquid renders every page; TypeScript custom elements, GSAP and Vite add interaction on top. It uses Shopify's own catalog, cart, checkout, filters and SEO objects. There is no separate storefront app and no React.\n\n> This repository holds Corsovelle's configured theme. It is not yet packaged as a neutral commercial release, and no license is granted (see [LICENSE](LICENSE)).\n\n## Features\n\n| Area | What's included |\n| --- | --- |\n| Content | Image, video and slideshow heroes; media with text; expanding media; category cards; lookbook hotspots; FAQ; testimonials and reviews; feature, timeline, pricing and newsletter sections |\n| Discovery | Featured collections as a grid or a WebGL carousel (native fallback), collection tabs, clothes rack, predictive search, Search & Discovery filters, sorting, infinite or numbered pagination |\n| Product page | Gallery layouts with zoom, explicit size selection, size charts with cm/in switching, model information, sibling colourways, sticky add-to-cart bar |\n| Cart | AJAX drawer and cart page, quantity changes, notes, recommendations, free-shipping progress, Shopify discount codes (manual and automatic) |\n| Design | Colour schemes, three font roles, spacing, buttons, card styles, per-section options, Riviera / Minimal / Quiet theme styles |\n| Motion | GSAP entrances and scroll scenes, optional desktop wheel smoothing (Lenis), simplified phone motion, full reduced-motion support |\n\n## Quick start\n\nInstall a built theme ZIP from Shopify Admin → **Online Store → Themes**. To work from source (Node.js 22.12+, 24 or 26+):\n\n```sh\nnpm ci\nnpm run build\nnpm run watch                                      # terminal 1: rebuild assets on change\nnpm run dev -- --store your-store.myshopify.com    # terminal 2: Shopify preview\n```\n\nRun `npm run check` before committing, and `npm run package` to build the installable ZIP. See [INSTALLATION.md](INSTALLATION.md) for details and troubleshooting.\n\n## Branches\n\n| Branch | What it holds | Who changes it |\n| --- | --- | --- |\n| `main` | All source code and docs: `src/`, `theme/`, `scripts/`, `tests/`, `docs/`. Work happens here. | You, by committing |\n| `shopify` | Only the contents of `theme/`, moved to the top level. This is the branch connected to Shopify (Online Store → Themes → **Connect from GitHub**). | Generated from `main`, plus Shopify's own commits |\n| `history` | The full development history up to the clean `main`. Kept for reference only. | Nobody; leave it as is |\n\nShopify can only read a branch whose top level is a theme (`layout/`, `sections/`, `templates/` …). `main` keeps the theme inside `theme/` next to the source code, so it can't be connected directly; `shopify` exists for that reason.\n\nShopify also writes back to `shopify`: every save in the Theme Editor or code editor becomes a commit there (mostly `config/settings_data.json` and `templates/*.json`). So:\n\n- **Code changes go `main` → `shopify`.**\n- **Theme Editor changes go `shopify` → `main`.**\n\nTo publish code changes, first bring the Theme Editor's changes into `main`, then rebuild and update `shopify`:\n\n```sh\ngit checkout main\nnpm run shopify:pull      # copies Theme Editor commits from origin/shopify into theme/\nnpm run check             # rebuilds theme/assets and runs every check\ngit add <files> && git commit -m \"Describe the change\"\ngit push origin main\nnpm run shopify:deploy    # commits main's theme/ on top of origin/shopify and pushes it\n```\n\n`shopify:deploy` refuses to run while `shopify` has Theme Editor changes that `main` doesn't, so a deploy can't wipe them. It only ever fast-forwards. Never edit files on `shopify` by hand, and never force-push it: that overwrites the store's saved customizations.\n\n## Repository layout\n\n```text\nsrc/       TypeScript and CSS sources (built by Vite)\ntheme/     The Shopify theme that gets uploaded (Liquid, JSON, built assets)\nscripts/   Asset sync, watcher, JSON/schema checks, settings-reference generator\ntests/     Vitest unit tests\ndocs/      Setup guides, settings reference, licenses\n```\n\nEdit `src/` and `theme/`. Never edit `theme/assets/nk-*` or `theme/snippets/nk-assets.liquid` by hand; the build generates them.\n\n## Documentation\n\n| Guide | Covers |\n| --- | --- |\n| [INSTALLATION.md](INSTALLATION.md) | Installing a ZIP, developing from source, commands, packaging, troubleshooting |\n| [CUSTOMIZATION.md](CUSTOMIZATION.md) | Every Theme Editor area, what it controls and its limits |\n| [DEVELOPMENT.md](DEVELOPMENT.md) | Architecture, adding sections and components, animation, commerce code |\n| [docs/SETTINGS-REFERENCE.md](docs/SETTINGS-REFERENCE.md) | Every setting, default and block (generated from the schemas) |\n| [docs/SIZE-CHART-SETTINGS.md](docs/SIZE-CHART-SETTINGS.md) · [docs/SIZE-CHART-ADMIN.md](docs/SIZE-CHART-ADMIN.md) | Size charts from theme settings, or shared metaobject charts |\n| [docs/PROMOTIONS.md](docs/PROMOTIONS.md) | Connecting Shopify discount codes to products |\n| [docs/MODEL-INFO.md](docs/MODEL-INFO.md) | Model height and size text on product pages |\n| [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) | Preparing a release for another store, and updates |\n| [docs/SECTION-SOURCES.md](docs/SECTION-SOURCES.md) · [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | Where adapted sections and components came from, and their licenses |\n\n## License\n\nNo license is granted; all rights are reserved by the owner. Third-party parts keep their own licenses, listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The project started from [Shopify Skeleton](https://github.com/Shopify/skeleton-theme).\n",
+    "osayeidzaber/corso-velle": "<h1 align=\"center\">\n  <br>\n  CORSO VELLE — Custom Shopify Theme\n  <br>\n</h1>\n\n<p align=\"center\">\n  <img src=\"https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&duration=3500&pause=600&color=111111&background=fce6bb&center=true&vCenter=true&width=600&lines=A+bespoke+luxury+Shopify+storefront+for+Corso+Velle;Timeless+basics%2C+modern+experience;Built+with+Liquid+%7C+CSS+%7C+JavaScript\" alt=\"Typing animation\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/Shopify-96BF48?style=for-the-badge&logo=shopify&logoColor=white\" />\n  <img src=\"https://img.shields.io/badge/Liquid-7AB55C?style=for-the-badge&logo=shopify&logoColor=white\" />\n  <img src=\"https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black\" />\n  <img src=\"https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white\" />\n  <img src=\"https://img.shields.io/badge/Status-Private-111111?style=for-the-badge&labelColor=fce6bb\" />\n</p>\n\n---\n\n## 🏠 Homepage\n\nThe homepage opens with an immersive full-screen hero section — bold typography, custom call-to-action buttons, and seamless auto-looping background video. Below the hero sits the **New Arrivals** interactive product carousel, allowing customers to drag, swipe, and explore the latest drops effortlessly.\n\n* **Full-Width Hero Section**: Responsive video playback with zero latency and mobile-specific media overrides.\n* **New Arrivals Carousel**: Smooth touch and arrow navigation displaying 4:5 proportioned cards.\n* **Lookbook & Curated Stories**: Editorial photo grids that showcase seasonal collections and brand aesthetics.\n\n---\n\n## 🗂️ Collections & Product Cards\n\nThe collection pages present the product catalog in an elegant, evenly spaced grid with modern hover interactions.\n\n* **Hover Video & Slideshow**: Moving the cursor over any card instantly streams high-res video preview or alternates gallery images with smooth fade and zoom.\n* **Bold Product Typography**: Distinctive high-contrast product titles set in the signature *Inter / Newsreader* typography system.\n* **Smart Badges**: Sale, Sold Out, and New Arrival badges rendered in Corso Velle's warm champagne gold (`#fce6bb`) palette.\n* **Direct Add & Quick Buy**: Seamless drawer addition without page refreshes.\n\n---\n\n## 🧥 Product Details Page (PDP)\n\nBuilt for maximum clarity, storytelling, and high conversion.\n\n* **Pure Photo Gallery**: Clean, uncluttered photo carousel with interactive thumbnail navigation, dot indicators, and full-resolution zoom dialog.\n* **Standalone Video Showcase**: Product showcase videos are extracted from the photo gallery and presented in a dedicated video showcase below the product images. Plays automatically, muted, looping, and inline with zero intrusive overlay buttons.\n* **Sticky Add-to-Cart Bar**: Floats cleanly at the bottom as customers scroll through long descriptions and media.\n* **Accordion Care & Sizing Guides**: Built-in guides for clothing, linen, knitwear, denim, and genuine leather care.\n\n---\n\n## 🛒 Cart Drawer & Sticky Buy\n\nA high-performance slide-in cart drawer that keeps the customer inside the shopping flow.\n\n* **Slide-In Drawer**: Real-time item updates, cart notes, and subtotal calculation.\n* **Sticky Purchase Bar**: Keeps the product title, image, price, and Add to Cart button pinned within reach across desktop and mobile.\n* **Optimized Checkout Navigation**: Instant redirect to Shopify's secure checkout.\n\n---\n\n## ✨ Features Matrix\n\n| Feature | Details |\n|---|---|\n| 🛍️ **Product Pages** | Pure photo carousel, variant dropdowns, live price updates, standalone showcase video |\n| 🎬 **Hover Video Cards** | Pre-buffered MP4 hover stream on collection cards with zero lag |\n| 🛒 **Cart Drawer** | Slide-in drawer with live cart item management and sticky buy bar |\n| 🎠 **Interactive Carousels** | Touch-friendly drag and arrow sliders across New Arrivals and Hero sections |\n| 📐 **Accordion Care Guides** | Embedded care instructions for cotton, linen, suede, and leather footwear |\n| 🔍 **Search & Filters** | Predictive live search drawer with instant thumbnail previews |\n| 📱 **Mobile First** | Native touch gestures, responsive 16px screen padding, and edge protection |\n| 🎨 **Theme Customizer** | Fully configurable JSON architecture for Section Everywhere |\n\n---\n\n## 🎨 Design System\n\nCorso Velle's luxury aesthetic balances rich deep blacks, warm champagne accents, and crisp modern typography:\n\n| Token | Value | Purpose |\n|---|---|---|\n| **Background** | `#FFFFFF` | Clean editorial background |\n| **Foreground / Text** | `#111111` | High-contrast deep black typography |\n| **Accent / Badge** | `#fce6bb` | Signature warm champagne gold |\n| **Primary Font** | `Inter, Helvetica Neue, Arial` | Clean modern product titles, body, pricing, buttons |\n| **Editorial Serif** | `Newsreader, serif` | Timeless editorial headings and accents |\n\n---\n\n## 🗂️ Project Structure\n\n```\ncorso-velle-v2/\n├── assets/\n│   ├── base.css                     # Master global styles & typography\n│   ├── product-card.js              # Hover video and card interactions\n│   ├── media-gallery.js             # Photo carousel & zoom controller\n│   └── *.js / *.css                 # Optimized ES modules & component styles\n│\n├── sections/\n│   ├── hero.liquid                  # Fullscreen responsive video/image hero\n│   ├── product-information.liquid   # PDP main layout & media grid\n│   ├── product-list.liquid          # New arrivals & featured collections\n│   ├── header.liquid                # Header navigation & logo\n│   └── footer.liquid                # Footer links & copyright\n│\n├── blocks/\n│   ├── _product-card.liquid         # Modular product card block\n│   ├── _product-details.liquid      # Price, variants, and CTA group\n│   └── _slide.liquid                # Slideshow slide definitions\n│\n├── snippets/\n│   ├── product-showcase-video.liquid# Standalone showcase video player\n│   ├── card-gallery.liquid          # Card hover video & photo stream\n│   ├── product-media-gallery-content.liquid # PDP photo gallery engine\n│   ├── theme-styles-variables.liquid# Global CSS custom properties\n│   └── fonts.liquid                 # Google Fonts preloader\n│\n├── templates/                       # JSON page & section templates\n├── layout/theme.liquid              # Master HTML shell\n└── config/settings_data.json        # Theme settings and typography presets\n```\n\n---\n\n## 🚀 Local Development\n\n```bash\n# Authenticate with Shopify CLI\nshopify login --store corso-velle.myshopify.com\n\n# Start local development server with hot-reload\nshopify theme dev\n\n# Pull latest settings from live store\nshopify theme pull\n\n# Deploy changes to theme\nshopify theme push\n```\n\n---\n\n<p align=\"center\">\n  <sub>Handcrafted for <b>Corso Velle</b> • Built by Osayeid Zaber</sub>\n</p>\n",
+    "osayeidzaber/osayeedjaber": "<div align=\"center\">\n  <img src=\"https://capsule-render.vercel.app/api?type=waving&color=gradient&height=250&section=header&text=Osayeed%20Jaber&fontSize=80&animation=fadeIn&fontAlignY=35&desc=Full-Stack%20Developer%20%7C%20Anime%20Enthusiast&descAlignY=55&descAlign=50\" alt=\"header banner\" />\n</div>\n\n<p align=\"center\">\n  <a href=\"https://git.io/typing-svg\">\n    <img src=\"https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3000&pause=1000&color=F77F00&center=true&vCenter=true&width=600&lines=Full-Stack+Web+Developer+💻;Anime+%26+Ramen+Lover+🍜;Constantly+Leveling+Up+My+Skills+🚀;Turning+Coffee+Into+Code+☕\" alt=\"Typing SVG\" />\n  </a>\n</p>\n\n<p align=\"center\">\n  <img src=\"https://komarev.com/ghpvc/?username=Osayeedjaber&label=Profile%20Views&color=0e75b6&style=flat-square\" alt=\"Profile Views\" />\n</p>\n\n<div align=\"center\">\n  <a href=\"https://github.com/Osayeedjaber\"><img src=\"https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white\" alt=\"GitHub\"></a>\n  <a href=\"https://www.instagram.com/z3ber._/\"><img src=\"https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white\" alt=\"Instagram\"></a>\n  <a href=\"https://twitter.com/your-twitter\"><img src=\"https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white\" alt=\"Twitter\"></a>\n  <a href=\"mailto:osayeedjaber18@gmail.com\"><img src=\"https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white\" alt=\"Email\"></a>\n</div>\n\n<br/>\n\n<div align=\"center\">\n  <img src=\"https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGZoc3pwMzdjZmtwenp2YmNrZXhuMmN6NzZlYm5pb29hcjU4YTVzaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/bGgsc5mWoryfgKBx1u/giphy.gif\" alt=\"Dazai gif\" width=\"250\" style=\"border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);\"/>\n</div>\n\n<br/>\n\n<img src=\"https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png\" width=\"100%\" />\n\n### 👨‍💻 About Me\n\nHey! I'm Osayeed, a **full-stack developer** who's just as passionate about writing clean code as he is about anime marathons. My work is all about blending **frontend aesthetics** with **backend logic** to create cool, scalable apps. Think of me as the character who grinds to level up, always looking for new quests!\n\n- 🔭 **Currently working on:** Expanding my domain with some awesome full-stack projects.\n- 🌱 **Currently learning:** `Next.js`, `TypeScript`, and backend techniques worthy of a Hokage 🍥\n- 👯 **Seeking Allies:** Always open to teaming up on exciting projects (especially if they involve ramen or new tech!).\n- ⚡ **Fun fact:** I can debug code while watching an intense anime battle without missing a beat!\n\n<br/>\n\n### 🛠️ Tech Stack & Weapons of Choice\n\n<div align=\"center\">\n  <a href=\"https://skillicons.dev\">\n    <img src=\"https://skillicons.dev/icons?i=js,ts,python,html,css,react,nextjs,nodejs,express,mongodb,docker,git,vscode,discord&perline=7\" alt=\"Tech Stack\"/>\n  </a>\n</div>\n\n<br/>\n\n<img src=\"https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png\" width=\"100%\" />\n\n### 📊 GitHub Stats & Level Progress\n\n<div align=\"center\">\n  <img src=\"https://github-readme-stats.vercel.app/api?username=Osayeedjaber&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117\" alt=\"GitHub Stats\" width=\"48%\" />\n  <img src=\"https://github-readme-streak-stats.herokuapp.com/?user=Osayeedjaber&theme=tokyonight&hide_border=true&background=0D1117\" alt=\"GitHub Streak\" width=\"48%\" />\n</div>\n\n<br/>\n\n<div align=\"center\">\n  <img src=\"https://github-readme-stats.vercel.app/api/top-langs/?username=Osayeedjaber&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117\" alt=\"Top Languages\" width=\"48%\" />\n</div>\n\n<br/>\n\n<img src=\"https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png\" width=\"100%\" />\n\n### 🚀 Featured Quests (Projects)\n\n<table bordercolor=\"#30363d\">\n  <tr>\n    <td width=\"50%\" valign=\"top\">\n      <h3 align=\"center\">Todo with Glassmorphism</h3>\n      <div align=\"center\">\n        <a href=\"https://github.com/Osayeedjaber/todolist\" target=\"_blank\">\n          <img src=\"https://github-readme-stats.vercel.app/api/pin/?username=Osayeedjaber&repo=todolist&theme=tokyonight&hide_border=true&bg_color=0D1117\" alt=\"Repo Card\" />\n        </a>\n      </div>\n      <p align=\"center\">A sleek and efficient tool designed to help you organize tasks with a futuristic glassmorphism style. Built with <b>React</b> and <b>Tailwind CSS</b>.</p>\n    </td>\n    <td width=\"50%\" valign=\"top\">\n      <h3 align=\"center\">Awesome Project 2</h3>\n      <div align=\"center\">\n        <a href=\"https://github.com/Osayeedjaber/your-repo-name\" target=\"_blank\">\n          <!-- Replace 'your-repo-name' with your actual repo name below -->\n          <img src=\"https://github-readme-stats.vercel.app/api/pin/?username=Osayeedjaber&repo=your-repo-name&theme=tokyonight&hide_border=true&bg_color=0D1117\" alt=\"Repo Card\" />\n        </a>\n      </div>\n      <p align=\"center\">The technologies used, hidden skills, and the epic battle against bugs 🐛 to save the world!</p>\n    </td>\n  </tr>\n</table>\n\n> 👉 **Explore more of my work on my [GitHub Profile](https://github.com/Osayeedjaber)!**\n\n<br/>\n\n<div align=\"center\">\n  <img src=\"https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer\" alt=\"footer banner\" />\n</div>\n",
+    "osayeidzaber/igac-webite": "<p align=\"center\">\n  <img src=\"./public/logo (2).png\" width=\"150\" alt=\"IGAC Logo\" />\n</p>\n\n<h1 align=\"center\">✨ IGAC - International Global Affairs Council ✨</h1>\n\n<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/Status-Premium_Showcase-FFD700?style=for-the-badge&logoColor=white&labelColor=000033\" alt=\"Status\" />\n  <img src=\"https://img.shields.io/badge/Theme-Cinematic_Diplomacy-10B981?style=for-the-badge&logoColor=white&labelColor=064E3B\" alt=\"Theme\" />\n  <img src=\"https://img.shields.io/badge/Vibe-Nice_&_Cute-FF69B4?style=for-the-badge&logoColor=white&labelColor=C71585\" alt=\"Vibe\" />\n</p>\n\n<p align=\"center\">\n  <b>Forging the diplomats, leaders, and changemakers of tomorrow.</b>\n</p>\n\n---\n\n<h2 align=\"center\">👋 Hello from Osayeed Jaber!</h2>\n\n<p align=\"center\">\n  <a href=\"https://github.com/Osayeedjaber\">\n    <img src=\"https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white&labelColor=black&color=blueviolet\" alt=\"GitHub\" />\n  </a>\n  <a href=\"https://www.instagram.com/0.os4yed__/\">\n    <img src=\"https://img.shields.io/badge/Instagram-E1306C?style=for-the-badge&logo=instagram&logoColor=white&labelColor=E1306C&color=ff69b4\" alt=\"Instagram\" />\n  </a>\n  <a href=\"mailto:osayeedjaber18@gmail.com\">\n    <img src=\"https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white&labelColor=D14836&color=red\" alt=\"Email\" />\n  </a>\n</p>\n\n<p align=\"center\">\n  <img src=\"https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGZoc3pwMzdjZmtwenp2YmNrZXhuMmN6NzZlYm5pb29hcjU4YTVzaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/bGgsc5mWoryfgKBx1u/giphy.gif\" alt=\"Dazai gif\" width=\"200\" height=\"200\" style=\"border-radius: 50%; border: 4px solid #6D93F2;\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=4000&pause=500&color=6D93F2&center=true&vCenter=true&width=500&lines=Full-stack+Wizard+🧙‍♂️;Slightly+Chaotic+Ramen+Lover+🍜;Building+the+Future+of+Diplomacy+🌐\" alt=\"Typing animation\" />\n</p>\n\n---\n\n### 🏛️ The IGAC Mission\n\nThe **International Global Affairs Council (IGAC)** is South East Asia's premier platform for youth diplomacy. We aren't just hosting MUNs; we're building a digital ecosystem where future leaders are forged.\n\n> [!CAUTION]\n> ### 📢 Important: Showcase Only\n> This source code is uploaded for **inspiration and technical showcase** only. It is **not for distribution, redistribution, or commercial use**. Enjoy exploring the architecture, but please respect the creative and intellectual property of IGAC.\n\n---\n\n### 🏷️ IGAC \"Stickers\" (Our Core Pillars)\n\n<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/🛡️-INTEGRITY-0F172A?style=for-the-badge\" />\n  <img src=\"https://img.shields.io/badge/⚓-DIPLOMACY-10B981?style=for-the-badge\" />\n  <img src=\"https://img.shields.io/badge/🏆-LEADERSHIP-F59E0B?style=for-the-badge\" />\n  <img src=\"https://img.shields.io/badge/✨-EXCELLENCE-6366F1?style=for-the-badge\" />\n</p>\n\n---\n\n### 🎨 Visual & Technical Excellence\n\n| Category | Our Arsenal | Vibe |\n| :--- | :--- | :--- |\n| **Logic** | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript) | 🧠 Smart |\n| **Aesthetics** | ![Tailwind](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3) | 💅 Pretty |\n| **Motion** | ![Framer](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer) ![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=flat-square&logo=greensock) | 🎠 Smooth |\n| **Icons** | ![Lucide](https://img.shields.io/badge/Lucide-FFD700?style=flat-square&logo=lucide&logoColor=black) | 📍 Cute |\n\n---\n\n### 🚀 Regional Hubs: The Gateway Command\n\nThe project features specialized themes for different divisions. Our **Chattogram (CTG)** division uses a deep emerald maritime theme, while our **HQ** maintains a high-tech naval blue aesthetic.\n\n<p align=\"center\">\n  <img src=\"./public/past events/igacmunbannerjpg.jpg\" width=\"80%\" style=\"border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);\" />\n</p>\n\n---\n\n### 🛠️ Getting Started (The Quest)\n\nReady to see how it works? Follow the steps to level up:\n\n1. **Clone the repository**:\n   ```bash\n   git clone https://github.com/Osayeedjaber/igac-final.git\n   ```\n2. **Install the gear**:\n   ```bash\n   npm install\n   ```\n3. **Ignite the server**:\n   ```bash\n   npm run dev\n   ```\n4. **Enter the Gateway**:\n   Go to `http://localhost:3000` ✨\n\n---\n\n### 📊 Stats & Allies\n\n<p align=\"center\">\n  <img src=\"https://github-readme-stats.vercel.app/api?username=Osayeedjaber&show_icons=true&theme=radical&bg_color=0D1117&title_color=6D93F2&icon_color=FFD700&text_color=C9D1D9\" width=\"48%\" />\n  <img src=\"https://github-readme-stats.vercel.app/api/top-langs/?username=Osayeedjaber&layout=compact&theme=radical&bg_color=0D1117&title_color=6D93F2&icon_color=FFD700&text_color=C9D1D9\" width=\"48%\" />\n</p>\n\n---\n\n<p align=\"center\">\n  <b>Built with ❤️ by Osayeed Jaber for IGAC</b><br/>\n  <i>\"Let's make something epic together!\"</i>\n</p>\n\n<p align=\"center\">\n  <img src=\"https://visitor-badge.laobi.icu/badge?page_id=Osayeedjaber.igac-final\" alt=\"Visitors\" />\n</p>\n",
+    "osayeidzaber/tajwater": "<div align=\"center\">\n\n<img src=\"public/logo/tajcyan.svg\" alt=\"TajWater Logo\" width=\"120\" />\n\n# TajWater\n\n**Premium water delivery platform for Metro Vancouver**\n\n[![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org)\n[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)\n[![Tailwind CSS](https://img.shields.io/badge/Tailwind_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)\n[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)\n[![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)](https://stripe.com)\n\n[Live Demo](https://tajwater.ca) · [Report Bug](https://github.com/Osayeedjaber/tajwater/issues)\n\n</div>\n\n---\n\n## Overview\n\nTajWater is a full-stack e-commerce platform built for a water delivery company operating across 10 Metro Vancouver zones. Customers can browse products, place one-time or recurring subscription orders, and track deliveries — all from a polished storefront. A role-gated admin panel handles everything from order fulfillment to customer support.\n\n---\n\n## Tech Stack\n\n| Layer | Technology |\n|---|---|\n| **Framework** | Next.js 16 (App Router, TypeScript) |\n| **Styling** | Tailwind CSS v4, shadcn/ui, Framer Motion |\n| **State** | Zustand (cart — localStorage persist) |\n| **Database** | Supabase (PostgreSQL + RLS) |\n| **Auth** | Supabase Auth (email/password + Google OAuth) |\n| **Payments** | Stripe (PaymentIntents + Webhooks) |\n| **Email** | Resend (transactional HTML emails) |\n| **Deployment** | Vercel |\n\n---\n\n## Features\n\n### Storefront\n- Product catalog with category filtering and real-time stock display\n- Delivery zone checker — confirms coverage before checkout\n- Cart with persistent state across sessions\n- Checkout with Stripe card payments and order confirmation email\n\n### Customer Dashboard\n- Order history with status tracking\n- Subscription management (pause, resume, cancel)\n- Support ticket system with admin replies\n- Profile management\n\n### Admin Panel (role-gated)\n| Role | Access |\n|---|---|\n| **Super Admin** | Full access — settings, access management, all data |\n| **Manager** | Orders, customers, products, content, tickets, analytics |\n| **Delivery** | Dashboard and delivery schedule only |\n\n- Orders management with status updates and driver assignment\n- Customer CRM with order history\n- Product inventory management\n- Delivery schedule and zone management\n- Payments dashboard with Stripe integration\n- Support ticket queue with reply system\n- Analytics overview (revenue, orders, customers)\n- Content editor for services and about page\n- Email logs and notification preferences\n\n---\n\n## Project Structure\n\n```\napp/\n  (public)/       Home, Services, Areas, About, Contact, Shop, Checkout\n  auth/           Login, Register, Forgot, Reset, OAuth Callback\n  dashboard/      Customer portal (orders, subscription, profile, support)\n  admin/          Admin portal (10 sub-pages, role-gated)\n  api/            create-payment-intent, stripe/webhook, invoice/[orderId]\n\ncomponents/\n  layout/         Navbar, Footer\n  shared/         WaterBackground, FloatingOrderButton\n  home/           Hero, HowItWorks, ProductShowcase, DeliveryChecker, etc.\n  ui/             shadcn primitives\n\nlib/              supabase.ts, stripe.ts, email.ts\nstore/            cartStore.ts (Zustand)\ntypes/            index.ts (all shared interfaces)\nsupabase/         migrations/\n```\n\n---\n\n## Getting Started\n\n### Prerequisites\n\n- Node.js 20+\n- A [Supabase](https://supabase.com) project\n- A [Stripe](https://stripe.com) account\n- A [Resend](https://resend.com) account\n\n### Installation\n\n```bash\ngit clone https://github.com/Osayeedjaber/tajwater.git\ncd tajwater\nnpm install\n```\n\n### Environment Variables\n\nCopy `.env.example` to `.env.local` and fill in your values:\n\n```bash\ncp .env.example .env.local\n```\n\n```env\nNEXT_PUBLIC_SUPABASE_URL=\nNEXT_PUBLIC_SUPABASE_ANON_KEY=\nSUPABASE_SERVICE_ROLE_KEY=\n\nSTRIPE_SECRET_KEY=\nSTRIPE_WEBHOOK_SECRET=\n\nRESEND_API_KEY=\nRESEND_FROM_EMAIL=TajWater <orders@yourdomain.com>\n\nNEXT_PUBLIC_SITE_URL=http://localhost:3000\nNEXT_PUBLIC_COMPANY_PHONE=\nNEXT_PUBLIC_COMPANY_EMAIL=\n```\n\n### Database\n\nRun the schema in your Supabase SQL Editor:\n\n```bash\n# Open supabase_schema.sql and run it in Supabase Dashboard → SQL Editor\n```\n\n### Run\n\n```bash\nnpm run dev       # Development server\nnpm run build     # Production build\nnpm run start     # Serve production build\nnpm run lint      # ESLint\n```\n\n---\n\n## Delivery Zones\n\nNorth Vancouver · West Vancouver · Vancouver · Richmond · Burnaby · Coquitlam · Port Moody · Surrey · Delta · Langley\n\n---\n\n## License\n\nPrivate — all rights reserved.\n",
+    "osayeidzaber/arz": "<h1 align=\"center\">\n  <br>\n  ARZ — Custom Shopify Theme\n  <br>\n</h1>\n\n<p align=\"center\">\n  <img src=\"https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&duration=3500&pause=600&color=BFA27E&center=true&vCenter=true&width=600&lines=A+handcrafted+Shopify+storefront+for+ARZ;Traditional+clothing%2C+modern+experience;Built+with+Liquid+%7C+CSS+%7C+JavaScript\" alt=\"Typing animation\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/Shopify-96BF48?style=for-the-badge&logo=shopify&logoColor=white\" />\n  <img src=\"https://img.shields.io/badge/Liquid-7AB55C?style=for-the-badge&logo=shopify&logoColor=white\" />\n  <img src=\"https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black\" />\n  <img src=\"https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white\" />\n  <img src=\"https://img.shields.io/badge/Status-Private-BFA27E?style=for-the-badge\" />\n</p>\n\n---\n\n## 🏠 Homepage\n\nThe homepage opens with a full-width hero section — bold typography, a clean call-to-action, and the brand's signature warm palette. Below the hero sits a curated featured products grid, letting customers jump straight into browsing. Every element is intentional: no clutter, no noise — just the brand and the product.\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000336920.png?v=1771610622\" alt=\"ARZ Homepage\" width=\"100%\" />\n</p>\n\n---\n\n## 🗂️ Collections\n\nThe collections page presents the full product catalog in a clean, evenly spaced grid. Each card shows the product image with a smooth multi-image slideshow on hover, the product name, price, and a Quick Add button — so customers can shop without ever leaving the page. Sale and new arrival badges surface automatically based on product tags.\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000349819.png?v=1771610634\" alt=\"ARZ Collections\" width=\"100%\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000400798.png?v=1771610646\" alt=\"ARZ Products Grid\" width=\"100%\" />\n</p>\n\n---\n\n## 🧥 Product Page\n\nThe product page is built for clarity and conversion. On the left, a full image gallery with numbered navigation (`1 / 5`) lets customers cycle through every angle. On the right, the size selector, quantity input, and add-to-cart button are laid out in a logical hierarchy — with a real-time stock indicator that shows low availability when stock drops below the threshold.\n\nScroll down and the page reveals a size guide (dynamically matched to the product type — Panjabi, Shacket, or Pants) and a \"You May Also Like\" recommendations section powered by Shopify's product recommendations API.\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000414623.png?v=1771610659\" alt=\"ARZ Product Page\" width=\"100%\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000422332.png?v=1771610667\" alt=\"ARZ Product Page Scrolled\" width=\"100%\" />\n</p>\n\n---\n\n## 📦 Track Order\n\nA fully custom-built order tracking portal — no third-party apps, no redirects. Customers enter their order number and email directly on-site and get their fulfilment status back in a clean, readable format. Keeps the post-purchase experience inside the brand rather than pushing customers to a generic courier page.\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000436941.png?v=1771610680\" alt=\"ARZ Track Order\" width=\"100%\" />\n</p>\n\n---\n\n## ✂️ Bespoke (Custom Tailored)\n\nThe Bespoke page is ARZ's made-to-measure offering. Customers can submit their exact measurements for a fully custom-tailored piece. The page walks through the process — what to measure, how to submit, and what to expect — keeping it approachable for customers who've never ordered custom clothing before.\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000500127.png?v=1771610704\" alt=\"ARZ Bespoke Page\" width=\"100%\" />\n</p>\n\n<p align=\"center\">\n  <img src=\"https://cdn.shopify.com/s/files/1/0590/8050/7450/files/image_2026-02-21_000508922.png?v=1771610713\" alt=\"ARZ Bespoke Page Scrolled\" width=\"100%\" />\n</p>\n\n---\n\n## ✨ Features\n\n| Feature | Details |\n|---|---|\n| 🛍️ Product Pages | Image gallery, variant picker, quantity selector, live stock warnings |\n| 🛒 Cart Drawer | Slide-in cart with free shipping progress bar |\n| ⚡ Quick Add | Add to cart directly from any collection grid |\n| 📐 Size Guides | Dynamic charts per product type — Panjabi, Shacket, Pants |\n| 🔍 Mega Menu | Multi-column Shop navigation with collection categories |\n| 📦 Order Tracking | Built-in custom order tracking portal |\n| 💡 Recommendations | \"You May Also Like\" on every product page |\n| ✂️ Bespoke Page | Custom tailored clothing submission flow |\n| 📱 Mobile Ready | Fully responsive with hamburger nav and touch-friendly UI |\n| 🎨 Theme Customizer | Colors, fonts, layout, and copy — all editable from Shopify admin |\n\n---\n\n## 🎨 Design System\n\nBuilt around ARZ's brand palette — warm, earthy, and understated:\n\n| Token | Default |\n|---|---|\n| Background | `#efebe0` — warm linen |\n| Accent | `#BFA27E` — earthy gold |\n| Text | Dark neutral |\n| Borders | Subtle warm tones |\n\nAll values are CSS custom properties — swappable from the Shopify customizer without touching code.\n\n---\n\n## 🗂️ Project Structure\n\n```\narz final/\n├── assets/\n│   ├── theme.css                    # Main stylesheet\n│   ├── theme.js                     # All client-side logic\n│   ├── critical.css                 # Critical above-the-fold styles\n│   └── *.svg                        # Brand logos, size charts\n│\n├── sections/\n│   ├── header.liquid                # Header, mega menu, mobile nav\n│   ├── product.liquid               # Product detail page\n│   ├── footer.liquid\n│   ├── hero.liquid                  # Homepage hero\n│   ├── featured-products.liquid\n│   ├── custom-tracking-portal.liquid\n│   └── main-custom-tailored.liquid  # Bespoke page\n│\n├── snippets/\n│   ├── product-card.liquid\n│   ├── cart-drawer.liquid\n│   └── size-chart.liquid\n│\n├── templates/                       # JSON page templates\n├── layout/theme.liquid              # Global HTML shell\n└── config/                          # Theme settings schema\n```\n\n---\n\n## 🚀 Local Development\n\n```bash\n# Preview locally against your store\nshopify theme dev --store YOUR_STORE.myshopify.com\n\n# Push to live store\nshopify theme push --store YOUR_STORE.myshopify.com\n\n# Lint\nshopify theme check\n```\n\n---\n\n<p align=\"center\">\n  <sub>Made By Osayeed Zaber <3</sub>\n</p>\n",
+    "osayeidzaber/igacmun-session-3": "",
+    "osayeidzaber/igac-admin-portal-certificates": "# IGAC MUN Certificate Admin Portal\r\n\r\nA modern admin dashboard for managing MUN (Model United Nations) certificates, built with Next.js 15, Supabase, and Tailwind CSS.\r\n\r\n<p align=\"center\">\r\n  <img src=\"public/logo%20(2).png\" alt=\"IGAC Logo\" width=\"200\">\r\n</p>\r\n\r\n---\r\n\r\n## 🎯 What is this?\r\n\r\nThis is the **Admin Portal** for IGAC MUN's certificate management system. It allows organizers to:\r\n\r\n- **Issue certificates** to delegates, secretariat, executive board members, campus ambassadors, and volunteers\r\n- **Sync data** from Google Sheets (bulk import)\r\n- **Manage certificates** - view, edit, revoke\r\n- **Track verifications** - see who verified their certificates\r\n- **Manage users** - approve new admin accounts\r\n\r\n### Two Connected Systems\r\n\r\n| System | URL | Purpose |\r\n|--------|-----|---------|\r\n| **Admin Portal** (this) | `your-domain.vercel.app` | Manage & issue certificates |\r\n| **Certificate Portal** | `igacmun.vercel.app` | Public verification page |\r\n\r\nBoth share the same Supabase database.\r\n\r\n---\r\n\r\n## ✨ Features\r\n\r\n### 🏠 Dashboard\r\n- Overview statistics (total certificates, active, revoked)\r\n- Recent activity feed\r\n- Quick actions\r\n\r\n### 📜 Certificate Management\r\n- View all certificates with search & filters\r\n- Edit certificate details (name, school, award, metadata)\r\n- Revoke/restore certificates\r\n- Category-aware fields:\r\n  - **Delegates**: Committee + Country\r\n  - **Executive Board**: Committee + Position (Chair, Vice Chair, Rapporteur)\r\n  - **Secretariat**: Department + Designation\r\n  - **Campus Ambassador**: Basic info only\r\n\r\n### ➕ Manual Creation\r\n- Create individual certificates with form validation\r\n- Auto-generated unique IDs (6-7 character alphanumeric)\r\n- Optional sync to Google Sheet\r\n- Award type suggestions\r\n\r\n### 🔄 Google Sheets Sync\r\n- Import certificates from Google Sheets (via SheetDB API)\r\n- Bi-directional sync support\r\n- Automatic ID generation for new entries\r\n- Rate limiting to avoid API limits\r\n\r\n### 📊 Analytics\r\n- Verification trends over time\r\n- Certificate distribution by type\r\n- Event-based statistics\r\n- Recent verification logs\r\n\r\n### 👥 User Management (Super Admin only)\r\n- Approve/reject new registrations\r\n- Change user roles (admin/mod)\r\n- Delete users\r\n- View all registered accounts\r\n\r\n### 🔐 Role-Based Access Control\r\n| Role | Permissions |\r\n|------|-------------|\r\n| `super_admin` | Full access + user management + approve registrations |\r\n| `admin` | Create, edit, delete certificates |\r\n| `mod` | View only access |\r\n\r\n---\r\n\r\n## 🚀 Getting Started\r\n\r\n### Prerequisites\r\n- Node.js 18+ \r\n- npm or yarn\r\n- Supabase account (for database & auth)\r\n- SheetDB account (for Google Sheets sync)\r\n- Discord webhooks (optional, for notifications)\r\n\r\n### Installation\r\n\r\n```bash\r\n# Clone the repository\r\ngit clone https://github.com/your-org/certificate-admin.git\r\ncd certificate-admin\r\n\r\n# Install dependencies\r\nnpm install\r\n\r\n# Set up environment variables\r\ncp .env.example .env.local\r\n# Edit .env.local with your credentials\r\n\r\n# Run development server\r\nnpm run dev\r\n```\r\n\r\nOpen [http://localhost:3001](http://localhost:3001) to view the dashboard.\r\n\r\n### Environment Variables\r\n\r\nCreate a `.env.local` file with:\r\n\r\n```env\r\n# Supabase (Required)\r\nNEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co\r\nNEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key\r\nSUPABASE_SERVICE_ROLE_KEY=your-service-role-key\r\n\r\n# SheetDB - Google Sheets sync (Required for sync feature)\r\nSHEETDB_API_URL=https://sheetdb.io/api/v1/your-sheet-id\r\n\r\n# Discord Webhooks (Optional - for notifications)\r\nDISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...\r\nDISCORD_ERROR_WEBHOOK_URL=https://discord.com/api/webhooks/...\r\n\r\n# Certificate Portal URL\r\nNEXT_PUBLIC_CERTIFICATE_PORTAL_URL=https://igacmun.vercel.app/certificate-portal\r\n\r\n# Default Event\r\nDEFAULT_EVENT_NAME=igacmun-session-3-2025\r\n```\r\n\r\n---\r\n\r\n## 📁 Project Structure\r\n\r\n```\r\n├── app/\r\n│   ├── api/                    # API routes\r\n│   │   ├── auth/              # Login, logout, register, me\r\n│   │   ├── certificates/      # CRUD operations\r\n│   │   ├── events/            # Event management\r\n│   │   ├── logs/              # Verification logs\r\n│   │   ├── stats/             # Dashboard statistics\r\n│   │   ├── sync/              # Google Sheets sync\r\n│   │   └── users/             # User management\r\n│   ├── dashboard/             # Protected admin pages\r\n│   │   ├── analytics/         # Analytics & charts\r\n│   │   ├── certificates/      # Certificate list & edit\r\n│   │   ├── create/            # Manual certificate creation\r\n│   │   ├── events/            # Event management\r\n│   │   ├── export/            # Export certificates\r\n│   │   ├── import/            # Bulk import\r\n│   │   ├── logs/              # Verification logs\r\n│   │   ├── settings/          # Settings + user management\r\n│   │   ├── sheet/             # View Google Sheet data\r\n│   │   └── sync/              # Sync controls\r\n│   ├── login/                 # Login page\r\n│   ├── register/              # Registration page\r\n│   ├── error.tsx              # Error boundary\r\n│   ├── loading.tsx            # Global loading state\r\n│   └── not-found.tsx          # 404 page\r\n├── components/\r\n│   ├── ui/                    # Reusable UI components\r\n│   │   └── index.tsx          # Toggle, Badge, Tooltip, Card, etc.\r\n│   ├── Sidebar.tsx            # Navigation sidebar\r\n│   └── DashboardLayout.tsx    # Main layout wrapper\r\n├── lib/\r\n│   ├── supabase/              # Supabase clients (admin, client, server)\r\n│   └── utils/                 # Helper functions\r\n│       ├── auth.ts            # Authentication helpers\r\n│       ├── cache.ts           # Caching utilities\r\n│       ├── certificates.ts    # Certificate validation & generation\r\n│       ├── discord.ts         # Discord webhook notifications\r\n│       └── sheetdb.ts         # SheetDB API wrapper\r\n├── types/\r\n│   └── database.ts            # TypeScript types\r\n└── public/\r\n    └── logo (2).png           # IGAC logo\r\n```\r\n\r\n---\r\n\r\n## 🎨 Brand Colors\r\n\r\nThe dashboard uses IGAC's official brand colors:\r\n\r\n| Color | Hex | Usage |\r\n|-------|-----|-------|\r\n| Dark | `#000b07` | Main background |\r\n| Dark Alt | `#001c14` | Card backgrounds |\r\n| Cream | `#ffeccd` | Primary accent, buttons |\r\n| Cream Light | `#faf4ea` | Text color |\r\n\r\n```css\r\n/* Tailwind usage */\r\nbg-[#000b07]     /* Main background */\r\nbg-[#001c14]     /* Cards */\r\ntext-[#ffeccd]   /* Accent text */\r\ntext-[#faf4ea]   /* Primary text */\r\n```\r\n\r\n---\r\n\r\n## 🗄️ Database Schema\r\n\r\n### `certificates` table\r\n| Column | Type | Description |\r\n|--------|------|-------------|\r\n| `id` | uuid | Primary key |\r\n| `certificate_id` | text | Unique short ID (e.g., \"abc123\") |\r\n| `certificate_type` | text | Award name (e.g., \"Best Delegate\") |\r\n| `participant_name` | text | Full name |\r\n| `school` | text | Institution |\r\n| `event_id` | uuid | Foreign key to events |\r\n| `status` | text | 'active' or 'revoked' |\r\n| `date_issued` | date | Issue date |\r\n| `qr_code_data` | text | Verification URL |\r\n| `created_by` | uuid | User who created it |\r\n\r\n### `certificate_metadata` table\r\n| Column | Type | Description |\r\n|--------|------|-------------|\r\n| `id` | uuid | Primary key |\r\n| `certificate_id` | uuid | Foreign key to certificates |\r\n| `field_name` | text | e.g., 'committee', 'country', 'position' |\r\n| `field_value` | text | The value |\r\n| `field_type` | text | 'text' |\r\n\r\n**Metadata field names by category:**\r\n- **Delegate**: `cert_type`, `email`, `committee`, `country`\r\n- **Executive Board**: `cert_type`, `email`, `committee`, `position`\r\n- **Secretariat**: `cert_type`, `email`, `department`, `designation`\r\n- **Campus Ambassador**: `cert_type`, `email`\r\n\r\n### `users` table\r\n| Column | Type | Description |\r\n|--------|------|-------------|\r\n| `id` | uuid | Primary key (matches auth.users) |\r\n| `email` | text | User email |\r\n| `role` | text | 'super_admin', 'admin', 'mod' |\r\n| `account_status` | text | 'pending_approval', 'approved', 'rejected' |\r\n| `approved_by` | uuid | Who approved the account |\r\n| `approved_at` | timestamp | When approved |\r\n\r\n---\r\n\r\n## 📋 Google Sheet Structure\r\n\r\nYour Google Sheet should have these columns:\r\n\r\n| Column | Description | Who Fills |\r\n|--------|-------------|-----------|\r\n| `Cert_Type` | Category (delegate, secretariat, etc.) | Admin |\r\n| `Participant_Name` | Full name | Admin |\r\n| `Email` | Email address | Admin |\r\n| `institution` | School/organization (lowercase!) | Admin |\r\n| `Award_Type` | Certificate name (Best Delegate, etc.) | Admin |\r\n| `Committee` | Committee name OR Department | Admin |\r\n| `Country` | Country OR Designation | Admin |\r\n| `Unique_ID` | Generated certificate ID | System |\r\n| `Verification_URL` | Public verification link | System |\r\n| `Date_Issued` | Issue date | System |\r\n| `Verified_Status` | 'active' or 'revoked' | System |\r\n| `Event_Name` | Event code | System |\r\n\r\n---\r\n\r\n## 🔐 User Registration\r\n\r\nNew admin accounts require approval:\r\n\r\n1. Go to `/register`\r\n2. Enter email, password, and the **secret signup code**\r\n3. Select role (Admin or Moderator)\r\n4. Wait for a super_admin to approve your account\r\n5. Once approved, you can log in\r\n\r\n> **Note**: The signup code is required to register. Ask a super admin for the code.\r\n\r\n---\r\n\r\n## 🌐 API Endpoints\r\n\r\n### Authentication\r\n| Method | Endpoint | Description |\r\n|--------|----------|-------------|\r\n| POST | `/api/auth/login` | Login |\r\n| POST | `/api/auth/logout` | Logout |\r\n| GET | `/api/auth/me` | Get current user |\r\n| POST | `/api/auth/register` | Register new account |\r\n\r\n### Certificates\r\n| Method | Endpoint | Description |\r\n|--------|----------|-------------|\r\n| GET | `/api/certificates` | List certificates (paginated) |\r\n| POST | `/api/certificates/create` | Create single certificate |\r\n| GET | `/api/certificates/[id]` | Get certificate details |\r\n| PUT | `/api/certificates/[id]` | Update certificate |\r\n| DELETE | `/api/certificates/[id]` | Delete certificate |\r\n| POST | `/api/certificates/export` | Export certificates |\r\n| POST | `/api/certificates/import` | Bulk import |\r\n\r\n### Sync\r\n| Method | Endpoint | Description |\r\n|--------|----------|-------------|\r\n| POST | `/api/sync/from-sheet` | Import from Google Sheet |\r\n| POST | `/api/sync/to-sheet` | Export to Google Sheet |\r\n| GET | `/api/sheet` | View sheet data |\r\n\r\n### Other\r\n| Method | Endpoint | Description |\r\n|--------|----------|-------------|\r\n| GET | `/api/stats` | Dashboard statistics |\r\n| GET | `/api/events` | List events |\r\n| GET | `/api/logs/verifications` | Verification logs |\r\n| GET/PUT/DELETE | `/api/users` | User management |\r\n\r\n---\r\n\r\n## 🔄 Rate Limiting\r\n\r\nSheetDB has rate limits on free tier. The app handles this with:\r\n- 1 second delay between requests\r\n- Exponential backoff on 429 errors\r\n- Batch processing (5 at a time with delays)\r\n- Retry logic (up to 3 retries)\r\n\r\n---\r\n\r\n## 🚀 Deployment\r\n\r\n### Vercel (Recommended)\r\n\r\n```bash\r\n# Install Vercel CLI\r\nnpm i -g vercel\r\n\r\n# Deploy\r\nvercel\r\n```\r\n\r\nMake sure to:\r\n1. Add all environment variables in Vercel dashboard\r\n2. Set the build command to `npm run build`\r\n3. Set the output directory to `.next`\r\n\r\n### Post-Deployment Checklist\r\n\r\n- [ ] All environment variables configured\r\n- [ ] Supabase URL whitelist includes Vercel domain\r\n- [ ] Test login with super_admin account\r\n- [ ] Test certificate creation\r\n- [ ] Test Google Sheets sync\r\n- [ ] Verify Discord webhooks work\r\n\r\n---\r\n\r\n## 🤝 Contributing\r\n\r\nThis is an internal tool for IGAC MUN. For issues or feature requests, contact the development team.\r\n\r\n---\r\n\r\n## 📞 Support\r\n\r\n- **Discord**: IGAC MUN Server\r\n- **Email**: Contact your organization admin\r\n\r\n---\r\n\r\n<p align=\"center\">\r\n  <i>Built with ❤️ for IGAC MUN</i>\r\n</p>\r\n",
+    "osayeidzaber/portfolio": "\n## 🎨 Key Components\n\n- **Custom Cursor**: Smooth, animated cursor\n- **Space Theme**: Dynamic star field background\n- **Project Showcase**: Interactive project cards\n- **Skill Display**: Animated skill indicators\n- **Contact Form**: Interactive contact section\n- **Loading Screen**: Smooth page transitions\n\n## 📝 License\n\nThis project is protected under copyright law. All rights reserved.\n\nNo part of this software, including but not limited to the source code, documentation, \ndesign, and assets, may be reproduced, distributed, or transmitted in any form or by \nany means without the prior written permission of Osayeed Jaber.\n\n## 🤝 Contributing\n\nWhile this is a personal portfolio, suggestions are welcome:\n\n1. Report bugs\n2. Suggest improvements\n3. Submit pull requests\n\n## 📞 Contact\n\n- **Email**: osayeedjaber18@gmail.com\n- **GitHub**: [@Osayeedjaber](https://github.com/Osayeedjaber)\n- **Instagram**: [@0.os4yed__](https://www.instagram.com/0.os4yed__/)\n\n<p align=\"center\">\n  <sub>Built with ❤️ and a lot of ☕ by Osayeed Jaber</sub>\n</p>",
+    "osayeidzaber/todolist": "<h1 align=\"center\">todowithGlassmorphism</h1>\n\n<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white&labelColor=black&color=cyan\" alt=\"React Badge\" />\n  <img src=\"https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=white&labelColor=black&color=blueviolet\" alt=\"Vite Badge\" />\n  <img src=\"https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white&labelColor=black&color=teal\" alt=\"Tailwind CSS badge\" />\n  <img src=\"https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black&labelColor=black&color=yellow\" alt=\"JavaScript badge\" />\n</p>\n\n---\n\n<p align=\"center\">\n  <!-- Replace with an actual GIF or a placeholder image -->\n  <img src=\"https://camo.githubusercontent.com/f0d1d4ef8153263218f960319e84981305e6458ae8ce87e1637311eec40f8a72/68747470733a2f2f6d656469612e67697068792e636f6d2f6d656469612f76312e59326c6b505463354d4749334e6a457861475a6f633370774d7a646a5a6d7477656e7032596d4e725a5868754d6d4e364e7a5a6c596d357062323968636a55345954567a61695a6c634431324d56396e61575a7a58334e6c59584a6a61435a6a6444316e2f6247677363356d576f727966674b427831752f67697068792e676966\" alt=\"Futuristic Task Manager Demo\" width=\"300\" height=\"300\"/>\n</p>\n\n---\n\n<p align=\"center\">\n  <img src=\"https://readme-typing-svg.demolab.com?font=Orbitron&weight=500&size=24&duration=4000&pause=500&color=4dd0e1&center=true&vCenter=true&width=600&lines=Organize+Your+Future+Tasks;Sleek+and+Efficient+Task+Management;Built+with+React+and+Tailwind+CSS\" alt=\"Typing animation\" />\n</p>\n\n---\n\n### 🚀 About the Project\n\nWelcome to the **todowithGlassmorphism**, a sleek and efficient tool designed to help you organize your tasks with a touch of futuristic style. This project is built using React for a dynamic user interface and Tailwind CSS for stylish, responsive design. It's a simple yet powerful application to manage your daily tasks effectively.\n\n- ✨ **Glassmorphism UI:** Experience a visually appealing interface with glassmorphic design elements.\n- 🌙 **Dark/Light Theme:** Toggle between dark and light themes for comfortable viewing in any environment.\n- ⚡️ **Fast and Responsive:** Built with Vite for lightning-fast development and optimized performance.\n- 💾 **Local Storage:** Tasks are saved in your browser's local storage for persistence.\n- ⚙️ **Filter and Organize:** Easily filter tasks by 'all', 'pending', or 'completed' to stay organized.\n\n---\n\n### 💻 Tech Stack\n\nThis project is built using the following technologies:\n\n- **Frontend:**\n  - [React](https://reactjs.org/) - A JavaScript library for building user interfaces.\n  - [Vite](https://vitejs.dev/) -  A fast build tool and development server.\n  - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework for rapid UI development.\n- **Styling & Design:**\n  - Glassmorphism UI principles\n  - Custom CSS for animations and effects\n\n---\n\n### 📦 Getting Started\n\nTo run this project locally, follow these steps:\n\n1. **Installation:**\n   ```shell\n   npm install\n   ```\n\n2. **Start the development server:**\n   ```shell\n   npm run dev\n   ```\n\n3. **Open in your browser:**\n   - The app will be running at `http://localhost:5173` or the URL provided by Vite.\n\n---\n\n### 📌 Features\n\n- **Add Tasks:** Easily add new tasks with a simple input field.\n- **Complete Tasks:** Mark tasks as complete with a click.\n- **Delete Tasks:** Remove tasks that are no longer needed.\n- **Filter Tasks:** View 'all', 'pending', or 'completed' tasks for better organization.\n- **Theme Toggle:** Switch between light and dark themes for optimal viewing experience.\n- **Animated Background:** Enjoy a subtle starry animated background for a futuristic feel.\n\n---\n\n### 🖼️ Screenshots\n\n<p align=\"center\">\n  <img src=\"https://imgur.com/1rE2d6J.png\" alt=\"Screenshot 1\" width=\"400\"/>\n</p>\n<p align=\"center\">\n  <img src=\"https://imgur.com/X4zHSNG.png\" alt=\"Screenshot 1\" width=\"400\"/>\n</p>\n\n---\n\n### 🚀 Contributing\n\nContributions are welcome! If you have suggestions or find issues, please open an issue or submit a pull request.\n\n1. Fork the repository\n2. Create your feature branch (`git checkout -b feature/YourAmazingFeature`)\n3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)\n4. Push to the branch (`git push origin feature/YourAmazingFeature`)\n5. Open a Pull Request\n\n---\n\n### 🐜 License\n\n[MIT](LICENSE)\n\n---\n\n### 🤝 Connect with Me\n\n<p align=\"center\">\n  Made with ❤️ by Osayeed\n</p>\n<p align=\"center\">\n  <a href=\"https://www.instagram.com/0.os4yed__/\">\n    <img src=\"https://img.shields.io/badge/Instagram-E4405F?style=flat-square&logo=instagram&logoColor=white\" alt=\"Instagram Badge\" />\n  </a>\n  <a href=\"https://github.com/Osayeedjaber\">\n    <img src=\"https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white\" alt=\"GitHub Badge\" />\n  </a>\n</p>\n\n---\n\n<p align=\"center\">Thank you for checking out the todowithGlassmorphism! ✨</p>\n\n"
+  }
+}

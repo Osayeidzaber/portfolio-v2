@@ -1,0 +1,450 @@
+{
+  "version": 1,
+  "profile": {
+    "name": "Osayeed Zaber",
+    "title": "Full-stack developer",
+    "roles": [
+      "storefronts",
+      "admin portals",
+      "delivery platforms",
+      "event websites",
+      "Shopify themes"
+    ],
+    "intro": "I build in Next.js, TypeScript and Liquid — for clothing brands, a water company in Vancouver, and a council of student diplomats.",
+    "location": "Uttara, Dhaka, Bangladesh",
+    "email": "osayeedjaber18@gmail.com",
+    "availability": {
+      "status": "available",
+      "label": "Available for new projects"
+    },
+    "avatar": "",
+    "resume": "",
+    "socials": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/Osayeidzaber"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/z3ber._/"
+      }
+    ]
+  },
+  "about": {
+    "heading": "I write the code and sweat the pixels.",
+    "paragraphs": [
+      "I'm Osayeed, a full-stack developer in Uttara, Dhaka. Most of my work is Next.js and TypeScript on the front, Supabase or Node on the back, and a lot of Liquid for Shopify brands.",
+      "I've shipped storefronts for Corso Velle and ARZ, a delivery platform for TajWater in Vancouver, and the websites and certificate system for IGAC. Off the clock: anime, ramen, and too many side projects."
+    ],
+    "quote": "Currently learning: whatever the last project made me realise I didn't know.",
+    "pillars": [
+      {
+        "title": "Development",
+        "body": "Next.js apps with real back offices: auth, Stripe, Supabase, role-gated admin panels.",
+        "placeholder": false
+      },
+      {
+        "title": "Commerce",
+        "body": "Custom Shopify themes in Liquid, built section by section for fashion labels.",
+        "placeholder": false
+      },
+      {
+        "title": "Community",
+        "body": "Websites and the certificate system for IGAC's Model UN sessions.",
+        "placeholder": false
+      },
+      {
+        "title": "Off-screen",
+        "body": "Anime, ramen, and debugging through the loud episodes.",
+        "placeholder": false
+      }
+    ]
+  },
+  "projects": [
+    {
+      "slug": "corso-velle",
+      "title": "Corso Velle",
+      "repo": "Osayeidzaber/Corso-Velle-V2",
+      "description": "A Shopify Online Store 2.0 theme for Corso Velle, with editorial shopping, interactive product discovery and a custom cart experience.",
+      "body": "Built on Shopify's native catalog, cart and checkout, Corso Velle pairs Liquid-rendered pages with TypeScript custom elements, GSAP and Vite. The theme includes configurable editorial sections, lookbook hotspots, predictive search and collection filters.\n\nProduct pages support gallery zoom, size charts and sibling colourways. An AJAX cart drawer handles quantity changes, recommendations and discount codes. Motion adapts for phones and respects reduced-motion preferences.",
+      "category": "Shopify",
+      "tech": [
+        "Liquid",
+        "TypeScript",
+        "GSAP",
+        "Vite",
+        "Shopify"
+      ],
+      "liveUrl": "https://corsovelle.com",
+      "thumbnail": "/media/corso-velle-live.e2e2200a61.jpg",
+      "gallery": [],
+      "featured": true,
+      "hidden": false
+    },
+    {
+      "slug": "tajwater",
+      "title": "TajWater",
+      "repo": "Osayeidzaber/tajwater",
+      "description": "Water delivery for ten Metro Vancouver zones: one-time and subscription orders, delivery tracking, and a role-gated admin panel.",
+      "body": "TajWater is a full-stack e-commerce platform for a water delivery company operating across 10 Metro Vancouver zones. Customers browse products, place one-time or recurring subscription orders and track deliveries from the storefront. A role-gated admin panel handles everything from order fulfilment to customer support.",
+      "category": "Full-stack",
+      "tech": [
+        "Next.js 16",
+        "TypeScript",
+        "Tailwind v4",
+        "Supabase",
+        "Stripe"
+      ],
+      "liveUrl": "https://tajwater.ca",
+      "thumbnail": "/media/tajwater-live.7a16f84cb4.jpg",
+      "gallery": [],
+      "featured": true,
+      "hidden": false
+    },
+    {
+      "slug": "igac",
+      "title": "IGAC",
+      "repo": "Osayeidzaber/igac-webite",
+      "description": "The International Global Affairs Council website: sessions, councils and registration.",
+      "body": "",
+      "category": "Full-stack",
+      "tech": [
+        "Next.js",
+        "TypeScript"
+      ],
+      "liveUrl": "https://www.igac.info",
+      "thumbnail": "/media/igac-live.3acf02b93c.jpg",
+      "gallery": [],
+      "featured": true,
+      "hidden": false
+    },
+    {
+      "slug": "arz",
+      "title": "ARZ",
+      "repo": "Osayeidzaber/Arz",
+      "description": "A custom Shopify storefront theme for ARZ, a traditional clothing store.",
+      "body": "",
+      "category": "Shopify",
+      "tech": [
+        "Liquid",
+        "Shopify"
+      ],
+      "liveUrl": "https://arzlifestyle.com/",
+      "thumbnail": "",
+      "gallery": [],
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "slug": "igac-certificates",
+      "title": "IGAC Certificates",
+      "repo": "Osayeidzaber/IGAC-ADMIN-PORTAL-CERTIFICATES",
+      "description": "Admin portal to issue MUN certificates, bulk-import them from Google Sheets, track verifications and revoke them.",
+      "body": "",
+      "category": "Tools",
+      "tech": [
+        "Next.js 15",
+        "Supabase",
+        "Tailwind CSS"
+      ],
+      "liveUrl": "",
+      "thumbnail": "",
+      "gallery": [],
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "slug": "igacmun-session-iii",
+      "title": "IGACMUN Session III",
+      "repo": "Osayeidzaber/igacmun-session-3",
+      "description": "The official website for the third session of IGAC's Model United Nations conference.",
+      "body": "",
+      "category": "Web",
+      "tech": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "liveUrl": "https://igacmun.vercel.app",
+      "thumbnail": "/media/igacmun-session-iii-live.da0da9af79.jpg",
+      "gallery": [],
+      "featured": false,
+      "hidden": false
+    },
+    {
+      "slug": "corso-velle-crm",
+      "title": "Corso Velle CRM",
+      "repo": "Osayeidzaber/corsovelle-crm",
+      "description": "",
+      "body": "",
+      "category": "Tools",
+      "tech": [
+        "Next.js",
+        "TypeScript"
+      ],
+      "liveUrl": "",
+      "thumbnail": "",
+      "gallery": [],
+      "featured": false,
+      "hidden": false
+    }
+  ],
+  "hiddenRepos": [
+    "Corso-Velle",
+    "Osayeedjaber",
+    "i-sorry",
+    "valentinesday"
+  ],
+  "categories": [
+    "Full-stack",
+    "Shopify",
+    "Tools",
+    "Web",
+    "Experiments"
+  ],
+  "skills": [
+    {
+      "category": "Frontend",
+      "items": [
+        {
+          "name": "TypeScript",
+          "note": "Most repos since 2025",
+          "icon": "typescript"
+        },
+        {
+          "name": "React",
+          "note": "Component work",
+          "icon": "react"
+        },
+        {
+          "name": "Next.js",
+          "note": "App Router",
+          "icon": "nextdotjs"
+        },
+        {
+          "name": "Tailwind CSS",
+          "note": "v4",
+          "icon": "tailwindcss"
+        },
+        {
+          "name": "JavaScript",
+          "note": "Theme scripting",
+          "icon": "javascript"
+        },
+        {
+          "name": "HTML & CSS",
+          "note": "Hand-written",
+          "icon": "html5"
+        }
+      ]
+    },
+    {
+      "category": "Backend",
+      "items": [
+        {
+          "name": "Supabase",
+          "note": "Auth, Postgres",
+          "icon": "supabase"
+        },
+        {
+          "name": "Node.js",
+          "note": "APIs and scripts",
+          "icon": "nodedotjs"
+        },
+        {
+          "name": "Express",
+          "note": "REST services",
+          "icon": "express"
+        },
+        {
+          "name": "MongoDB",
+          "note": "Document stores",
+          "icon": "mongodb"
+        },
+        {
+          "name": "PostgreSQL",
+          "note": "PL/pgSQL functions",
+          "icon": "postgresql"
+        }
+      ]
+    },
+    {
+      "category": "Commerce",
+      "items": [
+        {
+          "name": "Shopify",
+          "note": "Storefronts",
+          "icon": "shopify"
+        },
+        {
+          "name": "Liquid",
+          "note": "Custom themes",
+          "icon": ""
+        },
+        {
+          "name": "Stripe",
+          "note": "Subscriptions",
+          "icon": "stripe"
+        }
+      ]
+    },
+    {
+      "category": "Tools",
+      "items": [
+        {
+          "name": "Git & GitHub",
+          "note": "Daily",
+          "icon": "github"
+        },
+        {
+          "name": "Docker",
+          "note": "Local services",
+          "icon": "docker"
+        },
+        {
+          "name": "Vercel",
+          "note": "Deploys",
+          "icon": "vercel"
+        },
+        {
+          "name": "Python",
+          "note": "Scripts",
+          "icon": "python"
+        },
+        {
+          "name": "VS Code",
+          "note": "Editor",
+          "icon": ""
+        }
+      ]
+    }
+  ],
+  "interests": [
+    "Anime",
+    "Ramen",
+    "Shopify themes",
+    "Admin dashboards",
+    "Model UN",
+    "Open source",
+    "Motion on the web",
+    "Late-night debugging"
+  ],
+  "experience": [
+    {
+      "id": "corso-velle-theme",
+      "title": "Corso Velle storefront",
+      "org": "Corso Velle",
+      "role": "",
+      "start": "2026-10",
+      "end": "",
+      "description": "Custom Shopify theme: full-screen video hero, drag-to-explore new arrivals, mobile media overrides.",
+      "link": "https://corsovelle.com",
+      "placeholder": false
+    },
+    {
+      "id": "corso-velle-crm",
+      "title": "Corso Velle CRM",
+      "org": "Corso Velle",
+      "role": "",
+      "start": "2026-09",
+      "end": "",
+      "description": "Internal tooling for the brand, in Next.js and TypeScript.",
+      "link": "",
+      "placeholder": false
+    },
+    {
+      "id": "igac-platform",
+      "title": "IGAC platform",
+      "org": "International Global Affairs Council",
+      "role": "",
+      "start": "2026-05",
+      "end": "",
+      "description": "The council's website at igac.info: sessions, councils and registration.",
+      "link": "https://www.igac.info",
+      "placeholder": false
+    },
+    {
+      "id": "tajwater",
+      "title": "TajWater",
+      "org": "TajWater, Vancouver",
+      "role": "",
+      "start": "2026-03",
+      "end": "",
+      "description": "Storefront, recurring subscriptions with Stripe, and a Supabase back office for ten delivery zones.",
+      "link": "https://tajwater.ca",
+      "placeholder": false
+    },
+    {
+      "id": "arz",
+      "title": "ARZ storefront",
+      "org": "ARZ Lifestyle",
+      "role": "",
+      "start": "2026-02",
+      "end": "",
+      "description": "Shopify theme for a traditional clothing store.",
+      "link": "https://arzlifestyle.com/",
+      "placeholder": false
+    },
+    {
+      "id": "igac-certificates",
+      "title": "IGAC MUN certificates",
+      "org": "International Global Affairs Council",
+      "role": "",
+      "start": "2025-11",
+      "end": "",
+      "description": "Admin portal to issue, bulk-import from Google Sheets, verify and revoke certificates.",
+      "link": "",
+      "placeholder": false
+    },
+    {
+      "id": "github-start",
+      "title": "Started on GitHub",
+      "org": "",
+      "role": "",
+      "start": "2024-11",
+      "end": "",
+      "description": "First public repos: a glassmorphism todo list and a lot of experiments.",
+      "link": "https://github.com/Osayeidzaber",
+      "placeholder": false
+    }
+  ],
+  "achievements": [
+    {
+      "id": "example-award",
+      "kind": "award",
+      "title": "Add an award, certificate or recognition here",
+      "issuer": "",
+      "date": "",
+      "url": "",
+      "image": "",
+      "placeholder": true
+    }
+  ],
+  "sections": {
+    "about": true,
+    "work": true,
+    "showcase": true,
+    "toolkit": true,
+    "ledger": true,
+    "experience": true,
+    "achievements": true,
+    "playground": true,
+    "contact": true
+  },
+  "contact": {
+    "heading": "Got a project?",
+    "note": "Email is the fastest way to reach me."
+  },
+  "seo": {
+    "title": "Osayeed Zaber — Full-stack developer in Dhaka",
+    "description": "Osayeed Zaber builds storefronts, admin portals and web platforms in Next.js, TypeScript and Shopify Liquid.",
+    "keywords": [
+      "Osayeed Zaber",
+      "full-stack developer",
+      "Next.js",
+      "Shopify developer",
+      "Dhaka",
+      "TypeScript"
+    ]
+  }
+}
