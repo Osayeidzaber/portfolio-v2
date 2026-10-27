@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { PDFDocument } from "pdf-lib"
 
-import { emptyStudio, invoiceInputSchema, invoiceTotals, saveInvoice, toMinor, type InvoiceInput } from "@/lib/studio/schema"
+import { emptyStudio, invoiceInputSchema, invoiceSchema, invoiceTotals, saveInvoice, toMinor, type InvoiceInput } from "@/lib/studio/schema"
+import { invoiceDesigns } from "@/lib/studio/designs"
 import { invoiceEmail } from "@/lib/studio/invoice-document"
 import { invoicePdf } from "@/lib/studio/pdf"
 import { readStudio, writeStudio } from "@/lib/studio/store"
@@ -78,6 +79,28 @@ describe("private storage boundaries", () => {
 })
 
 describe("invoice documents", () => {
+  it("defaults new invoices to Noir and persists a draft's selected layout", () => {
+    const { data, invoice } = fixture()
+    expect(invoice.design).toBe("noir")
+    const changed = saveInvoice(data, { ...input, id, design: "outline" }, id, invoice.createdAt)
+    expect(changed.design).toBe("outline")
+    expect(invoiceInputSchema.safeParse({ ...input, design: "unknown" }).success).toBe(false)
+  })
+  it("leaves old records on the original layout and locks issued design choices", () => {
+    const { data, invoice } = fixture()
+    const legacy = { ...invoice }; delete legacy.design
+    expect(invoiceSchema.parse(legacy).design).toBeUndefined()
+    invoice.status = "issued"
+    expect(() => saveInvoice(data, { ...input, id, design: "ledger" }, id, invoice.createdAt)).toThrow("locked")
+    expect(invoice.design).toBe("noir")
+  })
+  it.each(invoiceDesigns)("renders the $name layout as a valid PDF", async ({ id: design, name }) => {
+    const { invoice } = fixture()
+    const document = await PDFDocument.load(await invoicePdf({ ...invoice, design }))
+    expect(document.getTitle()).toContain("OZ-0001")
+    expect(document.getPageCount()).toBeGreaterThan(0)
+    if (design !== "signature") expect(document.getSubject()).toBe(`OZ Studio / ${name}`)
+  })
   it("escapes client-controlled HTML in the branded email", () => {
     const { invoice } = fixture()
     invoice.client.name = '<img src=x onerror="alert(1)">'

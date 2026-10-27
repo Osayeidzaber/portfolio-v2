@@ -6,6 +6,8 @@ import { invoiceEmail } from "@/lib/studio/invoice-document"
 import { invoiceInputSchema, invoiceTotals, money, toMinor, type Invoice, type InvoiceInput, type StudioData } from "@/lib/studio/schema"
 import { InvoicePreview } from "./invoice-preview"
 import { PdfViewer } from "./pdf-viewer"
+import { DesignPicker } from "./design-picker"
+import { invoiceDesigns, invoiceDesignName, type InvoiceDesign } from "@/lib/studio/designs"
 
 export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, emailReady, sender, onSave, onSend, onIssue, onStatus, onClose }: {
   data: StudioData; invoice: Invoice | null; today: string; busy: boolean; persistenceEnabled: boolean; emailReady: boolean; sender: string
@@ -14,6 +16,7 @@ export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, 
   const [mode, setMode] = useState<"edit" | "preview" | "pdf" | "email">(invoice?.status && invoice.status !== "draft" ? "pdf" : "edit")
   const [error, setError] = useState("")
   const [reviewed, setReviewed] = useState(false)
+  const [design, setDesign] = useState<InvoiceDesign>(invoice?.design ?? (invoice ? "signature" : "noir"))
   const [title, setTitle] = useState(invoice?.title ?? "")
   const [client, setClient] = useState(invoice?.client ?? { name: "", company: "", email: "", address: "" })
   const [number, setNumber] = useState(invoice?.number ?? `OZ-${String(data.nextInvoice).padStart(4, "0")}`)
@@ -26,7 +29,7 @@ export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, 
   const [notes, setNotes] = useState(invoice?.notes ?? data.settings.invoiceNote)
   const locked = invoice && invoice.status !== "draft"
   function value(): InvoiceInput {
-    return invoiceInputSchema.parse({ ...(invoice ? { id: invoice.id } : {}), title, number, client, issueDate, dueDate, currency, items: items.map((item) => ({ description: item.description, quantity: Number(item.quantity), unitPrice: toMinor(item.price) })), discount: toMinor(discount), taxBasisPoints: toMinor(tax), notes })
+    return invoiceInputSchema.parse({ ...(invoice ? { id: invoice.id } : {}), title, number, design, client, issueDate, dueDate, currency, items: items.map((item) => ({ description: item.description, quantity: Number(item.quantity), unitPrice: toMinor(item.price) })), discount: toMinor(discount), taxBasisPoints: toMinor(tax), notes })
   }
   function preview(): Invoice {
     if (locked) return invoice
@@ -58,6 +61,7 @@ export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, 
       <button type="button" aria-pressed={mode === "email"} onClick={() => switchMode("email")}>Email preview</button>
     </div>
     {mode === "edit" && <form className="oz-form oz-panel" onSubmit={submit}>
+      <DesignPicker value={design} onChange={setDesign} />
       <label>Project / invoice title<input required maxLength={120} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="For example, storefront design & development" /></label>
       <div className="oz-form-grid"><label>Invoice number<input required maxLength={40} value={number} onChange={(event) => setNumber(event.target.value)} /></label><label>Currency<select value={currency} onChange={(event) => setCurrency(event.target.value as typeof currency)}>{["BDT", "USD", "CAD", "EUR", "GBP"].map((item) => <option key={item}>{item}</option>)}</select></label><label>Issue date<input type="date" required value={issueDate} onChange={(event) => setIssueDate(event.target.value)} /></label><label>Due date<input type="date" required min={issueDate} value={dueDate} onChange={(event) => setDueDate(event.target.value)} /></label></div>
       <h2>Bill to</h2><div className="oz-form-grid"><label>Client name<input required maxLength={100} value={client.name} onChange={(event) => setClient({ ...client, name: event.target.value })} /></label><label>Company (optional)<input maxLength={100} value={client.company} onChange={(event) => setClient({ ...client, company: event.target.value })} /></label></div><label>Client email<input required type="email" maxLength={254} value={client.email} onChange={(event) => setClient({ ...client, email: event.target.value })} /></label><label>Client billing address<textarea maxLength={500} value={client.address} onChange={(event) => setClient({ ...client, address: event.target.value })} /></label>
@@ -71,7 +75,10 @@ export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, 
       <div className="oz-form-actions"><button className="oz-button" type="button" onClick={() => switchMode("pdf")}>Preview PDF</button><button className="oz-button oz-button-light" disabled={busy || !persistenceEnabled} type="submit">{busy ? "Saving…" : persistenceEnabled ? "Save draft" : "Storage required to save"}</button></div>
     </form>}
     {mode === "preview" && document && <InvoicePreview invoice={document} />}
-    {mode === "pdf" && document && <PdfViewer key={JSON.stringify(document)} invoice={document} />}
+    {mode === "pdf" && document && <>
+      <div className="oz-design-bar">{locked ? <p className="oz-form-hint">Saved design: <strong>{invoiceDesignName(invoice.design)}</strong></p> : <label>Invoice design<select aria-label="PDF invoice design" value={design} onChange={(event) => setDesign(event.target.value as InvoiceDesign)}>{invoiceDesigns.map((item) => <option value={item.id} key={item.id}>{item.name} · {item.dark ? "Dark" : "Paper"}</option>)}</select></label>}<p className="oz-form-hint">{locked ? "The issued invoice keeps its selected design." : "Switch layouts to compare the actual PDFs. Save your draft to keep your choice."}</p></div>
+      <PdfViewer key={JSON.stringify(document)} invoice={document} />
+    </>}
     {mode === "email" && document && <><p className="oz-form-hint" style={{ marginBottom: 20 }}>To: {document.client.email} · Subject: {document.business.name} — Invoice {document.number}</p><iframe className="oz-mail-preview" title="Invoice email preview" sandbox="" srcDoc={invoiceEmail(document, sender || "billing@example.com", "/oz-studio/logo-email.png").html} /></>}
     {mode !== "edit" && <div className="oz-panel oz-review">
       {invoice ? <>

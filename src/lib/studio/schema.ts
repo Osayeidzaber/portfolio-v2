@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { invoiceDesignIds } from "./designs"
 
 export const currencySchema = z.enum(["BDT", "USD", "CAD", "EUR", "GBP"])
 const text = (max: number) => z.string().trim().max(max)
@@ -12,6 +13,7 @@ export const billingSchema = z.object({ name: text(100).min(1), company: text(10
 export const lineSchema = z.object({ description: text(180).min(1), quantity: z.number().int().min(1).max(10_000), unitPrice: minor })
 export const invoiceInputSchema = z.object({
   id: z.uuid().optional(), client: billingSchema, title: text(120).min(1),
+  design: z.enum(invoiceDesignIds).optional(),
   number: z.string().trim().regex(/^[A-Za-z0-9][A-Za-z0-9/\-]{0,39}$/, "Use up to 40 letters, numbers, slashes or hyphens for the invoice number.").optional(),
   issueDate: z.iso.date(), dueDate: z.iso.date(), currency: currencySchema,
   items: z.array(lineSchema).min(1).max(20), discount: minor,
@@ -92,6 +94,7 @@ export function saveInvoice(data: StudioData, raw: unknown, id: string, createdA
   const invoice: Invoice = {
     ...input, id: existing?.id ?? id,
     number,
+    design: input.design ?? existing?.design ?? (existing ? "signature" : "noir"),
     createdAt: existing?.createdAt ?? createdAt,
     status: "draft", client: { ...input.client }, business: { ...data.settings },
   }

@@ -8,9 +8,12 @@ import { PDFDocument, rgb, type PDFFont } from "pdf-lib"
 
 import { displayDate, invoiceTotals, money, type Invoice } from "./schema"
 import { OZ_MONOGRAM_PATH } from "./brand"
+import { designedInvoicePdf } from "./pdf-layouts"
 
 /** Printable invoice, generated server-side; no private invoice has a public URL. */
 export async function invoicePdf(invoice: Invoice): Promise<Uint8Array> {
+  // Preserve existing invoices without a design field as the original composition.
+  if (invoice.design && invoice.design !== "signature") return designedInvoicePdf(invoice, invoice.design)
   const document = await PDFDocument.create()
   const stamp = new Date(invoice.createdAt)
   document.setCreationDate(stamp)

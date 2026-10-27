@@ -157,6 +157,15 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        PDFs were visually inspected. Resend domain verified; no live email sent.
        Production still needs the private-repository token and email env in Vercel.
 
+- [x] 18. Invoice design collection: dark Noir default, Monolith, Outline, Atelier,
+       Editorial, Ledger and legacy Original; design gallery and live PDF switching.
+       Template choice persists per draft and locks on issue; old records retain
+       their original layout. Rendered comparison and overflow QA cover all designs.
+       Validation: typecheck, lint, 77 unit tests, production build and 52 browser
+       checks passed; 4 expected skips. Actual PDF switching, zoom, download and
+       persistence/immutability checks passed. Seven sample PDFs fit one page with
+       no out-of-page text in the visual audit.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,

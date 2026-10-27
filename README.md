@@ -233,8 +233,16 @@ and contact details. Its private invoice desk lives at `/admin/oz-studio`;
 
 The invoice desk focuses on invoices: custom numbering, billing details, line items,
 currency, discounts, a user-supplied tax rate, notes, and payment instructions. You
-can inspect the actual PDF in an embedded viewer, download it, issue a saved draft,
+can choose among seven invoice designs, inspect the actual PDF in an embedded viewer,
+download it, issue a saved draft,
 record full payment, or void an invoice. Issued invoice details are locked.
+
+New invoices start in **Noir**, a full-black editorial layout. The design gallery
+also includes **Monolith** (bold graphic type), **Outline** (architectural frames),
+**Atelier** (asymmetric folio rail), **Editorial** (expressive white paper), **Ledger**
+(compact accounting table), and **Original**. Switch designs in the PDF viewer to
+compare the actual documents. The selection saves with the draft and locks on issue.
+Existing records without a design field continue using the original layout.
 
 **Email is review-and-send.** Resend receives a branded HTML/text message with the
 PDF attached only when the owner explicitly sends it. Provider acceptance is recorded
@@ -296,6 +304,12 @@ Browser tests start a production server on port **3100** by default. Set
 
 <details>
 <summary><strong>Verification history and known limitations</strong></summary>
+
+Invoice design collection: typecheck, lint, 77 unit tests, production build and
+52 browser checks passed, with 4 expected skips. All seven layouts were rendered
+and visually reviewed; the sample invoices fit one A4 page without out-of-page
+text. Browser QA checked the dark default, gallery, live design switching, zoom
+and PDF download on desktop and at 375px.
 
 OZ Studio refinement: TypeScript, ESLint, 68 unit tests, the production build and
 52 browser checks passed, with 4 expected skips. The studio portfolio, studio case
