@@ -14,7 +14,7 @@ vi.mock("@/lib/studio/store", () => ({
   }),
 }))
 
-import { changeInvoiceStatus, issueInvoiceAction, loadWorkspace, saveBusinessAction, saveInvoiceAction, sendInvoiceAction } from "@/app/admin/oz-studio/actions"
+import { checkEmailStatusAction, archiveInvoicesAction, restoreArchiveAction, saveServicesAction, changeInvoiceStatus, issueInvoiceAction, loadWorkspace, saveBusinessAction, saveInvoiceAction, sendInvoiceAction } from "@/app/admin/oz-studio/actions"
 import { readStudio } from "@/lib/studio/store"
 
 const attachment = Buffer.from("%PDF-1.7\nBrowser-generated test attachment\n%%EOF").toString("base64")
@@ -31,9 +31,39 @@ beforeEach(() => {
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs() })
 
 describe("studio server actions", () => {
+  it("records payment date, method and reference only on an issued invoice", async () => {
+    state.data!.invoices[0].status = "issued"
+    const payment = { date: "2026-10-27", method: "bKash", reference: "TEST-REFERENCE" }
+    expect((await changeInvoiceStatus(id, "paid", "s0", { ...payment, date: "2099-01-01" })).ok).toBe(false)
+    expect(state.writes).toBe(0)
+    expect((await changeInvoiceStatus(id, "paid", "s0", payment)).ok).toBe(true)
+    expect(state.data!.invoices[0].payment).toEqual(payment)
+    expect((await changeInvoiceStatus(id, "paid", state.sha, payment)).ok).toBe(false)
+  })
+  it("validates service presets and archives before writing", async () => {
+    expect((await saveServicesAction([{ name: "Invalid", description: "Service", quantity: 0, unitPrice: -1, currency: "BDT" }], "s0")).ok).toBe(false)
+    expect((await archiveInvoicesAction([id], "s0")).ok).toBe(false)
+    expect((await restoreArchiveAction({ kind: "bad" }, "s0")).ok).toBe(false)
+    expect(state.writes).toBe(0)
+    expect((await saveServicesAction([{ name: "Preview service", description: "Service", quantity: 1, unitPrice: 10000, currency: "BDT" }], "s0")).ok).toBe(true)
+    expect(state.data!.services![0].unitPrice).toBe(10000)
+  })
+  it("checks delivery only when requested and keeps provider errors out of the saved state", async () => {
+    state.data!.invoices[0].status = "issued"
+    state.data!.invoices[0].emailAttempt = { key: id, startedAt: "2026-10-27T10:00:00.000Z", acceptedAt: "2026-10-27T10:01:00.000Z", providerId: "message-test" }
+    const fetch = vi.fn().mockResolvedValueOnce(new Response("{}", { status: 403 })).mockResolvedValueOnce(new Response(JSON.stringify({ id: "message-test", last_event: "delivered" })))
+    vi.stubGlobal("fetch", fetch)
+    expect((await checkEmailStatusAction(id, "s0")).ok).toBe(false)
+    expect(state.writes).toBe(0)
+    expect((await checkEmailStatusAction(id, "s0")).ok).toBe(true)
+    expect(state.data!.invoices[0].emailAttempt!.delivery!.event).toBe("delivered")
+    expect(fetch).toHaveBeenCalledTimes(2)
+    expect(fetch.mock.calls[1][1].method).toBeUndefined()
+  })
+
   it("guards every read, write, preview and send before accessing private data", async () => {
     state.authenticated = false
-    const results = await Promise.all([loadWorkspace(), saveInvoiceAction({}, "s0"), saveBusinessAction({}, "s0"), changeInvoiceStatus(id, "paid", "s0"), issueInvoiceAction(id, "s0"), sendInvoiceAction(id, "s0", attachment)])
+    const results = await Promise.all([loadWorkspace(), saveInvoiceAction({}, "s0"), saveBusinessAction({}, "s0"), changeInvoiceStatus(id, "paid", "s0"), issueInvoiceAction(id, "s0"), sendInvoiceAction(id, "s0", attachment), saveServicesAction([], "s0"), archiveInvoicesAction([id], "s0"), restoreArchiveAction({}, "s0"), checkEmailStatusAction(id, "s0")])
     expect(results.every((result) => !result.ok)).toBe(true)
     expect(readStudio).not.toHaveBeenCalled()
     expect(state.writes).toBe(0)
@@ -57,7 +87,7 @@ describe("studio server actions", () => {
     state.data!.invoices[0].business.paymentMethods = [{ name: "bKash", details: "TEST ACCOUNT ONLY" }]
     const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ id: "message-test" })))
     vi.stubGlobal("fetch", fetch)
-    const result = await sendInvoiceAction(id, "s0", attachment)
+    const result = await sendInvoiceAction(id, "s0", attachment, { subject: "Your custom invoice", message: "Thanks <script>preview only</script>" })
     expect(result.ok).toBe(true)
     expect(state.data!.invoices[0].status).toBe("issued")
     expect(state.data!.invoices[0].emailAttempt?.providerId).toBe("message-test")
@@ -65,6 +95,10 @@ describe("studio server actions", () => {
     const body = JSON.parse(fetch.mock.calls[0][1].body)
     expect(body.attachments[0].filename).toBe("OZ-0001.pdf")
     expect(body.attachments).toHaveLength(1)
+    expect(body.subject).toBe("Your custom invoice")
+    expect(body.html).toContain("Thanks &lt;script&gt;preview only&lt;/script&gt;")
+    expect(body.html).not.toContain("<script>")
+    expect(state.data!.invoices[0].emailAttempt!.subject).toBe("Your custom invoice")
     expect(Buffer.from(body.attachments[0].content, "base64").toString()).toBe(Buffer.from(attachment, "base64").toString())
     expect(state.data!.invoices[0].emailAttempt?.acceptedAt).toBeTruthy()
     expect(body.from).toBe("OZ Studio <invoices@example.com>")

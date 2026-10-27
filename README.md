@@ -258,6 +258,35 @@ an invoice into a new unsaved draft with fresh dates and numbering; payment and
 email history remain with the original. The editor warns before leaving unsaved
 invoice changes. CSV exports quote values and neutralize spreadsheet formulas.
 
+The invoice desk also includes previous-client autofill (using the latest existing
+billing record), currency-specific service presets, and payment date/method/reference
+records. Service presets live in Settings and never alter existing invoice lines.
+Payment references are included in CSV exports.
+
+**Device recovery is opt-in.** In the invoice editor, enable **Keep a recovery copy
+on this device** to preserve incomplete typing across a refresh. Restore is explicit;
+it does not write to the private ledger. Copies contain billing information, expire
+after seven days, and are removed after a successful draft save or sign-out from the
+invoice desk. Turning recovery off removes that draft’s local copy. No background
+server autosave is used.
+
+**Archives stay under your control.** Settings shows the ledger’s byte usage against
+the 750 KB storage limit. Download the closed-invoice archive, then confirm that you
+saved it before archiving paid/void records. Open invoices and unresolved sends cannot
+be archived. Invoice numbers remain reserved. Restore previews the imported records
+and merges closed snapshots without replacing existing invoices, settings or presets;
+conflicting records are rejected. Complete backups and closed-invoice archives are
+separate exports; the restore tool accepts the latter.
+
+**Personal email copy** is edited in Email preview. The authenticated server validates
+and escapes the subject/message before sending the browser-generated PDF attachment.
+Pending retries preserve the original email copy and attachment. After acceptance,
+**Check email delivery** retrieves the latest Resend event only when clicked and saves
+the result. There are no delivery polls, scheduled checks or background workers.
+The Resend key must have access to retrieve the sent email; errors leave the existing
+status intact. A delivered event means acceptance by the recipient’s mail server.
+
+
 The personal portfolio’s **Full effects / Fewer effects** control remembers the
 visitor’s choice in their browser. Fewer effects replaces decorative WebGL with
 static alternatives and reduces motion. System reduced-motion preferences remain

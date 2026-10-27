@@ -21,10 +21,10 @@ export function invoiceCsv(invoices: Invoice[]) {
     const safe = /^[\s]*[=+@-]|^[\t\r\n]/.test(text) ? `'${text}` : text
     return `"${safe.replaceAll('"', '""')}"`
   }
-  const header = ["Invoice", "Client", "Project", "Status", "Invoice date", "Due date", "Currency", "Subtotal", "Discount", "Tax", "Total"]
+  const header = ["Invoice", "Client", "Project", "Status", "Invoice date", "Due date", "Currency", "Subtotal", "Discount", "Tax", "Total", "Payment date", "Payment method", "Payment reference"]
   const rows = invoices.map((invoice) => {
     const totals = invoiceTotals(invoice)
-    return [invoice.number, invoice.client.company || invoice.client.name, invoice.title, invoice.status, invoice.issueDate, invoice.dueDate, invoice.currency, ...[totals.subtotal, totals.discount, totals.tax, totals.total].map((amount) => (amount / 100).toFixed(2))]
+    return [invoice.number, invoice.client.company || invoice.client.name, invoice.title, invoice.status, invoice.issueDate, invoice.dueDate, invoice.currency, ...[totals.subtotal, totals.discount, totals.tax, totals.total].map((amount) => (amount / 100).toFixed(2)), invoice.payment?.date || "", invoice.payment?.method || "", invoice.payment?.reference || ""]
   })
   return "\uFEFF" + [header, ...rows].map((row) => row.map(cell).join(",")).join("\r\n")
 }

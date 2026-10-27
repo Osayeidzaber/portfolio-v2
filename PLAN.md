@@ -205,6 +205,19 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        desktop WebGL carousel timing failure passed on an isolated rerun. No live
        email sent.
 
+- [x] 22. Invoice-admin workflow additions only: opt-in device recovery with explicit
+       restore and save/sign-out cleanup; previous-client autofill; currency-aware
+       service presets; full-payment date/method/reference records and CSV fields;
+       editable, escaped email subject/message with immutable retry payloads;
+       manual Resend delivery checks without polling; storage usage, downloaded
+       closed-invoice archives, reserved numbering and conflict-safe restore.
+       Public portfolios and their editor remain unchanged; no FAQ added.
+       Validation: typecheck, lint, 98 unit tests, production build and 64 browser
+       checks passed; 4 expected skips. Desktop and 375px checks cover service
+       presets, opt-in recovery/restore/sign-out cleanup, personal email copy,
+       browser PDF generation and accessible settings. Archive/payment/provider
+       actions use isolated fixtures and mocks; no live emails sent.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,

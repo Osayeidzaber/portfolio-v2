@@ -3,7 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react"
 
 import { invoiceEmail } from "@/lib/studio/invoice-document"
-import { invoiceInputSchema, invoiceTotals, money, toMinor, type Invoice, type InvoiceInput, type StudioData } from "@/lib/studio/schema"
+import { invoiceInputSchema, invoiceTotals, money, toMinor, type Invoice, type InvoiceInput, type StudioData, type PaymentRecord, type EmailComposition } from "@/lib/studio/schema"
 import { InvoicePreview } from "./invoice-preview"
 import { PdfViewer } from "./pdf-viewer"
 import { DesignPicker } from "./design-picker"
@@ -11,11 +11,16 @@ import { invoiceDesigns, invoiceDesignName, type InvoiceDesign } from "@/lib/stu
 import { liveInvoicePreview } from "@/lib/studio/live-preview"
 import { LivePreview } from "./live-preview"
 import { browserInvoicePdf, pdfBase64 } from "@/lib/studio/browser-pdf"
+import { DraftRecovery } from "./draft-recovery"
+import { PaymentRecordForm } from "./payment-record"
+import { previousClients } from "@/lib/studio/workflows"
+import type { RecoveryFields } from "@/lib/studio/recovery"
 import { InvoiceEmailStatus } from "./email-status"
 
-export function InvoiceEditor({ data, invoice, initial, today, busy, persistenceEnabled, emailReady, sender, onSave, onSend, onIssue, onStatus, onClose, onUnsavedChange }: {
+export function InvoiceEditor({ data, invoice, initial, today, busy, persistenceEnabled, emailReady, sender, onSave, onSend, onIssue, onStatus, onClose, onUnsavedChange, onCheckEmail }: {
   data: StudioData; invoice: Invoice | null; initial?: InvoiceInput; today: string; busy: boolean; persistenceEnabled: boolean; emailReady: boolean; sender: string
-  onSave: (value: InvoiceInput) => void; onSend: (id: string, pdf?: string) => void; onIssue: (id: string) => void; onStatus: (id: string, status: "paid" | "void") => void; onClose: () => void
+  onSave: (value: InvoiceInput) => void; onSend: (id: string, pdf?: string, composition?: EmailComposition) => void; onIssue: (id: string) => void; onStatus: (id: string, status: "paid" | "void", payment?: PaymentRecord) => void; onClose: () => void
+  onCheckEmail?: (id: string) => void
   onUnsavedChange?: (value: boolean) => void
 }) {
   const source = invoice ?? initial
@@ -23,6 +28,8 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
   const [error, setError] = useState("")
   const [reviewed, setReviewed] = useState(false)
   const [preparingEmail, setPreparingEmail] = useState(false)
+  const [emailSubject, setEmailSubject] = useState(invoice?.emailAttempt?.subject ?? "")
+  const [emailMessage, setEmailMessage] = useState(invoice?.emailAttempt?.message ?? "")
   const [design, setDesign] = useState<InvoiceDesign>(source?.design ?? (invoice ? "signature" : "noir"))
   const [title, setTitle] = useState(source?.title ?? "")
   const [client, setClient] = useState(source?.client ?? { name: "", company: "", email: "", address: "" })
@@ -35,12 +42,22 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
   const [tax, setTax] = useState(String((source?.taxBasisPoints ?? 0) / 100))
   const [notes, setNotes] = useState(source?.notes ?? data.settings.invoiceNote)
   const locked = invoice && invoice.status !== "draft"
+  const clients = previousClients(data.invoices)
+  const presets = (data.services ?? []).filter((service) => service.currency === currency)
+  function restore(fields: RecoveryFields) {
+    setTitle(fields.title); setNumber(fields.number); setDesign(fields.design); setClient(fields.client)
+    setIssueDate(fields.issueDate); setDueDate(fields.dueDate); setCurrency(fields.currency)
+    setItems(fields.items); setDiscount(fields.discount); setTax(fields.tax); setNotes(fields.notes)
+    setEmailSubject(fields.emailSubject); setEmailMessage(fields.emailMessage); setReviewed(false)
+  }
+  const composition = { subject: emailSubject.trim() || `${invoice?.business.name || data.settings.name} — Invoice ${number}`, message: emailMessage }
+
   async function send() {
     if (!invoice || preparingEmail) return
     setPreparingEmail(true); setError("")
     try {
       const attachment = invoice.emailAttempt ? undefined : pdfBase64(await browserInvoicePdf({ ...invoice, status: "issued" }))
-      onSend(invoice.id, attachment)
+      onSend(invoice.id, attachment, { subject: emailSubject.trim() || `${invoice.business.name} — Invoice ${invoice.number}`, message: emailMessage })
     } catch (error) { setError(error instanceof Error ? error.message : "Could not prepare the PDF attachment. Please retry.") }
     finally { setPreparingEmail(false) }
   }
@@ -87,12 +104,15 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
       <button type="button" aria-pressed={mode === "pdf"} onClick={() => switchMode("pdf")}>PDF viewer</button>
       <button type="button" aria-pressed={mode === "email"} onClick={() => switchMode("email")}>Email preview</button>
     </div>
+    {!locked && <DraftRecovery key={invoice ? JSON.stringify(invoice) : "new"} id={invoice?.id} fields={{ title, number, design, issueDate, dueDate, currency, client, items, discount, tax, notes, emailSubject, emailMessage }} onRestore={restore} />}
+    {invoice?.payment && <div className="oz-notice"><strong>Full payment recorded</strong><p>{invoice.payment.date} · {invoice.payment.method}{invoice.payment.reference ? ` · Reference: ${invoice.payment.reference}` : ""}</p></div>}
     {mode === "edit" && <div className="oz-edit-layout"><form className="oz-form oz-panel" onSubmit={submit}>
       <DesignPicker value={design} onChange={setDesign} />
       <label>Project / invoice title<input required maxLength={120} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="For example, storefront design & development" /></label>
       <div className="oz-form-grid"><label>Invoice number<input required maxLength={40} value={number} onChange={(event) => setNumber(event.target.value)} /></label><label>Currency<select value={currency} onChange={(event) => setCurrency(event.target.value as typeof currency)}>{["BDT", "USD", "CAD", "EUR", "GBP"].map((item) => <option key={item}>{item}</option>)}</select></label><label>Issue date<input type="date" required value={issueDate} onChange={(event) => setIssueDate(event.target.value)} /></label><label>Due date<input type="date" required min={issueDate} value={dueDate} onChange={(event) => setDueDate(event.target.value)} /></label></div>
-      <h2>Bill to</h2><div className="oz-form-grid"><label>Client name<input required maxLength={100} value={client.name} onChange={(event) => setClient({ ...client, name: event.target.value })} /></label><label>Company (optional)<input maxLength={100} value={client.company} onChange={(event) => setClient({ ...client, company: event.target.value })} /></label></div><label>Client email<input required type="email" maxLength={254} value={client.email} onChange={(event) => setClient({ ...client, email: event.target.value })} /></label><label>Client billing address<textarea maxLength={500} value={client.address} onChange={(event) => setClient({ ...client, address: event.target.value })} /></label>
+      <h2>Bill to</h2>{clients.length > 0 && <label>Use a previous client<select defaultValue="" onChange={(event) => { const previous = clients.find((value) => value.email === event.target.value); if (previous && (!(client.name || client.email || client.company || client.address) || window.confirm("Replace the current billing fields with this client’s most recent details?"))) setClient({ ...previous }); event.target.value = "" }}><option value="">Choose a previous client…</option>{clients.map((value) => <option key={value.email} value={value.email}>{value.company || value.name} · {value.email}</option>)}</select></label>}<div className="oz-form-grid"><label>Client name<input required maxLength={100} value={client.name} onChange={(event) => setClient({ ...client, name: event.target.value })} /></label><label>Company (optional)<input maxLength={100} value={client.company} onChange={(event) => setClient({ ...client, company: event.target.value })} /></label></div><label>Client email<input required type="email" maxLength={254} value={client.email} onChange={(event) => setClient({ ...client, email: event.target.value })} /></label><label>Client billing address<textarea maxLength={500} value={client.address} onChange={(event) => setClient({ ...client, address: event.target.value })} /></label>
       <h2>Services & line items</h2><p className="oz-form-hint">Rates are in {currency}. Quantities are whole units; enter a separate line for each service or deliverable.</p>
+      {presets.length > 0 && <label>Add a saved service ({currency})<select defaultValue="" disabled={items.length >= 20} onChange={(event) => { const service = presets[Number(event.target.value)]; if (event.target.value !== "" && service) { const row = { description: service.description, quantity: String(service.quantity), price: (service.unitPrice / 100).toFixed(2) }; setItems(items.length === 1 && !items[0].description && Number(items[0].price) === 0 ? [row] : [...items, row]) } event.target.value = "" }}><option value="">Choose a saved service…</option>{presets.map((service, index) => <option key={index} value={index}>{service.name} · {money(service.unitPrice, service.currency)}</option>)}</select></label>}
       {items.map((item, index) => <div className="oz-line-item" key={index}><label>Description {index + 1}<input required maxLength={180} value={item.description} onChange={(event) => setItems(items.map((line, i) => i === index ? { ...line, description: event.target.value } : line))} /></label><label>Quantity {index + 1}<input type="number" min={1} max={10000} step={1} required value={item.quantity} onChange={(event) => setItems(items.map((line, i) => i === index ? { ...line, quantity: event.target.value } : line))} /></label><label>Rate {index + 1}<input type="text" inputMode="decimal" required value={item.price} onChange={(event) => setItems(items.map((line, i) => i === index ? { ...line, price: event.target.value } : line))} /></label><button type="button" className="oz-remove" disabled={items.length === 1} aria-label={`Remove line item ${index + 1}`} onClick={() => setItems(items.filter((_, i) => i !== index))}>×</button></div>)}
       <div><button className="oz-button" type="button" disabled={items.length >= 20} onClick={() => setItems([...items, { description: "", quantity: "1", price: "0.00" }])}>+ Add line item</button></div>
       <div className="oz-form-grid"><label>Discount ({currency})<input type="text" inputMode="decimal" value={discount} onChange={(event) => setDiscount(event.target.value)} /></label><label>Tax rate (%)<input type="text" inputMode="decimal" value={tax} onChange={(event) => setTax(event.target.value)} /></label></div>
@@ -106,11 +126,11 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
       <div className="oz-design-bar">{locked ? <p className="oz-form-hint">Saved design: <strong>{invoiceDesignName(invoice.design)}</strong></p> : <label>Invoice design<select aria-label="PDF invoice design" value={design} onChange={(event) => setDesign(event.target.value as InvoiceDesign)}>{invoiceDesigns.map((item) => <option value={item.id} key={item.id}>{item.name} · {item.dark ? "Dark" : "Paper"}</option>)}</select></label>}<p className="oz-form-hint">{locked ? "The issued invoice keeps its selected design." : "Switch layouts to compare the actual PDFs. Save your draft to keep your choice."}</p></div>
       <PdfViewer key={JSON.stringify(document)} invoice={document} />
     </>}
-    {mode === "email" && document && <><p className="oz-form-hint" style={{ marginBottom: 12 }}>To: {document.client.email} · Subject: {document.business.name} — Invoice {document.number}</p><div className="oz-email-attachment"><span className="oz-label">PDF ATTACHMENT</span><strong>{document.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf</strong><span>{invoiceDesignName(document.design)} design · Generated in your browser and attached when you send.</span></div><details className="oz-email-pdf"><summary>Review PDF attachment</summary><PdfViewer key={JSON.stringify(document)} invoice={{ ...document, status: document.status === "draft" ? "issued" : document.status }} /></details><iframe className="oz-mail-preview" title="Invoice email preview" sandbox="" srcDoc={invoiceEmail(document, sender || "billing@example.com", "/oz-studio/logo-email.png").html} /></>}
+    {mode === "email" && document && <>{!invoice?.emailAttempt && <div className="oz-form oz-panel oz-email-compose"><label>Email subject<input required maxLength={180} value={composition.subject} onChange={(event) => { setEmailSubject(event.target.value); setReviewed(false) }} /></label><label>Personal message (optional)<textarea maxLength={2000} value={emailMessage} onChange={(event) => { setEmailMessage(event.target.value); setReviewed(false) }} placeholder="A short personal note for this client. Invoice totals and payment details are included automatically." /></label></div>}<p className="oz-form-hint" style={{ marginBottom: 12 }}>To: {document.client.email} · Subject: {invoice?.emailAttempt?.subject || composition.subject}</p><div className="oz-email-attachment"><span className="oz-label">PDF ATTACHMENT</span><strong>{document.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf</strong><span>{invoiceDesignName(document.design)} design · Generated in your browser and attached when you send.</span></div><details className="oz-email-pdf"><summary>Review PDF attachment</summary><PdfViewer key={JSON.stringify(document)} invoice={{ ...document, status: document.status === "draft" ? "issued" : document.status }} /></details><iframe className="oz-mail-preview" title="Invoice email preview" sandbox="" srcDoc={invoiceEmail(document, sender || "billing@example.com", "/oz-studio/logo-email.png", invoice?.emailAttempt ? { subject: invoice.emailAttempt.subject || `${document.business.name} — Invoice ${document.number}`, message: invoice.emailAttempt.message || "" } : composition).html} /></>}
     {mode !== "edit" && <div className="oz-panel oz-review">
       {invoice ? <>
-        <InvoiceEmailStatus invoice={invoice} />
-        <div className="oz-row-actions"><button className="oz-button" onClick={() => switchMode("pdf")}>Open PDF / download ↗</button>{invoice.status === "draft" && <button className="oz-button" disabled={busy || Boolean(dirty)} onClick={() => { if (window.confirm("Issue this saved invoice and lock its details? This does not send an email.")) onIssue(invoice.id) }}>Issue without email</button>}{invoice.status === "issued" && (!invoice.emailAttempt || invoice.emailAttempt.acceptedAt) && <button className="oz-button" disabled={busy} onClick={() => { if (window.confirm("Confirm that you have received the full payment for this invoice?")) onStatus(invoice.id, "paid") }}>Record full payment</button>}{(invoice.status === "draft" || invoice.status === "issued") && (!invoice.emailAttempt || invoice.emailAttempt.acceptedAt) && <button className="oz-small-button" disabled={busy} onClick={() => { if (window.confirm("Void this invoice? It will stay in your records and cannot be sent.")) onStatus(invoice.id, "void") }}>Void invoice</button>}</div>
+        <InvoiceEmailStatus invoice={invoice} />{invoice.emailAttempt?.acceptedAt && onCheckEmail && <button type="button" className="oz-button" disabled={busy || !emailReady} onClick={() => onCheckEmail(invoice.id)}>Check email delivery</button>}
+        <div className="oz-row-actions"><button className="oz-button" onClick={() => switchMode("pdf")}>Open PDF / download ↗</button>{invoice.status === "draft" && <button className="oz-button" disabled={busy || Boolean(dirty)} onClick={() => { if (window.confirm("Issue this saved invoice and lock its details? This does not send an email.")) onIssue(invoice.id) }}>Issue without email</button>}{invoice.status === "issued" && (!invoice.emailAttempt || invoice.emailAttempt.acceptedAt) && <PaymentRecordForm invoice={invoice} today={today} busy={busy} onSave={(payment) => onStatus(invoice.id, "paid", payment)} />}{(invoice.status === "draft" || invoice.status === "issued") && (!invoice.emailAttempt || invoice.emailAttempt.acceptedAt) && <button className="oz-small-button" disabled={busy} onClick={() => { if (window.confirm("Void this invoice? It will stay in your records and cannot be sent.")) onStatus(invoice.id, "void") }}>Void invoice</button>}</div>
         {!invoice.emailAttempt?.acceptedAt && invoice.status !== "void" && invoice.status !== "paid" && <>
           <h2 style={{ marginTop: 28 }}>Review, then send.</h2><p className="oz-form-hint">The saved invoice will be emailed to <strong>{invoice.client.email}</strong> with a PDF attached. Issuing locks the invoice details.</p>
           {!emailReady && <p className="oz-notice" style={{ marginTop: 20 }}>Connect a verified email sender in Settings to enable delivery. Preview and PDF download remain available.</p>}

@@ -16,6 +16,9 @@ export const businessSchema = z.object({
 })
 export const billingSchema = z.object({ name: text(100).min(1), company: text(100), email: z.email().max(254), address: text(500) })
 export const lineSchema = z.object({ description: text(180).min(1), quantity: z.number().int().min(1).max(10_000), unitPrice: minor })
+export const servicePresetSchema = lineSchema.extend({ name: text(80).min(1), currency: currencySchema })
+export const emailCompositionSchema = z.object({ subject: text(180).min(1).refine((value) => !/[\r\n]/.test(value), "Keep the subject on one line."), message: text(2000) })
+export const paymentRecordSchema = z.object({ date: z.iso.date(), method: text(80).min(1), reference: text(160) })
 export const invoiceInputSchema = z.object({
   id: z.uuid().optional(), client: billingSchema, title: text(120).min(1),
   design: z.enum(invoiceDesignIds).optional(),
@@ -35,15 +38,24 @@ export const invoiceSchema = invoiceInputSchema.safeExtend({
   status: z.enum(["draft", "issued", "paid", "void"]),
   business: businessSchema,
   paidAt: z.iso.datetime().optional(),
+  payment: paymentRecordSchema.optional(),
   emailAttempt: z.object({
     key: z.uuid(), startedAt: z.iso.datetime(), acceptedAt: z.iso.datetime().optional(),
     providerId: z.string().optional(), payload: emailPayloadSchema.optional(),
+    subject: text(180).optional(), message: text(2000).optional(),
+    delivery: z.object({ event: text(40).min(1), checkedAt: z.iso.datetime() }).optional(),
   }).optional(),
 })
 export const studioSchema = z.object({
   version: z.literal(1), nextInvoice: z.number().int().min(1), settings: businessSchema,
   invoices: z.array(invoiceSchema).max(1000),
+  services: z.array(servicePresetSchema).max(40).optional(),
+  archivedNumbers: z.array(text(40).min(1)).max(5000).optional(),
 })
+export const invoiceArchiveSchema = z.object({ version: z.literal(1), kind: z.literal("oz-studio-archive"), nextInvoice: z.number().int().min(1).max(100_000_000), invoices: z.array(invoiceSchema).min(1).max(1000) })
+export type ServicePreset = z.infer<typeof servicePresetSchema>
+export type PaymentRecord = z.infer<typeof paymentRecordSchema>
+export type EmailComposition = z.infer<typeof emailCompositionSchema>
 
 export type Business = z.infer<typeof businessSchema>
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>
@@ -101,7 +113,7 @@ export function saveInvoice(data: StudioData, raw: unknown, id: string, createdA
   if (input.id && !existing) throw new Error("Invoice not found.")
   if (existing && existing.status !== "draft") throw new Error("Issued invoices are locked. Create a new draft instead.")
   const number = input.number || existing?.number || `OZ-${String(data.nextInvoice).padStart(4, "0")}`
-  if (data.invoices.some((invoice) => invoice.number.toLowerCase() === number.toLowerCase() && invoice.id !== existing?.id)) throw new Error("That invoice number is already in use.")
+  if (data.invoices.some((invoice) => invoice.number.toLowerCase() === number.toLowerCase() && invoice.id !== existing?.id) || data.archivedNumbers?.some((value) => value.toLowerCase() === number.toLowerCase())) throw new Error("That invoice number is already in use.")
   const invoice: Invoice = {
     ...input, id: existing?.id ?? id,
     number,

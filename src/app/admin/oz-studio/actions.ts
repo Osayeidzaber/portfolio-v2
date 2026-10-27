@@ -4,9 +4,10 @@ import { randomUUID } from "node:crypto"
 import { z } from "zod"
 
 import { isAuthenticated } from "@/lib/auth/session"
-import { emailConfiguration, deliverInvoiceEmail } from "@/lib/studio/email"
+import { emailConfiguration, deliverInvoiceEmail, retrieveEmailStatus } from "@/lib/studio/email"
 import { invoiceEmail } from "@/lib/studio/invoice-document"
-import { paymentDetails, businessSchema, saveInvoice, type Invoice } from "@/lib/studio/schema"
+import { paymentDetails, businessSchema, servicePresetSchema, paymentRecordSchema, emailCompositionSchema, saveInvoice, type Invoice } from "@/lib/studio/schema"
+import { archiveInvoices, restoreArchive } from "@/lib/studio/workflows"
 import { readStudio, writeStudio, studioStorageMode, StudioConflict, type StudioSnapshot } from "@/lib/studio/store"
 import { siteUrl } from "@/lib/env"
 
@@ -46,7 +47,7 @@ export async function saveBusinessAction(raw: unknown, sha: string | null): Prom
   } catch (error) { return fail(error) }
 }
 
-export async function changeInvoiceStatus(id: string, status: "paid" | "void", sha: string | null): Promise<WorkspaceResult> {
+export async function changeInvoiceStatus(id: string, status: "paid" | "void", sha: string | null, payment?: unknown): Promise<WorkspaceResult> {
   try {
     const { data } = await current(sha)
     const next = z.enum(["paid", "void"]).parse(status)
@@ -55,6 +56,12 @@ export async function changeInvoiceStatus(id: string, status: "paid" | "void", s
     if (invoice.status === "paid" || invoice.status === "void") throw new Error("This invoice is already closed.")
     if (next === "paid" && invoice.status !== "issued") throw new Error("Issue this invoice before recording payment.")
     if (invoice.emailAttempt && !invoice.emailAttempt.acceptedAt) throw new Error("Reconcile the pending email with the provider before closing this invoice.")
+    if (next === "paid" && payment !== undefined) {
+      const details = paymentRecordSchema.parse(payment)
+      const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Dhaka" })
+      if (details.date < invoice.issueDate || details.date > today) throw new Error("Payment date must fall between the invoice date and today.")
+      invoice.payment = details
+    }
     invoice.status = next
     if (next === "paid") invoice.paidAt = new Date().toISOString()
     return { ok: true, snapshot: await writeStudio(data, sha) }
@@ -62,7 +69,7 @@ export async function changeInvoiceStatus(id: string, status: "paid" | "void", s
 }
 
 /** Only this explicit review-and-send action contacts a recipient. No background mailing. */
-export async function sendInvoiceAction(id: string, sha: string | null, attachment?: string): Promise<WorkspaceResult> {
+export async function sendInvoiceAction(id: string, sha: string | null, attachment?: string, composition?: unknown): Promise<WorkspaceResult> {
   let claimed: StudioSnapshot | undefined
   try {
     const snapshot = await current(sha)
@@ -74,12 +81,14 @@ export async function sendInvoiceAction(id: string, sha: string | null, attachme
     if (!paymentDetails(invoice.business).trim()) throw new Error("Add payment instructions in Settings, then save this draft again before sending.")
     if (invoice.emailAttempt && Date.now() - new Date(invoice.emailAttempt.startedAt).getTime() > 23 * 60 * 60_000) throw new Error("This pending send is older than the safe retry window. Check the provider dashboard before taking further action; no duplicate email has been sent.")
     if (!invoice.emailAttempt) {
+      const copy = composition === undefined ? undefined : emailCompositionSchema.parse(composition)
       const content = z.string().max(600_000, "The PDF attachment is too large. Shorten the invoice and try again.").regex(/^[A-Za-z0-9+/]+={0,2}$/, "Generate and review the PDF attachment before sending.").parse(attachment)
       const bytes = Buffer.from(content, "base64")
       if (bytes.toString("base64") !== content || bytes.subarray(0, 5).toString() !== "%PDF-" || !bytes.subarray(-1024).toString().includes("%%EOF")) throw new Error("The attachment is not a complete PDF. Reopen the PDF viewer and retry.")
       invoice.emailAttempt = {
         key: randomUUID(), startedAt: new Date().toISOString(),
-        payload: { ...invoiceEmail(invoice, email.sender, `${siteUrl}/oz-studio/logo-email.png`), attachments: [{ filename: `${invoice.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf`, content }] },
+        ...(copy ? { subject: copy.subject, message: copy.message } : {}),
+        payload: { ...invoiceEmail(invoice, email.sender, `${siteUrl}/oz-studio/logo-email.png`, copy), attachments: [{ filename: `${invoice.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf`, content }] },
       }
       invoice.status = "issued"
       claimed = await writeStudio(snapshot.data, snapshot.sha)
@@ -100,6 +109,41 @@ export async function sendInvoiceAction(id: string, sha: string | null, attachme
     if (claimed) result.error += " Reload the workspace before retrying. The saved pending send will reuse the original request."
     return result
   }
+}
+
+export async function saveServicesAction(raw: unknown, sha: string | null): Promise<WorkspaceResult> {
+  try {
+    const { data } = await current(sha)
+    data.services = z.array(servicePresetSchema).max(40).parse(raw)
+    return { ok: true, snapshot: await writeStudio(data, sha) }
+  } catch (error) { return fail(error) }
+}
+
+export async function checkEmailStatusAction(id: string, sha: string | null): Promise<WorkspaceResult> {
+  try {
+    const { data } = await current(sha)
+    const attempt = data.invoices.find((invoice) => invoice.id === id)?.emailAttempt
+    if (!attempt?.acceptedAt || !attempt.providerId) throw new Error("Only an accepted email with a provider message ID can be checked.")
+    const event = await retrieveEmailStatus(attempt.providerId)
+    attempt.delivery = { event, checkedAt: new Date().toISOString() }
+    return { ok: true, snapshot: await writeStudio(data, sha) }
+  } catch (error) { return fail(error) }
+}
+
+export async function archiveInvoicesAction(ids: unknown, sha: string | null): Promise<WorkspaceResult> {
+  try {
+    const { data } = await current(sha)
+    archiveInvoices(data, z.array(z.uuid()).min(1).max(1000).parse(ids))
+    return { ok: true, snapshot: await writeStudio(data, sha) }
+  } catch (error) { return fail(error) }
+}
+
+export async function restoreArchiveAction(raw: unknown, sha: string | null): Promise<WorkspaceResult> {
+  try {
+    const { data } = await current(sha)
+    restoreArchive(data, raw)
+    return { ok: true, snapshot: await writeStudio(data, sha) }
+  } catch (error) { return fail(error) }
 }
 
 export async function issueInvoiceAction(id: string, sha: string | null): Promise<WorkspaceResult> {
