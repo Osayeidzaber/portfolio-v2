@@ -13,7 +13,23 @@ export const env = {
   revalidateSecret: process.env.REVALIDATE_SECRET || "",
 }
 
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "")
+/** Accept bare deployment domains so metadata, sitemaps, and robots use absolute URLs. */
+function normalizeSiteUrl(configured: string | undefined): string {
+  const value = configured?.trim() || "https://zaber.tech"
+  const absolute = /^[a-z][a-z\d+.-]*:\/\//i.test(value)
+    ? value
+    : `https://${value.replace(/^\/\//, "")}`
+
+  try {
+    const url = new URL(absolute)
+    if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error("Unsupported protocol")
+    return url.href.replace(/\/+$/, "")
+  } catch {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be a valid HTTP(S) URL or domain, for example https://zaber.tech.")
+  }
+}
+
+export const siteUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL)
 
 /** True when the admin can actually publish (repo + write token present). */
 export const canPublish = () => Boolean(env.contentRepo && env.contentToken)

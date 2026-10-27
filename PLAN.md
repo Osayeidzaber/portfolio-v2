@@ -129,6 +129,8 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** �
        E2E_ADMIN_PASSWORD, plus mobile keyboard flow). Portrait checked at 375×812
        and 1024×1800; production carousel/footer screenshots inspected.
 
+- [x] Deployment URL handling: normalize bare domains to HTTPS before metadata generation; regression coverage for URL configuration.
+
 ## 6. Environment variables
 
 | Name | Required | Purpose |
