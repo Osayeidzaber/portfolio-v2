@@ -68,6 +68,7 @@ export function Footer({
           <span className="!text-paper">From Dhaka, with intention.</span>
           <span className="max-w-56 normal-case !tracking-normal text-sm leading-relaxed">Designed, built and continually tinkered with by {name}.</span>
           <Link href="/#play" className="flex min-h-11 items-center hover:!text-paper">Try the workbench ↗</Link>
+          <Link href="/oz-studio" className="flex min-h-11 items-center hover:!text-paper">OZ Studio · Design & development ↗</Link>
         </div>
         <button
           type="button"

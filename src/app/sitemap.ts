@@ -10,7 +10,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = buildProjects(content, github)
   return [
     { url: siteUrl, lastModified: github.fetchedAt, changeFrequency: "weekly", priority: 1 },
+    { url: `${siteUrl}/oz-studio`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/minecraft`, changeFrequency: "monthly", priority: 0.8 },
+    ...content.projects.filter((project) => !project.hidden).map((project) => ({ url: `${siteUrl}/oz-studio/work/${project.slug}`, changeFrequency: "monthly" as const, priority: 0.7 })),
     ...projects.map((p) => ({
       url: `${siteUrl}/work/${p.slug}`,
       lastModified: p.pushedAt || github.fetchedAt,

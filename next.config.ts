@@ -19,6 +19,7 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
+  "frame-src 'self' blob:",
 ].join("; ")
 
 const securityHeaders = [
@@ -47,6 +48,8 @@ const nextConfig: NextConfig = {
   // Bundled uploads are read from disk when the content repo isn't configured.
   outputFileTracingIncludes: {
     "/media/[name]": ["./content/uploads/**/*"],
+    "/admin/oz-studio": ["./public/oz-studio/fonts/**/*"],
+    "/api/studio/invoices/*/pdf": ["./public/oz-studio/fonts/**/*"],
   },
   async headers() {
     return [

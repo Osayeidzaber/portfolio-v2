@@ -1,0 +1,88 @@
+import { existsSync, readFileSync } from "node:fs"
+import { loadEnvFile } from "node:process"
+import AxeBuilder from "@axe-core/playwright"
+import { expect, test } from "@playwright/test"
+import { createToken, SESSION_COOKIE } from "../src/lib/auth/token"
+
+if (existsSync(".env.local")) loadEnvFile(".env.local")
+
+test("OZ Studio is a standalone shareable portfolio", async ({ page }, info) => {
+  if (info.project.name === "mobile") await page.setViewportSize({ width: 375, height: 812 })
+  const errors: string[] = []
+  page.on("pageerror", (error) => errors.push(error.message))
+  await page.goto("/oz-studio")
+  await expect(page).toHaveTitle(/OZ Studio/)
+  await expect(page.locator("h1")).toHaveCount(1)
+  await expect(page.getByRole("heading", { name: /Good ideas/ })).toBeVisible()
+  await expect(page.getByAltText("OZ Studio monogram and wordmark")).toBeVisible()
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/oz-studio$/)
+  await page.locator("#oz-work").scrollIntoViewIfNeeded()
+  await expect(page.locator(".oz-project")).toHaveCount(4)
+  await expect(page.locator(".oz-project").first()).toHaveAttribute("href", "/oz-studio/work/corso-velle")
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)
+  expect(overflow).toBe(false)
+  expect(errors).toEqual([])
+  await page.screenshot({ path: info.outputPath("oz-studio-portfolio.png"), fullPage: true })
+  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()
+  expect(axe.violations.map((item) => item.id)).toEqual([])
+})
+
+test("invoice routes and PDF files are private", async ({ page, request }) => {
+  await page.goto("/admin/oz-studio")
+  await expect(page).toHaveURL(/\/admin\/login$/)
+  await page.goto("/oz-studio/admin")
+  await expect(page).toHaveURL(/\/admin\/login$/)
+  const pdf = await request.get("/api/studio/invoices/aaaabbbb-cccc-4000-8000-111122223333/pdf")
+  expect(pdf.status()).toBe(401)
+  expect(pdf.headers()["cache-control"]).toContain("no-store")
+})
+
+test("invoice desk previews a custom PDF without saving or emailing", async ({ page, baseURL }, info) => {
+  const secret = process.env.SESSION_SECRET || ""
+  test.skip(secret.length < 32, "An admin session secret is required for authenticated browser QA.")
+  test.skip(Boolean(process.env.STUDIO_DATA_REPO && process.env.STUDIO_GITHUB_TOKEN), "Do not edit connected production invoice storage during browser QA.")
+  if (info.project.name === "mobile") await page.setViewportSize({ width: 375, height: 812 })
+  await page.context().addCookies([{ name: SESSION_COOKIE, value: createToken(secret), url: baseURL! }])
+  await page.goto("/admin/oz-studio")
+  await page.getByRole("button", { name: "Open PDF designer" }).click()
+  await page.getByRole("button", { name: "Settings", exact: true }).click()
+  await page.getByLabel("Payment instructions", { exact: true }).fill("Preview document only. No payment requested.")
+  await page.getByRole("button", { name: "Save business details", exact: true }).click()
+  await expect(page.getByRole("status")).toContainText("preview session only")
+  await page.getByRole("button", { name: "Invoices", exact: true }).click()
+  await page.getByRole("button", { name: "+ Create invoice", exact: true }).click()
+  await page.getByLabel("Project / invoice title").fill("Preview / custom storefront invoice")
+  await page.getByLabel("Invoice number", { exact: true }).fill("OZ/QA-001")
+  await page.getByLabel("Client name", { exact: true }).fill("Preview Client")
+  await page.getByLabel("Company (optional)").fill("Preview only")
+  await page.getByLabel("Client email", { exact: true }).fill("preview@example.com")
+  await page.getByLabel("Description 1", { exact: true }).fill("Custom storefront design")
+  await page.getByLabel("Quantity 1", { exact: true }).fill("2")
+  await page.getByLabel("Rate 1", { exact: true }).fill("1250.50")
+  await page.getByLabel("Discount (BDT)", { exact: true }).fill("100.00")
+  await page.getByLabel("Tax rate (%)", { exact: true }).fill("5")
+  await page.getByRole("button", { name: "Invoice preview", exact: true }).click()
+  await expect(page.getByRole("article", { name: "Invoice preview" })).toContainText("2,521.05")
+  await page.getByRole("button", { name: "PDF viewer", exact: true }).click()
+  const viewer = page.getByRole("img", { name: "Invoice page 1 of 1", exact: true })
+  await expect(viewer).toBeVisible({ timeout: 30_000 })
+  await expect(viewer).toHaveAttribute("data-rendered", "true", { timeout: 30_000 })
+  await page.getByRole("button", { name: "Zoom in", exact: true }).click()
+  await expect(page.locator(".oz-pdf-controls")).toContainText("125%")
+  await page.getByRole("button", { name: "Fit", exact: true }).click()
+  await expect(viewer).toHaveAttribute("data-rendered", "true")
+  const download = page.waitForEvent("download")
+  await page.getByRole("link", { name: "Download preview PDF", exact: true }).click()
+  const file = await (await download).path()
+  expect(readFileSync(file!).subarray(0, 5).toString()).toBe("%PDF-")
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false)
+  await page.screenshot({ path: info.outputPath("oz-invoice-pdf-viewer.png"), fullPage: true })
+})
+
+test("studio project pages keep the studio identity", async ({ page }) => {
+  await page.goto("/oz-studio/work/corso-velle")
+  await expect(page.locator("h1")).toHaveText("Corso Velle")
+  await expect(page.getByRole("link", { name: "OZ Studio home" })).toHaveAttribute("href", "/oz-studio")
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/oz-studio\/work\/corso-velle$/)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false)
+})

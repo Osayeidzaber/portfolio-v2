@@ -9,7 +9,7 @@ export default function LoginPage() {
       <div className="mx-auto flex w-full max-w-[420px] flex-col gap-8">
         <div className="flex flex-col gap-3">
           <h1 className="text-[44px] font-bold leading-none tracking-[-0.03em]">Sign in</h1>
-          <p className="text-[16px] leading-[1.5] text-dust">Edit the portfolio. Changes are saved to GitHub.</p>
+          <p className="text-[16px] leading-[1.5] text-dust">Manage your portfolio and OZ Studio invoices.</p>
         </div>
         <LoginForm />
       </div>

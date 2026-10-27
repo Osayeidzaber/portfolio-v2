@@ -12,6 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "public/oz-studio/pdf.worker.min.mjs", // Generated upstream PDF.js worker, copied by postinstall.
     // Registry components (React Bits, Aceternity, Magic UI, Fancy, UI Arc) are kept as
     // installed so they can be diffed against upstream; our code lives in site/, admin/, shaders/.
     "src/components/*.tsx",

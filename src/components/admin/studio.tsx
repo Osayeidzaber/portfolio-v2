@@ -1,6 +1,7 @@
 "use client"
 
 import { AnimatePresence, motion } from "motion/react"
+import Link from "next/link"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import {
@@ -291,6 +292,7 @@ function StudioInner() {
               </button>
             </form>
           </div>
+          <Link href="/admin/oz-studio" className="mx-3 mb-4 flex min-h-11 items-center justify-between rounded-lg border border-edge px-3 text-sm">OZ Studio invoices <span aria-hidden>↗</span></Link>
           <ul className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:overflow-visible md:pb-0">
             {TABS.map((t) => (
               <li key={t.id} className="flex-none">

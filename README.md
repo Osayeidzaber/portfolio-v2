@@ -224,6 +224,54 @@ after changing environment variables.
 
 </details>
 
+## OZ Studio
+
+[OZ Studio](https://zaber.tech/oz-studio) is a separate client-facing portfolio with
+the supplied studio identity, selected work, studio-branded case studies, services,
+and contact details. Its private invoice desk lives at `/admin/oz-studio`;
+`/oz-studio/admin` redirects there. It uses the existing admin sign-in.
+
+The invoice desk focuses on invoices: custom numbering, billing details, line items,
+currency, discounts, a user-supplied tax rate, notes, and payment instructions. You
+can inspect the actual PDF in an embedded viewer, download it, issue a saved draft,
+record full payment, or void an invoice. Issued invoice details are locked.
+
+**Email is review-and-send.** Resend receives a branded HTML/text message with the
+PDF attached only when the owner explicitly sends it. Provider acceptance is recorded
+with a message ID; it is not presented as delivery or payment confirmation. Failed
+submissions retain their exact request for deduplicated retries within 23 hours.
+Older unresolved sends require checking the provider dashboard before further action.
+
+### Studio setup on Vercel
+
+| Variable | Value / purpose |
+| :--- | :--- |
+| `STUDIO_DATA_REPO` | `Osayeidzaber/oz-studio-invoices`, a separate **private** repository |
+| `STUDIO_DATA_BRANCH` | `main` (optional; otherwise the repository default) |
+| `STUDIO_GITHUB_TOKEN` | Fine-grained token with Contents read/write for the private invoice repository |
+| `RESEND_API_KEY` | Your server-only Resend key |
+| `STUDIO_EMAIL_FROM` | `invoices@zaber.tech`, on the verified sending domain |
+
+Use your existing `ADMIN_PASSWORD_HASH` and `SESSION_SECRET` for login. Redeploy
+after configuring the variables, then open Settings in the invoice desk to enter
+your actual business address and payment instructions. The reply-to address defaults
+to `mail@zaber.tech`, and the default currency is BDT; both are editable.
+
+Business records never use `content/site.json`. Storage checks repository privacy
+before every remote read or write and includes the last-seen SHA when saving. In
+development, records use the ignored `.studio-data/` folder. Without production
+storage configured, **Open PDF designer** provides a clearly labeled temporary
+session for PDF preview/download; it cannot save invoices or send email. You can
+export private invoice records from Settings. The JSON store has a 750 KB limit;
+export and archive older records before reaching that limit.
+
+PDFs use the supplied OZ monogram and the portfolio’s Black Press typography:
+Bricolage Grotesque, Instrument Serif and JetBrains Mono, with Noto fallbacks for
+Latin and Bengali support. Font licensing is included with the assets. The actual PDF is rendered with PDF.js;
+its matching worker is copied from the pinned dependency during `pnpm install`. No invoice or client PDF has
+a public share URL. Resend setup details: [sending email](https://resend.com/docs/api-reference/emails/send-email)
+and [idempotent retries](https://resend.com/docs/dashboard/emails/idempotency-keys).
+
 ## Development and verification
 
 | Command | What it does |
@@ -248,6 +296,12 @@ Browser tests start a production server on port **3100** by default. Set
 
 <details>
 <summary><strong>Verification history and known limitations</strong></summary>
+
+OZ Studio refinement: TypeScript, ESLint, 68 unit tests, the production build and
+52 browser checks passed, with 4 expected skips. The studio portfolio, studio case
+studies, private-route guards, custom PDF generation, actual PDF.js canvas render,
+zoom and download were checked on desktop and at 375px. Invoice PDFs were also
+rendered separately for visual review. No live invoice email was sent during QA.
 
 Latest standalone-app refinement: TypeScript, ESLint, 53 unit tests, production
 build and 39 desktop/mobile browser tests passed, with 3 expected skips. Checks

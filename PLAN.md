@@ -146,6 +146,17 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        RGB prefix command output, hash links, canonical domain, email links,
        desktop/mobile composition and accessibility on all public page types.
 
+- [x] 17. OZ Studio: independent portfolio and studio-branded case studies; focused
+       invoice desk with custom invoice details, embedded PDF viewer, downloads,
+       issuing/payment/void records, and explicit Resend review-and-send. Business
+       records use separate private storage; PDF-only mode works before storage setup.
+       PDF design uses the Black Press fonts, original OZ mark, monochrome masthead
+       and total panel. PDF.js renders the actual document with page/zoom controls.
+       Validation: typecheck, lint, 68 unit tests, production build and 52 browser
+       checks passed; 4 expected skips. Desktop and 375px layouts plus rendered
+       PDFs were visually inspected. Resend domain verified; no live email sent.
+       Production still needs the private-repository token and email env in Vercel.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,
