@@ -60,6 +60,7 @@ export function Contact({ profile, contact }: { profile: SiteContent["profile"];
           </span>
         </div>
       )}
+      {profile.alternateEmail && <p className="text-base text-mist">Or reach me at <a href={`mailto:${profile.alternateEmail}`} className="inline-flex min-h-11 items-center underline underline-offset-4">{profile.alternateEmail}</a></p>}
       <ul className="flex flex-wrap border-t border-rule">
         {links.map((l) => (
           <li key={l.url} className="flex-[1_1_220px] border-b border-rule">

@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test"
  * Browser tests against a production build. Run `pnpm build` first, then `pnpm test:e2e`.
  * Set E2E_ADMIN_PASSWORD to also exercise the signed-in admin.
  */
-const port = 3100
+const port = Number(process.env.E2E_PORT || 3100)
 
 export default defineConfig({
   testDir: "./e2e",

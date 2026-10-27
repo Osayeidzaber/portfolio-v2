@@ -1,9 +1,8 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import Link from "next/link"
 import { AnimatePresence, motion } from "motion/react"
-import { useMemo, useState } from "react"
+import { lazy, Suspense, useMemo, useState } from "react"
 
 import GradientText from "@/components/GradientText"
 import { Tooltip } from "@/components/ui/tooltip-card"
@@ -15,7 +14,7 @@ import { ChapterTitle, Folio } from "./section-head"
 import { WebGLGate } from "./webgl-gate"
 
 // Effects load on demand, when their section approaches the viewport.
-const FlexCarousel = dynamic(() => import("@/components/FlexCarousel"), { ssr: false })
+const FlexCarousel = lazy(() => import("@/components/FlexCarousel"))
 
 const fmtMonth = (iso: string) =>
   iso ? new Date(iso).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" }) : ""
@@ -104,16 +103,18 @@ export function Work({ projects, categories }: { projects: ProjectView[]; catego
         <WebGLGate
           key={category}
           className="h-full"
+          keepMounted
           fallback={<StripFallback items={list} active={active} onPick={setActive} />}
         >
+          <Suspense fallback={<StripFallback items={list} active={active} onPick={setActive} />}>
           <FlexCarousel
             items={items}
             preset="liquid"
             cardHeight={phone ? 0.64 : 0.9}
             fit="wide"
             intro="none"
-            bend={0.06}
-            reach={0.04}
+            bend={0}
+            reach={0}
             tilt={0}
             squeeze={0}
             focusOnClick={false}
@@ -125,6 +126,7 @@ export function Work({ projects, categories }: { projects: ProjectView[]; catego
             onChange={(i) => setActive(i)}
             className="h-full"
           />
+          </Suspense>
         </WebGLGate>
       </div>
 

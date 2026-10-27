@@ -40,6 +40,7 @@ export function ProfilePanel({ c, mutate }: { c: SiteContent; mutate: Mutate }) 
         </div>
         <TextField label="Location" value={p.location} path="profile.location" onChange={(v) => mutate((d) => void (d.profile.location = v))} />
         <TextField label="Email" type="email" value={p.email} path="profile.email" onChange={(v) => mutate((d) => void (d.profile.email = v))} />
+        <TextField label="Alternate email" type="email" value={p.alternateEmail} path="profile.alternateEmail" onChange={(v) => mutate((d) => void (d.profile.alternateEmail = v))} />
         <Select
           label="Availability"
           value={p.availability.status}

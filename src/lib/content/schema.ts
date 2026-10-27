@@ -23,6 +23,7 @@ export const profileSchema = z.object({
   intro: z.string().min(1).max(320),
   location: z.string().max(80),
   email: z.union([z.email(), z.literal("")]),
+  alternateEmail: z.union([z.email(), z.literal("")]).default(""),
   availability: z.object({
     status: z.enum(["available", "limited", "unavailable"]),
     label: z.string().max(80),

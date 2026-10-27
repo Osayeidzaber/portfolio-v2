@@ -37,7 +37,7 @@ Original-color project screenshots bring the work into focus.
 | **04 / Ledger** | Real GitHub repositories, languages, and contribution activity |
 | **05 / Experience** | A timeline of development, commerce, and community work |
 | **06 / Recognition** | Achievements, shown only when real content is available |
-| **07 / Workbench** | Ten Minecraft tools and an optional shader and typography lab |
+| **07 / Workbench** | A launcher for the standalone Minecraft app and an optional visual lab |
 | **08 / Contact** | Social links, email, and a closing typographic footer |
 
 Motion respects reduced-motion preferences. WebGL effects mount near the viewport
@@ -78,9 +78,17 @@ repository. Publishing creates a commit; history and restore come from Git.
 - **Keep content available.** Bundled JSON and a GitHub snapshot provide fallbacks when remote reads fail.
 - **Show real information.** Unknown achievements and other placeholders stay hidden on the public site.
 
-The Minecraft workbench runs locally in the browser. Its tools cover coordinate
-conversion, gradients, stacks, time, color codes, MOTD previews, chunks, portal
-links, XP, and item-name formatting. The visual lab loads when opened.
+The Minecraft app has its own page at `/minecraft`, separate from the portfolio's
+navigation and footer. Its 13 browser tools cover coordinates, multi-stop RGB
+gradients, stacks, time, color codes, MOTD previews, chunks, portals, XP, item names,
+and LuckPerms rank, track and meta commands. Tool links such as `/minecraft#ranks`
+are shareable. Gradients include common hex formats, MiniMessage, JSON, presets,
+formatting controls and a direct “use as rank prefix” action. The visual lab stays
+on the portfolio and loads when opened.
+
+The canonical site domain is `https://zaber.tech`. Primary contact is
+`mail@zaber.tech`, with `osayeedjaber18@gmail.com` as an editable alternate.
+Deploy the updated project to expose the app publicly at `https://zaber.tech/minecraft`.
 
 ## Quick start
 
@@ -240,6 +248,20 @@ Browser tests start a production server on port **3100** by default. Set
 
 <details>
 <summary><strong>Verification history and known limitations</strong></summary>
+
+Latest standalone-app refinement: TypeScript, ESLint, 53 unit tests, production
+build and 39 desktop/mobile browser tests passed, with 3 expected skips. Checks
+include launcher layout, Minecraft styles, all calculators, gradient-to-LuckPerms
+commands, tool hash links, the canonical domain, contact emails and accessibility.
+The Minecraft theme lives in plain `src/app/minecraft/theme.css` to keep style
+updates independent of the Tailwind compiler's development cache.
+
+Earlier Minecraft and layout refinement: TypeScript, ESLint, 35 unit tests, the
+production build, and 33 desktop/mobile browser tests passed. Three checks skipped:
+two authenticated studio checks without `E2E_ADMIN_PASSWORD`, and mobile keyboard
+flow. The ten-tool inventory, Bedrock color export, case-study navigation and axe
+accessibility checks passed. Pixel UI previews were inspected at 1440px and 375px.
+The earlier failures recorded below have been resolved in this refinement.
 
 During repository setup on **27 October 2026**, TypeScript, ESLint, 35 unit tests,
 and the production build passed. That browser run returned **26 passed, 3 skipped,

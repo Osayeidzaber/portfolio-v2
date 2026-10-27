@@ -1,13 +1,14 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import { useState, useSyncExternalStore } from "react"
 
 import JellyRadio from "@/components/JellyRadio"
+import SpecularButton from "@/components/SpecularButton"
 
 import { ChapterTitle, Folio } from "./section-head"
 import { WebGLGate } from "./webgl-gate"
-import { MinecraftWorkbench } from "./minecraft-workbench"
 
 // Effects load on demand, when their section approaches the viewport.
 const DitherVeil = dynamic(() => import("@/components/DitherVeil"), { ssr: false })
@@ -115,9 +116,13 @@ export function Playground({ veilImage }: { veilImage: string }) {
             <br /><span className="aside">More crafting.</span>
           </span>
         </ChapterTitle>
-        <p className="max-w-sm text-lg leading-relaxed text-mist">Ten little helpers for a very blocky world. Plan a portal, color your server, count your next build. Pick a slot and get crafting.</p>
+        <p className="max-w-sm text-lg leading-relaxed text-mist">A whole other world of little helpers. Minecraft calculators, color tools and a LuckPerms rank builder, in their own crafting room.</p>
       </div>
-      <MinecraftWorkbench />
+      <Link href="/minecraft" className="mc-launch-card group">
+        <span className="mc-launch-block" aria-hidden><span /></span>
+        <span className="mc-launch-copy"><span className="folio">Side quest / Minecraft tools</span><span className="mc-launch-title">Enter the crafting room <span className="inline-block transition-transform group-hover:translate-x-2">↗</span></span><span>13 free tools. Coordinates, ranks, gradients, XP and more.</span></span>
+        <span className="mc-button">Open tools</span>
+      </Link>
       <div className="flex flex-wrap items-center justify-between gap-6 border-t border-rule pt-8">
         <div><h3 className="text-3xl font-semibold tracking-tight">After hours <span className="aside">/ visual lab</span></h3><p className="mt-2 text-mist">Interactive type, materials and shaders. This is where I try things out.</p></div>
         <button type="button" aria-expanded={labOpen} aria-controls="visual-lab" className="pill pill-line" onClick={() => setLabOpen((open) => !open)}>{labOpen ? "Close the lab −" : "Enter the lab ↗"}</button>
@@ -161,9 +166,9 @@ export function Playground({ veilImage }: { veilImage: string }) {
           />
           <output className="w-8 text-paper">{amount}</output>
         </label>
-        <button type="button" onClick={() => setSeed((s) => s + 1)} className="pill pill-line h-11">
-          Reset
-        </button>
+        <WebGLGate motionSafe fallback={<button type="button" onClick={() => setSeed((s) => s + 1)} className="pill pill-line h-11">Reset</button>}>
+          <SpecularButton radius={24} size="md" baseColor="#3a3a3a" lineColor="#ffffff" textColor="#f2f2f2" tint="#ffffff" tintOpacity={0.06} onClick={() => setSeed((s) => s + 1)}>Reset</SpecularButton>
+        </WebGLGate>
         <span className="folio">Effects pause off-screen and switch to stills with reduced motion.</span>
       </div>
       </div>}

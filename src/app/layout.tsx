@@ -4,6 +4,7 @@ import { Bricolage_Grotesque, Instrument_Serif, JetBrains_Mono, Press_Start_2P }
 import { getContent } from "@/lib/content/read"
 import { siteUrl } from "@/lib/env"
 import "./globals.css"
+import "./minecraft/theme.css"
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",

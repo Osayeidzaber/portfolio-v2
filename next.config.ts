@@ -39,6 +39,8 @@ const nextConfig: NextConfig = {
   // Production never double-mounts, so this keeps dev faithful to production.
   reactStrictMode: false,
   experimental: {
+    // The custom Tailwind loader can retain stale global styles between dev runs.
+    turbopackFileSystemCacheForDev: false,
     // Admin uploads (images ≤ 5 MB, résumé PDF ≤ 8 MB) go through a server action.
     serverActions: { bodySizeLimit: "9mb" },
   },

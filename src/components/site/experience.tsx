@@ -79,7 +79,7 @@ export function Experience({ items }: { items: ExperienceItem[] }) {
           >
             <span aria-hidden className="dot absolute -left-[6px] top-[10px] size-[13px] rounded-full border border-dust bg-ink transition-all duration-500" />
             <span className="w-[140px] flex-none pt-2 font-mono text-[13px] tracking-[0.08em] text-dust">
-              <span className="mb-4 block text-[40px] leading-none tracking-[-0.06em] text-edge">{String(index + 1).padStart(2, "0")}</span>
+              <span className="mb-4 block text-[40px] leading-none tracking-[-0.06em] text-dust">{String(index + 1).padStart(2, "0")}</span>
               <time dateTime={item.start}>{fmt(item.start)}</time>
               {item.end && (
                 <>

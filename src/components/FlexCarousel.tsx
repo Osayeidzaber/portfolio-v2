@@ -864,7 +864,8 @@ const FlexCarousel = ({
 
       if (!introState.running && !introState.done) {
         const allSettled = slots.every(slot => slot.loaded || slot.failed);
-        if (allSettled || now - introState.readyAt > 3500) {
+        // patched: non-intro galleries render immediately instead of waiting for every remote thumbnail
+        if (s.intro === 'none' || allSettled || now - introState.readyAt > 3500) {
           goal = snapPoint(m, goal);
           pos = goal;
           beginIntro(s, m);

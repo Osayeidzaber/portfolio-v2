@@ -36,7 +36,7 @@ export function About({
         width={220}
         height={220}
         loading="lazy"
-        className="mx-auto aspect-square w-[62%] rounded-full object-cover grayscale"
+        className="mx-auto aspect-square w-[62%] rounded-full object-cover"
       />
       <div className="flex flex-col gap-1">
         <span className="text-[28px] font-bold leading-none tracking-[-0.02em]">{profile.name}</span>
@@ -93,7 +93,7 @@ export function About({
               height={500}
               radius={24}
               tint="#ffffff"
-              grayscale={1}
+              grayscale={0}
               statusColor="#f2f2f2"
               className="!w-full"
             >

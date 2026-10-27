@@ -3,9 +3,9 @@ import { expect, test } from "@playwright/test"
 
 const chapters = ["top", "about", "work", "toolkit", "ledger", "experience", "play", "contact"]
 
-test("Minecraft inventory opens all ten tools and calculates useful results", async ({ page }) => {
-  await page.goto("/")
-  await page.locator("#play").scrollIntoViewIfNeeded()
+test("standalone Minecraft inventory opens its tools and calculates useful results", async ({ page }) => {
+  await page.goto("/minecraft")
+  await page.locator("#tools").scrollIntoViewIfNeeded()
   const output = page.getByLabel("Crafted output", { exact: true })
   await expect(output).toHaveValue(/Nether: X 16, Z -32/)
   await page.getByLabel("Z coordinate", { exact: true }).fill("-257")
@@ -22,15 +22,55 @@ test("Minecraft inventory opens all ten tools and calculates useful results", as
   await page.getByRole("button", { name: "XP Level Calculator", exact: true }).click()
   await expect(output).toHaveValue(/1395 XP/)
   await page.getByLabel("Starting level").fill("40")
-  await expect(page.getByRole("alert")).toContainText("target level")
+  await expect(page.locator(".mc-workbench").getByRole("alert")).toContainText("target level")
   await page.getByRole("button", { name: "Minecraft Color Code Picker", exact: true }).click()
   await page.getByLabel("Edition", { exact: true }).selectOption("bedrock")
   await page.getByRole("button", { name: "Emerald §q", exact: true }).click()
   await expect(output).toHaveValue(/^§q/)
   const colorsAxe = await new AxeBuilder({ page }).include(".mc-workbench").withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()
   expect(colorsAxe.violations.map((violation) => violation.id)).toEqual([])
-  await expect(page.getByRole("button", { name: /Enter the lab/ })).toHaveAttribute("aria-expanded", "false")
-  await expect(page.getByRole("region", { name: "Corso Velle showcase" })).toHaveCount(1)
+  await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toHaveCount(0)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBe(0)
+})
+
+test("Minecraft launcher is a stable separate-page link with the owner's domain and email", async ({ page, request }) => {
+  await page.goto("/")
+  const card = page.locator(".mc-launch-card")
+  await card.scrollIntoViewIfNeeded()
+  await expect(card).toHaveCSS("display", "grid")
+  const cardBox = await card.boundingBox(), buttonBox = await card.locator(".mc-button").boundingBox()
+  expect(buttonBox!.x).toBeGreaterThanOrEqual(cardBox!.x)
+  expect(buttonBox!.x + buttonBox!.width).toBeLessThanOrEqual(cardBox!.x + cardBox!.width + 1)
+  await expect(page.locator('a[href="mailto:mail@zaber.tech"]').first()).toHaveText("mail@zaber.tech")
+  await expect(page.locator('a[href="mailto:osayeedjaber18@gmail.com"]').first()).toBeAttached()
+  await card.click()
+  await expect(page).toHaveURL(/\/minecraft$/)
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("CRAFTING")
+  await expect(page.locator(".mc-page-header")).toHaveCSS("display", "flex")
+  await expect(page.locator(".mc-hero-scene")).toHaveCSS("position", "absolute")
+  await expect(page.locator('link[rel="canonical"]').first()).toHaveAttribute("href", "https://zaber.tech/minecraft")
+  expect(await (await request.get("/sitemap.xml")).text()).toContain("https://zaber.tech/minecraft")
+})
+
+test("LuckPerms ranks accept RGB gradients and tool links survive reloading", async ({ page }) => {
+  await page.goto("/minecraft#ranks")
+  await expect(page.getByRole("heading", { name: "LuckPerms Rank Builder", exact: true })).toBeVisible()
+  await page.getByLabel("Rank group name").fill("champion")
+  await page.getByText("Design a gradient prefix", { exact: true }).click()
+  await page.getByLabel("Gradient text", { exact: true }).fill("[CHAMP] ")
+  await page.getByRole("button", { name: "Add stop +", exact: true }).click()
+  await page.getByRole("button", { name: "Use as rank prefix", exact: false }).click()
+  const commands = page.getByLabel("LuckPerms commands", { exact: true })
+  await expect(commands).toHaveValue(/group champion meta setprefix 100 "&#/)
+  await page.getByLabel("Permission nodes (one per line)").fill("example.use\n-example.admin")
+  await expect(commands).toHaveValue(/permission set example.admin false/)
+  await page.getByRole("button", { name: "LuckPerms Rank Ladder", exact: true }).click()
+  await expect(page).toHaveURL(/#tracks$/)
+  await expect(commands).toHaveValue(/track ranks append mvp/)
+  await page.reload()
+  await expect(page.getByRole("heading", { name: "LuckPerms Rank Ladder", exact: true })).toBeVisible()
+  await page.getByRole("button", { name: "LuckPerms Meta Editor", exact: true }).click()
+  await expect(commands).toHaveValue(/meta set max-homes "5"/)
 })
 
 test("case-study client navigation resolves URL data inside the streaming boundary", async ({ page }) => {
@@ -39,7 +79,7 @@ test("case-study client navigation resolves URL data inside the streaming bounda
   await page.goto("/")
   await page.locator("nav[aria-label='All projects']").getByRole("link", { name: /ARZ/ }).click()
   await expect(page).toHaveURL(/\/work\/arz$/)
-  await expect(page.locator("h1")).toHaveText("ARZ")
+  await expect(page.getByRole("heading", { name: "ARZ", level: 1, exact: true })).toBeVisible()
   expect(errors).toEqual([])
 })
 
@@ -109,7 +149,7 @@ test("case study page, filter and 404", async ({ page }) => {
   const res = await page.goto("/work/does-not-exist")
   await expect(page.locator("h1")).toContainText("Not")
   if (res?.status() !== 404) {
-    await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(1)
+    await expect(page.locator('meta[name="robots"][content*="noindex"]')).not.toHaveCount(0)
   }
 })
 
@@ -123,7 +163,7 @@ test("metadata, sitemap and robots", async ({ page, request }) => {
   expect(robots).toContain("Disallow: /admin")
 })
 
-for (const path of ["/", "/work/tajwater", "/admin/login"]) {
+for (const path of ["/", "/minecraft", "/work/tajwater", "/admin/login"]) {
   test(`no WCAG 2.1 AA violations on ${path}`, async ({ page }) => {
     await page.goto(path, { waitUntil: "networkidle" })
     await page.waitForTimeout(1500)

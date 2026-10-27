@@ -86,14 +86,14 @@ Next.js 16 App Router (cacheComponents + partialPrefetching on)
 | Nav | Motion layout pill, Letter Swap | Floating pill, active-section indicator |
 | 00 Cover | **Light Tunnel** (bg), **Variable Font & Cursor** (name), **Text Loop** (roles), **Shiny Text** (status), **Specular Button** (CTAs) | |
 | 01 About | **Text Animate** (essay), **Reflective Card** (portrait/ID card), **Animated Content** (reveals) | |
-| 02 Work | **Flex Carousel** (WebGL, wide landscape cards with original-color screenshots), **Tooltip Card** (stack chips), **Gradient Text** (featured mark, greys) | User-approved color exception for project media |
+| 02 Work | **Flex Carousel** (WebGL, 2:1 panoramic cards with original-color screenshots), **Tooltip Card** (stack chips), **Gradient Text** (featured mark, greys) | User-approved color exception for project media |
 | 02b Showcase | **MacBook Scroll** (real screenshot) | Corso Velle, using its V2 repository |
 | Case pages | **Container Scroll Animation** | `/work/[slug]`: the screen settles flat as you scroll |
 | 03 Toolkit | **Logo Loop** + **Marquee** (type belts), **Micro Slats** (bg) | |
 | 04 Ledger | **Activity Heatmap** (UI Arc, grey scale) | Real data only |
 | 05 Experience | GSAP ScrollTrigger spine | |
 | 06 Recognition | Tooltip Card | Hidden when empty |
-| 07 Workbench | Local JSON formatter, text helpers and URL codec; optional visual lab with **Elastic Mesh**, **Dither Veil**, **Fuzzy Text**, **Jelly Radio** (picker), custom R3F ink shader | Lab mounts only when opened |
+| 07 Crafting room | Launcher for the standalone `/minecraft` app; optional visual lab with **Elastic Mesh**, **Dither Veil**, **Fuzzy Text**, **Jelly Radio** (picker), custom R3F ink shader | User-approved Minecraft colors; lab mounts only when opened |
 | 08 Contact | **Background Gradient Animation** (greys), Letter Swap links, copy-email | |
 | Footer | Custom big-type footer (replaces Aceternity Pro footer), Letter Swap ping-pong | |
 
@@ -129,9 +129,33 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        E2E_ADMIN_PASSWORD, plus mobile keyboard flow). Portrait checked at 375Ã—812
        and 1024Ã—1800; production carousel/footer screenshots inspected.
 
+- [x] 15. Minecraft crafting room: ten browser tools, edition-aware formatting, pixel
+       inventory and original icons; 2:1 carousel cards, bounded laptop scene,
+       full-width contact atmosphere, and streamed case-study URL parameter reads.
+       Validation: typecheck, lint, 35 unit tests, production build, and 33 browser
+       tests passed; 3 expected skips (authenticated studio checks without a password
+       and mobile keyboard flow). Minecraft inventory and item previews inspected at
+       1440px and 375px; `/work/arz` navigation verified in development and production.
+
 - [x] Deployment URL handling: normalize bare domains to HTTPS before metadata generation; regression coverage for URL configuration.
 
+- [x] 16. Standalone Minecraft page, stable portfolio launcher, RGB-to-LuckPerms
+       workflow, public domain/email configuration, redesigned app workspace and QA.
+       Validation: typecheck, lint, 53 unit tests, production build and 39 browser
+       tests passed; 3 expected skips. Verified applied CSS, launcher geometry,
+       RGB prefix command output, hash links, canonical domain, email links,
+       desktop/mobile composition and accessibility on all public page types.
+
 ## 6. Environment variables
+
+Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,
+voxel portal hero, sidebar workspace, mobile quick selector, footer and social image.
+Its 13 tools include a multi-stop RGB designer and LuckPerms rank, track and meta
+builders. Hash links such as `/minecraft#ranks` open a selected tool directly.
+The tools generate copyable commands locally; LuckPerms stores prefix data and a
+compatible chat/TAB formatter must render the selected RGB syntax.
+The Minecraft theme is a plain CSS import (`src/app/minecraft/theme.css`) so edits
+bypass the cached Tailwind compiler; dev filesystem caching is disabled as well.
 
 | Name | Required | Purpose |
 |---|---|---|
@@ -144,7 +168,7 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
 | `ADMIN_PASSWORD_HASH` | for admin | `pnpm hash-password` output |
 | `SESSION_SECRET` | for admin | â‰¥32 random bytes |
 | `REVALIDATE_SECRET` | no | Manual refresh endpoint |
-| `NEXT_PUBLIC_SITE_URL` | yes in prod | Canonical URL (`https://osayeed.dev`) |
+| `NEXT_PUBLIC_SITE_URL` | yes in prod | Canonical URL (`https://zaber.tech`) |
 
 ## 7. Known risks / decisions
 

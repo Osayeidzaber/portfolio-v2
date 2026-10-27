@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useRef, useState } from "react"
 
 import ShinyText from "@/components/ShinyText"
-import SpecularButton from "@/components/SpecularButton"
 import VariableFontAndCursor from "@/components/fancy/text/variable-font-and-cursor"
 import type { SiteContent } from "@/lib/content/schema"
 import { useMediaQuery, useReducedMotion } from "@/lib/motion/hooks"
@@ -48,7 +47,6 @@ export function Hero({ profile }: { profile: SiteContent["profile"] }) {
   // Opening choreography runs in CSS (globals.css, .hero-*) so it starts at first paint
   // instead of waiting for hydration; the intro copy is never hidden, which keeps LCP early.
 
-  const goTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" })
   const role = profile.roles[roleIndex] ?? profile.roles[0]
   const nameSpan = (text: string, invert = false) =>
     reduced || !fine || portrait ? (
@@ -147,18 +145,7 @@ export function Hero({ profile }: { profile: SiteContent["profile"] }) {
               </p>
             )}
             <div className="flex flex-wrap gap-3">
-              <SpecularButton
-                size="lg"
-                radius={26}
-                baseColor="#3a3a3a"
-                lineColor="#ffffff"
-                textColor="#f2f2f2"
-                tint="#ffffff"
-                tintOpacity={0.06}
-                onClick={() => goTo("work")}
-              >
-                See the work
-              </SpecularButton>
+              <a href="#work" className="pill pill-solid h-[52px] px-8">See the work <span aria-hidden>↘</span></a>
               <a href="#contact" className="pill pill-line h-[52px]">
                 Say hello
               </a>

@@ -1,7 +1,11 @@
 "use client"
 
-import { useId, useState, useSyncExternalStore, type ReactNode } from "react"
-import { BEDROCK_COLORS, LEGACY_COLORS, chunkAt, closestLegacy, convertCoordinates, gradientLetters, gradientOutput, motdProperty, paletteFor, parseMinecraftText, stackCount, xpAtLevel, type Edition } from "@/lib/minecraft"
+import { useId, useState, useSyncExternalStore } from "react"
+import { BEDROCK_COLORS, LEGACY_COLORS, chunkAt, convertCoordinates, motdProperty, paletteFor, stackCount, xpAtLevel, type Edition } from "@/lib/minecraft"
+
+import { Field, Result, TextPreview } from "./minecraft-controls"
+import { LuckPermsTools } from "./luckperms-tools"
+import { MinecraftGradientEditor } from "./minecraft-gradient-editor"
 
 const TOOLS = [
   { id: "nether", name: "Nether Coordinate Calculator", short: "Coordinates", hint: "A shortcut through dimensions. Convert X and Z; Y stays the same.", icon: "portal" },
@@ -14,9 +18,22 @@ const TOOLS = [
   { id: "portals", name: "Portal Link Calculator", short: "Portal links", hint: "Find the matching block position for your portal in the other dimension.", icon: "portal" },
   { id: "xp", name: "XP Level Calculator", short: "XP levels", hint: "Count the experience points between two level boundaries.", icon: "bottle" },
   { id: "items", name: "Minecraft Item Name Formatter", short: "Item names", hint: "Make an item name with a live inventory-tooltip preview.", icon: "sword" },
+  { id: "ranks", name: "LuckPerms Rank Builder", short: "Rank builder", hint: "Design a rank, preview its prefix and copy the LuckPerms commands.", icon: "sword" },
+  { id: "tracks", name: "LuckPerms Rank Ladder", short: "Rank ladder", hint: "Put your ranks in order and generate an optional inheritance chain.", icon: "sign" },
+  { id: "meta", name: "LuckPerms Meta Editor", short: "Meta editor", hint: "Create context-aware meta commands for a group or player.", icon: "bottle" },
 ] as const
 type ToolId = typeof TOOLS[number]["id"]
 type Icon = typeof TOOLS[number]["icon"]
+
+const subscribeHash = (listener: () => void) => {
+  window.addEventListener("hashchange", listener)
+  window.addEventListener("popstate", listener)
+  return () => { window.removeEventListener("hashchange", listener); window.removeEventListener("popstate", listener) }
+}
+const readTool = (): ToolId => {
+  const hash = window.location.hash.slice(1)
+  return TOOLS.some((item) => item.id === hash) ? hash as ToolId : "nether"
+}
 
 /** Original pixel icons: tiny rectilinear illustrations, no game asset downloads. */
 function PixelIcon({ icon }: { icon: Icon }) {
@@ -30,19 +47,6 @@ function PixelIcon({ icon }: { icon: Icon }) {
     {icon === "bottle" && <><path fill="#9487b5" d="M5 1h6v3H5z" /><path fill="#b1d6df" d="M6 4h4v3h2v2h2v5h-2v1H4v-1H2V9h2V7h2z" /><path fill="#7ddc3b" d="M4 9h8v4H4z" /><path fill="#d3ff94" d="M5 10h2v2H5z" /></>}
     {icon === "sword" && <><path fill="#28777d" d="M11 1h4v4h-2v2h-2v2H9v2H7V9H5V7h4V5h2z" /><path fill="#64efe1" d="M12 2h2v2h-2v2h-2v2H8v1H7V8h3V6h2z" /><path fill="#8a6339" d="M3 10h2v2H3zm-2 2h2v3H1z" /><path fill="#a8ebdf" d="M3 7h2v2h2v2h2v2H7v-2H5V9H3z" /></>}
   </svg>
-}
-
-function Field({ label, children }: { label: string; children: ReactNode }) {
-  return <label className="mc-field"><span>{label}</span>{children}</label>
-}
-
-function Result({ value, note }: { value: string; note: string }) {
-  const [status, setStatus] = useState("")
-  return <div className="mc-result">
-    <label className="mc-label">Crafted output<textarea aria-label="Crafted output" readOnly value={value} rows={Math.min(6, value.split("\n").length + 1)} /></label>
-    <div className="mc-result-actions"><button type="button" className="mc-button" disabled={!value} onClick={async () => { try { await navigator.clipboard.writeText(value); setStatus("Copied to clipboard.") } catch { setStatus("Select the output and copy it manually.") } }}>Copy output</button><span role="status">{status}</span></div>
-    <p className="mc-note">{note}</p>
-  </div>
 }
 
 function NumberTools({ tool }: { tool: ToolId }) {
@@ -103,18 +107,12 @@ function NumberTools({ tool }: { tool: ToolId }) {
   </>
 }
 
-function TextPreview({ text, edition }: { text: string; edition: Edition }) {
-  return <span className="mc-game-text">{parseMinecraftText(text, edition).map((run, index) => <span key={index} style={{ color: run.color, fontWeight: run.bold ? 900 : undefined, fontStyle: run.italic ? "italic" : undefined, textDecoration: [run.underline ? "underline" : "", run.strike ? "line-through" : ""].join(" ").trim() || undefined }} aria-label={run.obfuscated ? run.text : undefined}>{run.obfuscated ? "▒".repeat(Array.from(run.text).length) : run.text}</span>)}</span>
-}
-
 function TextTools({ tool }: { tool: ToolId }) {
   const [edition, setEdition] = useState<Edition>("java")
   const [text, setText] = useState(tool === "motd" ? "&a&lZABER'S SURVIVAL\n&7A new adventure starts here." : tool === "items" ? "Diamond Dream" : "Craft something cool")
   const [color, setColor] = useState("b")
-  const [start, setStart] = useState("#55ffff"), [end, setEnd] = useState("#aa55ff")
   const [bold, setBold] = useState(false), [italic, setItalic] = useState(false)
   const [underline, setUnderline] = useState(false), [strike, setStrike] = useState(false)
-  const [format, setFormat] = useState<"json" | "mini" | "legacy">("json")
   const [serverName, setServerName] = useState("A little block of the internet")
   const [serverAddress, setServerAddress] = useState("play.example.net")
   const colors = paletteFor(edition)
@@ -122,22 +120,21 @@ function TextTools({ tool }: { tool: ToolId }) {
   const decorations = `${bold ? "§l" : ""}${italic ? "§o" : ""}${underline && edition === "java" ? "§n" : ""}${strike && edition === "java" ? "§m" : ""}`
   const named = `§${selected[0]}${decorations}${text}§r`
   const json = JSON.stringify({ text, color: selected[2], bold, italic, underlined: edition === "java" && underline, strikethrough: edition === "java" && strike })
-  const result = tool === "gradient" ? gradientOutput(text, start, end, format) : tool === "motd" ? edition === "java" ? motdProperty(text) : `server-name=${text.replace(/&([0-9a-fg-uw])/gi, "§$1").replace(/[\r\n]+/g, " ")}` : tool === "items" && edition === "java" ? json : named
-  const description = tool === "gradient" ? format === "json" ? "Java 1.16+ RGB text component. Paste where JSON text is supported, not straight into normal chat." : format === "mini" ? "Requires a server plugin that supports Adventure MiniMessage. This syntax is not vanilla Minecraft." : "16-color approximation using § codes, for Java/Bedrock legacy text. Your server may require & instead." : tool === "motd" ? edition === "java" ? "Copy this line to Java server.properties. & is preview shorthand; output uses escaped section signs and newlines. Sample player count and ping are decorative." : "Bedrock server.properties server-name is one line. This export flattens line breaks. Sample player count and ping are decorative." : tool === "items" ? edition === "java" ? "Java text-component JSON. Use as a custom-name component in commands or supported plugins; command syntax depends on your game version. Ordinary anvils do not parse JSON." : "Bedrock legacy colored name. Use in an item editor or tool that supports § codes; availability depends on how the item is created." : "§ codes are native legacy codes. & is plugin shorthand. Preview supports formatting codes for the selected edition; Minecraft does not parse these in every input field."
+  const result = tool === "motd" ? edition === "java" ? motdProperty(text) : `server-name=${text.replace(/&([0-9a-u])/gi, "§$1").replace(/[\r\n]+/g, " ")}` : tool === "items" && edition === "java" ? json : named
+  const description = tool === "motd" ? edition === "java" ? "Copy this line to Java server.properties. & is preview shorthand; output uses escaped section signs and newlines. Sample player count and ping are decorative." : "Bedrock server.properties server-name is one line. This export flattens line breaks. Sample player count and ping are decorative." : tool === "items" ? edition === "java" ? "Java text-component JSON. Use as a custom-name component in commands or supported plugins; command syntax depends on your game version. Ordinary anvils do not parse JSON." : "Bedrock legacy colored name. Use in an item editor or tool that supports § codes; availability depends on how the item is created." : "§ codes are native legacy codes. & is plugin shorthand. Preview supports formatting codes for the selected edition; Minecraft does not parse these in every input field."
 
   return <>
     <div className="mc-fields">
-      {tool !== "gradient" && <Field label="Edition"><select value={edition} onChange={(event) => { const next = event.target.value as Edition; setEdition(next); if (BEDROCK_COLORS.some(([code]) => code === color)) setColor("b") }}><option value="java">Java Edition</option><option value="bedrock">Bedrock Edition</option></select></Field>}
+      <Field label="Edition"><select value={edition} onChange={(event) => { const next = event.target.value as Edition; setEdition(next); if (BEDROCK_COLORS.some(([code]) => code === color)) setColor("b") }}><option value="java">Java Edition</option><option value="bedrock">Bedrock Edition</option></select></Field>
       <Field label={tool === "motd" ? "Message of the day" : tool === "items" ? "Item name" : "Preview text"}><textarea rows={tool === "motd" ? 2 : 1} maxLength={tool === "motd" ? 300 : 120} value={text} onChange={(event) => setText(event.target.value)} /></Field>
-      {tool === "gradient" && <><Field label="Start color"><input type="color" value={start} onChange={(event) => setStart(event.target.value)} /></Field><Field label="End color"><input type="color" value={end} onChange={(event) => setEnd(event.target.value)} /></Field><Field label="Output format"><select value={format} onChange={(event) => setFormat(event.target.value as typeof format)}><option value="json">Java RGB JSON</option><option value="mini">MiniMessage (plugin)</option><option value="legacy">16-color legacy (Java / Bedrock)</option></select></Field></>}
       {tool === "motd" && <><Field label="Server list name"><input value={serverName} maxLength={60} onChange={(event) => setServerName(event.target.value)} /></Field><Field label="Server address"><input value={serverAddress} maxLength={100} onChange={(event) => setServerAddress(event.target.value)} /></Field></>}
     </div>
     {(tool === "colors" || tool === "items") && <>
-      <div className="mc-palette" role="group" aria-label="Minecraft colors">{colors.map(([code, name, hex]) => <button key={code} type="button" aria-pressed={selected[0] === code} aria-label={`${name} §${code}`} title={`${name} · §${code}`} onClick={() => setColor(code)} style={{ backgroundColor: hex }}><span style={{ color: ["0", "1", "4", "5", "8", "j", "m", "t"].includes(code) ? "#fff" : "#000" }}>{code}</span></button>)}</div>
+      <div className="mc-palette" role="group" aria-label="Minecraft colors">{colors.map(([code, name, hex]) => <button key={code} type="button" aria-pressed={selected[0] === code} aria-label={`${name} §${code}`} title={`${name} · §${code}`} onClick={() => setColor(code)} style={{ backgroundColor: hex }}><span style={{ color: ["0", "1", "4", "5", "8", "9", "j", "m", "t"].includes(code) ? "#fff" : "#000" }}>{code}</span></button>)}</div>
       <div className="mc-checkboxes">{[{ label: "Bold", value: bold, set: setBold }, { label: "Italic", value: italic, set: setItalic }, ...(edition === "java" ? [{ label: "Underline", value: underline, set: setUnderline }, { label: "Strikethrough", value: strike, set: setStrike }] : [])].map((setting) => <label key={setting.label}><input type="checkbox" checked={setting.value} onChange={(event) => setting.set(event.target.checked)} />{setting.label}</label>)}</div>
     </>}
-    <div className={`mc-preview ${tool === "items" ? "mc-item-preview" : ""}`} aria-label="Live Minecraft preview">
-      {tool === "gradient" ? <p className="mc-game-text">{gradientLetters(text, start, end).map((letter, index) => <span key={index} style={{ color: format === "legacy" ? closestLegacy(letter.color)[2] : letter.color }}>{letter.text}</span>)}</p> : tool === "motd" ? <div className="mc-server"><div className="mc-server-icon"><PixelIcon icon="block" /></div><div className="mc-server-copy"><div className="mc-server-title"><strong>{serverName}</strong><span>0 / 20 ▂▄▆█</span></div><TextPreview text={text} edition={edition} /><p>{serverAddress}</p></div></div> : <div className="mc-item-row">{tool === "items" && <PixelIcon icon="sword" />}<div><TextPreview text={named} edition={edition} />{tool === "items" && <p className="mc-note">Custom name preview · No command is run</p>}</div></div>}
+    <div className={`mc-preview ${tool === "items" ? "mc-item-preview" : ""}`} role="group" aria-label="Live Minecraft preview">
+      {tool === "motd" ? <div className="mc-server"><div className="mc-server-icon"><PixelIcon icon="block" /></div><div className="mc-server-copy"><div className="mc-server-title"><strong>{serverName}</strong><span>0 / 20 ▂▄▆█</span></div><TextPreview text={text} edition={edition} /><p>{serverAddress}</p></div></div> : <div className="mc-item-row">{tool === "items" && <PixelIcon icon="sword" />}<div><TextPreview text={named} edition={edition} />{tool === "items" && <p className="mc-note">Custom name preview · No command is run</p>}</div></div>}
     </div>
     <Result value={result} note={description} />
     {tool === "colors" && <dl className="mc-code-reference"><div><dt>Section sign</dt><dd>§{selected[0]}</dd></div><div><dt>Plugin shorthand</dt><dd>&amp;{selected[0]}</dd></div><div><dt>MOTD escape</dt><dd>{`\u00a7${selected[0]}`}</dd></div><div><dt>RGB</dt><dd>{selected[2]}</dd></div></dl>}
@@ -145,21 +142,28 @@ function TextTools({ tool }: { tool: ToolId }) {
 }
 
 export function MinecraftWorkbench() {
-  const [active, setActive] = useState<ToolId>("nether")
+  const active = useSyncExternalStore(subscribeHash, readTool, () => "nether" as ToolId)
+  const [shareStatus, setShareStatus] = useState("")
+  const setActive = (tool: ToolId) => {
+    window.history.replaceState(window.history.state, "", `#${tool}`)
+    window.dispatchEvent(new HashChangeEvent("hashchange"))
+    setShareStatus("")
+  }
   const ready = useSyncExternalStore(() => () => {}, () => true, () => false)
   const id = useId()
   const tool = TOOLS.find((item) => item.id === active)!
   const numeric = ["nether", "stacks", "time", "chunks", "portals", "xp"].includes(active)
   return <div className="mc-workbench">
-    <div className="mc-world-bar"><span>WORLD / CREATIVE</span><span>10 utilities · All local</span><span aria-hidden className="mc-hearts">♥ ♥ ♥ ♥ ♥</span></div>
+    <div className="mc-world-bar"><span>WORLD / CREATIVE</span><span>{TOOLS.length} utilities · All local</span><span aria-hidden className="mc-hearts">♥ ♥ ♥ ♥ ♥</span></div>
     <div className="mc-inventory">
       <div className="mc-inventory-heading"><h3>Choose your tool</h3><span>Inventory</span></div>
+      <div className="mc-mobile-tool-select"><Field label="Quick tool selector"><select value={active} onChange={(event) => setActive(event.target.value as ToolId)}>{TOOLS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></Field></div>
       <div className="mc-slots" role="group" aria-label="Minecraft tool inventory">{TOOLS.map((item, index) => <button key={item.id} disabled={!ready} aria-pressed={item.id === active} aria-controls={id} type="button" onClick={() => setActive(item.id)} className="mc-slot" aria-label={item.name}><span className="mc-slot-number" aria-hidden>{String(index + 1).padStart(2, "0")}</span><PixelIcon icon={item.icon} /><span aria-hidden>{item.short}</span></button>)}</div>
       <div id={id} className="mc-station" aria-labelledby={`${id}-title`}>
         <header className="mc-station-heading"><PixelIcon icon={tool.icon} /><div><p className="mc-label">Crafting station / {String(TOOLS.indexOf(tool) + 1).padStart(2, "0")}</p><h3 id={`${id}-title`}>{tool.name}</h3><p>{tool.hint}</p></div></header>
-        <fieldset disabled={!ready} className="mc-tool-fields" key={active}><legend className="sr-only">{tool.name}</legend>{numeric ? <NumberTools tool={active} /> : <TextTools tool={active} />}</fieldset>
+        <fieldset disabled={!ready} className="mc-tool-fields" key={active}><legend className="sr-only">{tool.name}</legend>{active === "ranks" || active === "tracks" || active === "meta" ? <LuckPermsTools tool={active} /> : active === "gradient" ? <MinecraftGradientEditor /> : numeric ? <NumberTools tool={active} /> : <TextTools tool={active} />}</fieldset>
       </div>
-      <div className="mc-bottom-bar"><span>Save your inventory space. Bookmark this page.</span><span>No account. No uploads.</span></div>
+      <div className="mc-bottom-bar"><span>Save your inventory space. Bookmark this tool.</span><button type="button" className="mc-button" onClick={async () => { try { await navigator.clipboard.writeText(window.location.href); setShareStatus("Tool link copied.") } catch { setShareStatus("Copy the address from your browser.") } }}>Share this tool ↗</button><span role="status">{shareStatus}</span><span>No account. No uploads.</span></div>
     </div>
     <p className="mc-credits">Fan-made utilities. Not affiliated with Mojang or Microsoft. Formatting references: <a href="https://learn.microsoft.com/en-us/minecraft/creator/reference/content/rawmessagejson" target="_blank" rel="noreferrer">Minecraft Creator docs ↗</a> · <a href="https://docs.papermc.io/adventure/minimessage/format/" target="_blank" rel="noreferrer">MiniMessage ↗</a></p>
   </div>

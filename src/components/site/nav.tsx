@@ -84,6 +84,13 @@ export function Nav({
 
   const href = (id: string) => (onHome ? `#${id}` : `/#${id}`)
   const primary = items.filter((i) => ["work", "about", "ledger", "play", "contact"].includes(i.id))
+  // Intermediate chapters belong to the preceding primary item; never unmount the
+  // shared indicator just because Toolkit or Experience crosses the viewport.
+  const activeIndex = items.findIndex((item) => item.id === active)
+  const primaryIds = new Set(primary.map((item) => item.id))
+  const activePrimary = onHome
+    ? items.slice(0, activeIndex + 1).findLast((item) => primaryIds.has(item.id))?.id
+    : pathname.startsWith("/work/") ? "work" : undefined
 
   return (
     <>
@@ -101,7 +108,7 @@ export function Nav({
           <nav aria-label="Primary" className="hidden md:block">
             <ul className="flex gap-1 rounded-full border border-rule bg-ink/80 p-[5px] backdrop-blur-md">
               {primary.map((item) => {
-                const isActive = active === item.id
+                const isActive = activePrimary === item.id
                 return (
                   <li key={item.id} className="relative">
                     {isActive && (
