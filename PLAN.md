@@ -191,6 +191,20 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        CSV contents, safe draft reuse, original-record preservation, navigation
        guards and accessibility at 1440px and 375px. Fixtures removed after QA.
 
+- [x] 21. Live invoice editing with an immediate, incomplete-draft-safe preview;
+       reusable bKash, Nagad, Rocket, bank and custom payment instructions; visible
+       email acceptance receipts with recipient, Dhaka time and message ID.
+       PDF generation, font embedding, previews and downloads now run in the browser.
+       Explicit send uploads the browser-generated issued PDF; the authenticated
+       server forwards it to Resend and preserves exact attachments for safe retries.
+       Payment details remain snapshots on issued records; no automatic email added.
+       Validation: typecheck, lint, 88 unit tests and production build passed.
+       Desktop and 375px invoice browser QA passed, including actual PDF downloads,
+       payment methods, live amounts, design switching and no backend PDF requests.
+       Across the full browser suite, 62 checks passed with 4 expected skips; one
+       desktop WebGL carousel timing failure passed on an isolated rerun. No live
+       email sent.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,

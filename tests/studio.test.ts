@@ -1,11 +1,14 @@
+import { readFile } from "node:fs/promises"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { PDFDocument } from "pdf-lib"
 
-import { emptyStudio, invoiceInputSchema, invoiceSchema, invoiceTotals, saveInvoice, toMinor, type InvoiceInput } from "@/lib/studio/schema"
+import { businessSchema, paymentDetails, emptyStudio, invoiceInputSchema, invoiceSchema, invoiceTotals, saveInvoice, toMinor, type InvoiceInput } from "@/lib/studio/schema"
 import { invoiceDesigns } from "@/lib/studio/designs"
 import { invoiceEmail } from "@/lib/studio/invoice-document"
 import { invoicePdf } from "@/lib/studio/pdf"
 import { readStudio, writeStudio } from "@/lib/studio/store"
+
+const loadFont = async (name: string) => new Uint8Array(await readFile(`public/oz-studio/fonts/${name}`))
 
 const id = "aaaabbbb-cccc-4000-8000-111122223333"
 const input: InvoiceInput = {
@@ -17,6 +20,21 @@ const fixture = () => { const data = emptyStudio(); data.settings.paymentInstruc
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals() })
 
 describe("invoice accounting and snapshots", () => {
+  it("validates payment methods, preserves legacy instructions and snapshots account details", () => {
+    const { data, invoice } = fixture()
+    expect(businessSchema.parse(data.settings).paymentMethods).toBeUndefined()
+    data.settings.paymentInstructions = "Use your invoice number as the reference."
+    data.settings.paymentMethods = [{ name: "bKash", details: "TEST ACCOUNT ONLY\nMerchant Payment" }, { name: "Bank transfer", details: "Preview bank details" }]
+    const draft = saveInvoice(data, { ...input, id }, id, invoice.createdAt)
+    expect(paymentDetails(draft.business)).toBe("bKash: TEST ACCOUNT ONLY\nMerchant Payment\nBank transfer: Preview bank details\nUse your invoice number as the reference.")
+    data.settings.paymentMethods[0].details = "Changed account"
+    expect(draft.business.paymentMethods![0].details).toContain("TEST ACCOUNT ONLY")
+    const email = invoiceEmail(draft, "invoices@example.com", "https://example.com/logo.png")
+    expect(email.text).toContain(paymentDetails(draft.business))
+    expect(email.html).toContain("Merchant Payment")
+    expect(businessSchema.safeParse({ ...data.settings, paymentMethods: [{ name: "bKash", details: "  " }] }).success).toBe(false)
+    expect(businessSchema.safeParse({ ...data.settings, paymentMethods: Array(6).fill({ name: "bKash", details: "Preview" }) }).success).toBe(false)
+  })
   it("calculates integer totals with discount before tax", () => {
     expect(invoiceTotals(input)).toEqual({ subtotal: 20010, discount: 1010, tax: 950, total: 19950 })
     expect(toMinor("0.29")).toBe(29)
@@ -96,7 +114,7 @@ describe("invoice documents", () => {
   })
   it.each(invoiceDesigns)("renders the $name layout as a valid PDF", async ({ id: design, name }) => {
     const { invoice } = fixture()
-    const document = await PDFDocument.load(await invoicePdf({ ...invoice, design }))
+    const document = await PDFDocument.load(await invoicePdf({ ...invoice, design }, loadFont))
     expect(document.getTitle()).toContain("OZ-0001")
     expect(document.getPageCount()).toBeGreaterThan(0)
     if (design !== "signature") expect(document.getSubject()).toBe(`OZ Studio / ${name}`)
@@ -115,7 +133,7 @@ describe("invoice documents", () => {
     const { invoice } = fixture()
     invoice.client.name = "Preview Client / জাবের"
     invoice.items = Array.from({ length: 20 }, (_, i) => ({ description: `Service ${i + 1}: a detailed project deliverable`, quantity: 1, unitPrice: 10000 }))
-    const bytes = await invoicePdf(invoice)
+    const bytes = await invoicePdf(invoice, loadFont)
     const document = await PDFDocument.load(bytes)
     expect(document.getTitle()).toContain("OZ-0001")
     expect(document.getPageCount()).toBeGreaterThan(1)

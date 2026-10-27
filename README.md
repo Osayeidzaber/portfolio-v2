@@ -238,10 +238,19 @@ their order and hides projects marked hidden. The editor overview links both pub
 portfolios and the invoice desk, with a short content-readiness checklist.
 
 The invoice desk focuses on invoices: custom numbering, billing details, line items,
-currency, discounts, a user-supplied tax rate, notes, and payment instructions. You
-can choose among seven invoice designs, inspect the actual PDF in an embedded viewer,
+currency, discounts, a user-supplied tax rate, notes, and payment instructions. Settings
+include bKash, Nagad, Rocket, bank transfer and custom payment methods, with your own
+account details carried into previews, PDFs and emails. You
+can watch the invoice update beside the form while typing, choose among seven
+invoice designs, inspect the actual PDF in an embedded viewer,
 download it, issue a saved draft,
 record full payment, or void an invoice. Issued invoice details are locked.
+
+The browser generates the actual invoice PDF from your invoice data and selected
+design. Preview and download use a local blob; no PDF-generation request is sent to
+the backend. When you explicitly send, the browser supplies the issued PDF as an
+attachment. The authenticated server sends those bytes through Resend and records
+acceptance. Pending retries reuse the original attachment and request.
 
 The overview separates outstanding, overdue and paid amounts by currency. Search,
 status filters, sorting and a CSV export help manage the ledger. **Reuse** copies
@@ -263,7 +272,8 @@ Existing records without a design field continue using the original layout.
 
 **Email is review-and-send.** Resend receives a branded HTML/text message with the
 PDF attached only when the owner explicitly sends it. Provider acceptance is recorded
-with a message ID; it is not presented as delivery or payment confirmation. Failed
+with a message ID. The ledger and invoice review show the recipient, acceptance
+time and PDF filename; it is not presented as delivery or payment confirmation. Failed
 submissions retain their exact request for deduplicated retries within 23 hours.
 Older unresolved sends require checking the provider dashboard before further action.
 

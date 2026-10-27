@@ -111,3 +111,84 @@
   .oz-row-actions { justify-content:flex-start; gap:12px; }
   .oz-row-amount { margin-right:auto; }
 }
+
+/* Edit and preview together: input is never gated on a completed billing form. */
+.oz-invoice-editor.oz-editor-live { max-width:none; }
+.oz-edit-layout { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr); gap:24px; align-items:start; }
+.oz-edit-layout>.oz-form { min-width:0; }
+.oz-edit-layout .oz-design-grid { display:flex; overflow-x:auto; padding:3px 3px 12px; scroll-snap-type:x proximity; }
+.oz-edit-layout .oz-design-card { flex:0 0 145px; scroll-snap-align:start; }
+.oz-edit-layout .oz-line-item { grid-template-columns:minmax(0,1fr) minmax(90px,1fr) 44px; }
+.oz-edit-layout .oz-line-item>label:first-child { grid-column:1/-1; }
+.oz-edit-layout .oz-line-item>label:nth-child(2) { grid-column:1; }
+.oz-live-preview { position:sticky; top:20px; min-width:0; border:1px solid #444; border-radius:7px; background:#080808; overflow:hidden; }
+.oz-live-preview-header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 18px 8px; }
+.oz-live-preview-header h2 { font-size:17px; font-weight:500; margin:0 0 6px; }
+.oz-live-preview-header p { margin:0; color:#bdbdbd; font-size:10px; }
+.oz-live-preview-total { display:flex; justify-content:space-between; gap:12px; padding:10px 18px 16px; border-bottom:1px solid #333; font-size:12px; }
+.oz-live-preview-total strong { font-weight:500; font-variant-numeric:tabular-nums; }
+.oz-live-sheet { max-height:calc(100svh - 240px); overflow:auto; overscroll-behavior:contain; padding:14px; background:#171717; }
+.oz-live-sheet[hidden] { display:none; }
+.oz-live-preview-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 16px; padding:8px 18px; border-top:1px solid #333; }
+.oz-live-preview-footer p,.oz-live-calculation-hint { font-size:10px; line-height:1.7; color:#bdbdbd; margin:0; }
+.oz-live-preview-footer button:disabled { opacity:.45; cursor:default; }
+.oz-live-calculation-hint { padding:10px 18px; }
+.oz-live-paper { padding:24px 20px; border:1px solid #444; border-radius:0; }
+.oz-live-paper .oz-paper-header { padding-bottom:18px; gap:12px; }
+.oz-live-paper .oz-paper-header strong { font-size:13px; }
+.oz-live-paper .oz-paper-brand { font-size:20px; }
+.oz-live-paper .oz-paper-header p { font-size:7px; }
+.oz-live-document-title { font:italic 50px/1 var(--font-instrument),Georgia,serif; margin:24px 0 16px; letter-spacing:-2px; }
+.oz-live-paper h2 { font-size:20px; margin:0 0 12px; }
+.oz-live-paper .oz-paper-meta { font-size:10px; line-height:1.8; }
+.oz-live-paper .oz-paper-parties { gap:18px; margin:24px 0; }
+.oz-live-paper .oz-paper-parties p,.oz-live-paper .oz-paper-note p { font-size:10px; }
+.oz-live-paper .oz-paper-table { font-size:10px; }
+.oz-live-paper .oz-paper-table th { font-size:8px; letter-spacing:.3px; }
+.oz-live-paper .oz-paper-table :is(th,td) { padding:12px 3px; overflow-wrap:anywhere; }
+.oz-live-paper .oz-paper-table td:last-child { white-space:normal; }
+.oz-live-paper .oz-paper-note { margin-top:24px; padding-top:18px; }
+.oz-live-paper .oz-invoice-totals { font-size:10px; max-width:100%; }
+.oz-live-paper .oz-invoice-totals .oz-total { font-size:18px; }
+.oz-preview-placeholder { opacity:.7; font-style:italic; }
+.oz-live-paper:is([data-design=noir],[data-design=monolith],[data-design=outline],[data-design=atelier]) { background:#000; color:#f2f2f2; }
+.oz-live-paper:is([data-design=noir],[data-design=monolith],[data-design=outline],[data-design=atelier]) :is(h2,h3,.oz-paper-meta,.oz-paper-header p,.oz-paper-table th) { color:#bdbdbd; }
+.oz-live-paper:is([data-design=noir],[data-design=monolith],[data-design=outline],[data-design=atelier]) :is(.oz-paper-header,.oz-paper-note,.oz-total,th,td) { border-color:#444; }
+.oz-live-paper[data-design=monolith] .oz-live-document-title { font-family:var(--font-bricolage),sans-serif; font-style:normal; font-weight:800; font-size:45px; }
+.oz-live-paper[data-design=monolith] .oz-total { background:#f2f2f2; color:#000; padding:14px 10px; }
+.oz-live-paper[data-design=outline] { outline:1px solid #555; outline-offset:-9px; padding:28px 22px; }
+.oz-live-paper[data-design=atelier] { border-left:18px solid #282828; }
+.oz-live-paper[data-design=ledger] .oz-live-document-title { font-family:var(--font-bricolage),sans-serif; font-style:normal; font-size:32px; font-weight:700; }
+@media(max-width:1100px) { .oz-edit-layout { grid-template-columns:minmax(0,1fr) minmax(300px,.9fr); gap:18px; } .oz-edit-layout>.oz-panel { padding:20px 16px; } }
+@media(max-width:900px) {
+  .oz-edit-layout { display:flex; flex-direction:column; }
+  .oz-edit-layout>.oz-form { width:100%; }
+  .oz-live-preview { order:-1; width:100%; top:0; z-index:5; }
+  .oz-live-sheet { max-height:30svh; padding:10px; }
+  .oz-live-preview-header { padding:8px 14px 0; }
+  .oz-live-preview-total { padding:8px 14px 12px; }
+  .oz-live-preview-footer { padding:4px 14px; }
+  .oz-live-preview-footer p { max-width:180px; }
+  .oz-edit-layout input,.oz-edit-layout textarea,.oz-edit-layout select { scroll-margin-top:calc(30svh + 180px); }
+  .oz-live-paper .oz-paper-parties { grid-template-columns:1fr 1fr; }
+}
+.oz-email-receipt { padding:18px; border:1px solid #444; background:#0a0a0a; margin-bottom:22px; overflow-wrap:anywhere; }
+.oz-email-receipt strong { font-size:16px; font-weight:500; }
+.oz-email-receipt p { font-size:12px; color:#bdbdbd; line-height:1.8; margin:10px 0 0; }
+.oz-email-status { font-size:10px!important; color:#bdbdbd!important; }
+.oz-email-status[data-email-status=accepted] { color:#f2f2f2!important; }
+.oz-email-attachment { display:flex; flex-direction:column; gap:9px; border:1px solid #444; background:#0a0a0a; padding:18px; margin-bottom:20px; overflow-wrap:anywhere; }
+.oz-email-attachment strong { font-size:14px; font-weight:500; }
+.oz-email-attachment>span:last-child { font-size:11px; color:#bdbdbd; line-height:1.7; }
+
+/* Payment options stay neutral and readable alongside business settings. */
+.oz-payment-methods { border: 0; padding: 0; margin: 0; min-width: 0; }
+.oz-payment-methods legend { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.oz-payment-presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.oz-payment-card { display: grid; gap: 16px; border: 1px solid #333; background: #080808; padding: 20px; margin-bottom: 12px; }
+.oz-payment-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.oz-payment-card textarea { min-height: 100px; }
+
+.oz-email-pdf { margin-bottom:24px; border:1px solid #444; padding:16px; }
+.oz-email-pdf summary { cursor:pointer; min-height:44px; display:list-item; align-content:center; font-size:13px; }
+.oz-email-pdf .oz-pdf-stage { margin-top:16px; }

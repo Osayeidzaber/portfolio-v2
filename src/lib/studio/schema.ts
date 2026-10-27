@@ -4,10 +4,15 @@ import { invoiceDesignIds } from "./designs"
 export const currencySchema = z.enum(["BDT", "USD", "CAD", "EUR", "GBP"])
 const text = (max: number) => z.string().trim().max(max)
 const minor = z.number().int().min(0).max(100_000_000)
+export const paymentMethodSchema = z.object({
+  name: text(60).min(1, "Enter a payment method name."),
+  details: text(400).min(1, "Add the account or payment details for each method."),
+})
 
 export const businessSchema = z.object({
   name: text(100).min(1), email: z.email().max(254), address: text(500),
   currency: currencySchema, paymentInstructions: text(1200), invoiceNote: text(1200),
+  paymentMethods: z.array(paymentMethodSchema).max(5).optional(),
 })
 export const billingSchema = z.object({ name: text(100).min(1), company: text(100), email: z.email().max(254), address: text(500) })
 export const lineSchema = z.object({ description: text(180).min(1), quantity: z.number().int().min(1).max(10_000), unitPrice: minor })
@@ -41,6 +46,12 @@ export const studioSchema = z.object({
 })
 
 export type Business = z.infer<typeof businessSchema>
+export type PaymentMethod = z.infer<typeof paymentMethodSchema>
+
+/** One representation keeps payment details consistent across every invoice format. */
+export function paymentDetails(business: Business): string {
+  return [...(business.paymentMethods ?? []).map((method) => `${method.name}: ${method.details}`), business.paymentInstructions].filter((value) => value.trim()).join("\n")
+}
 export type Billing = z.infer<typeof billingSchema>
 export type Invoice = z.infer<typeof invoiceSchema>
 export type InvoiceInput = z.infer<typeof invoiceInputSchema>
@@ -96,7 +107,7 @@ export function saveInvoice(data: StudioData, raw: unknown, id: string, createdA
     number,
     design: input.design ?? existing?.design ?? (existing ? "signature" : "noir"),
     createdAt: existing?.createdAt ?? createdAt,
-    status: "draft", client: { ...input.client }, business: { ...data.settings },
+    status: "draft", client: { ...input.client }, business: { ...data.settings, ...(data.settings.paymentMethods ? { paymentMethods: data.settings.paymentMethods.map((method) => ({ ...method })) } : {}) },
   }
   if (existing) data.invoices[data.invoices.indexOf(existing)] = invoice
   else { data.invoices.push(invoice); data.nextInvoice += 1 }

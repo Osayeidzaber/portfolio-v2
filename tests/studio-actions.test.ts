@@ -4,7 +4,6 @@ import { emptyStudio, saveInvoice, type StudioData } from "@/lib/studio/schema"
 
 const state = vi.hoisted(() => ({ authenticated: true, data: null as StudioData | null, sha: "s0", writes: 0 }))
 vi.mock("@/lib/auth/session", () => ({ isAuthenticated: vi.fn(async () => state.authenticated) }))
-vi.mock("@/lib/studio/pdf", () => ({ invoicePdf: vi.fn(async () => new Uint8Array([37, 80, 68, 70])) }))
 vi.mock("@/lib/studio/store", () => ({
   StudioConflict: class extends Error {}, studioStorageMode: () => "local",
   readStudio: vi.fn(async () => ({ data: structuredClone(state.data), sha: state.sha })),
@@ -15,9 +14,10 @@ vi.mock("@/lib/studio/store", () => ({
   }),
 }))
 
-import { changeInvoiceStatus, issueInvoiceAction, loadWorkspace, previewInvoiceAction, saveBusinessAction, saveInvoiceAction, sendInvoiceAction } from "@/app/admin/oz-studio/actions"
+import { changeInvoiceStatus, issueInvoiceAction, loadWorkspace, saveBusinessAction, saveInvoiceAction, sendInvoiceAction } from "@/app/admin/oz-studio/actions"
 import { readStudio } from "@/lib/studio/store"
 
+const attachment = Buffer.from("%PDF-1.7\nBrowser-generated test attachment\n%%EOF").toString("base64")
 const id = "aaaabbbb-cccc-4000-8000-111122223333"
 beforeEach(() => {
   vi.clearAllMocks()
@@ -33,7 +33,7 @@ afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs() })
 describe("studio server actions", () => {
   it("guards every read, write, preview and send before accessing private data", async () => {
     state.authenticated = false
-    const results = await Promise.all([loadWorkspace(), saveInvoiceAction({}, "s0"), saveBusinessAction({}, "s0"), changeInvoiceStatus(id, "paid", "s0"), issueInvoiceAction(id, "s0"), sendInvoiceAction(id, "s0"), previewInvoiceAction({}, {})])
+    const results = await Promise.all([loadWorkspace(), saveInvoiceAction({}, "s0"), saveBusinessAction({}, "s0"), changeInvoiceStatus(id, "paid", "s0"), issueInvoiceAction(id, "s0"), sendInvoiceAction(id, "s0", attachment)])
     expect(results.every((result) => !result.ok)).toBe(true)
     expect(readStudio).not.toHaveBeenCalled()
     expect(state.writes).toBe(0)
@@ -52,23 +52,38 @@ describe("studio server actions", () => {
     expect(fetch).not.toHaveBeenCalled()
   })
   it("sends the issued PDF once, records acceptance and does not resend accepted invoices", async () => {
+    state.data!.invoices[0].design = "outline"
+    state.data!.invoices[0].business.paymentInstructions = ""
+    state.data!.invoices[0].business.paymentMethods = [{ name: "bKash", details: "TEST ACCOUNT ONLY" }]
     const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ id: "message-test" })))
     vi.stubGlobal("fetch", fetch)
-    const result = await sendInvoiceAction(id, "s0")
+    const result = await sendInvoiceAction(id, "s0", attachment)
     expect(result.ok).toBe(true)
     expect(state.data!.invoices[0].status).toBe("issued")
     expect(state.data!.invoices[0].emailAttempt?.providerId).toBe("message-test")
     expect(state.data!.invoices[0].emailAttempt?.payload).toBeUndefined()
     const body = JSON.parse(fetch.mock.calls[0][1].body)
     expect(body.attachments[0].filename).toBe("OZ-0001.pdf")
+    expect(body.attachments).toHaveLength(1)
+    expect(Buffer.from(body.attachments[0].content, "base64").toString()).toBe(Buffer.from(attachment, "base64").toString())
+    expect(state.data!.invoices[0].emailAttempt?.acceptedAt).toBeTruthy()
     expect(body.from).toBe("OZ Studio <invoices@example.com>")
     await sendInvoiceAction(id, state.sha)
     expect(fetch).toHaveBeenCalledTimes(1)
   })
+  it("rejects missing or malformed attachments before claiming or sending", async () => {
+    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch)
+    for (const pdf of [undefined, "not-base64", Buffer.from("%PDF-truncated").toString("base64"), Buffer.from("not a PDF %%EOF").toString("base64")]) {
+      const result = await sendInvoiceAction(id, "s0", pdf)
+      expect(result.ok).toBe(false)
+    }
+    expect(state.writes).toBe(0)
+    expect(fetch).not.toHaveBeenCalled()
+  })
   it("retains the exact request and idempotency key when provider submission fails", async () => {
     const fetch = vi.fn().mockResolvedValueOnce(new Response("{}", { status: 503 })).mockResolvedValueOnce(new Response(JSON.stringify({ id: "retry-message" })))
     vi.stubGlobal("fetch", fetch)
-    const first = await sendInvoiceAction(id, "s0")
+    const first = await sendInvoiceAction(id, "s0", attachment)
     expect(first.ok).toBe(false)
     expect(state.data!.invoices[0].emailAttempt?.acceptedAt).toBeUndefined()
     const second = await sendInvoiceAction(id, state.sha)
@@ -78,7 +93,7 @@ describe("studio server actions", () => {
   })
   it("stops old pending requests before the provider expires its deduplication window", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 503 })))
-    await sendInvoiceAction(id, "s0")
+    await sendInvoiceAction(id, "s0", attachment)
     state.data!.invoices[0].emailAttempt!.startedAt = "2020-01-01T00:00:00.000Z"
     const fetch = vi.fn(); vi.stubGlobal("fetch", fetch)
     const result = await sendInvoiceAction(id, state.sha)

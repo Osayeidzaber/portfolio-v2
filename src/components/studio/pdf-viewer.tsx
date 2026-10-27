@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import type { PDFDocumentLoadingTask, PDFDocumentProxy, RenderTask } from "pdfjs-dist"
 
-import { previewInvoiceAction } from "@/app/admin/oz-studio/actions"
+import { browserInvoicePdf } from "@/lib/studio/browser-pdf"
 import type { Invoice } from "@/lib/studio/schema"
 import { invoiceDesignName } from "@/lib/studio/designs"
 
@@ -47,7 +47,6 @@ export function PdfViewer({ invoice }: { invoice: Invoice }) {
   const canvas = useRef<HTMLCanvasElement>(null)
   const container = useRef<HTMLDivElement>(null)
   const signature = JSON.stringify(invoice)
-  const saved = invoice.status !== "draft"
 
   useEffect(() => {
     const changed = () => setExpanded(document.fullscreenElement === viewer.current)
@@ -68,16 +67,7 @@ export function PdfViewer({ invoice }: { invoice: Invoice }) {
     let loading: PDFDocumentLoadingTask | undefined
     async function open() {
       const invoice = JSON.parse(signature) as Invoice
-      let bytes: Uint8Array
-      if (saved) {
-        const response = await fetch(`/api/studio/invoices/${invoice.id}/pdf`, { cache: "no-store" })
-        if (!response.ok) throw new Error("The saved PDF could not be loaded. Reload and check your session.")
-        bytes = new Uint8Array(await response.arrayBuffer())
-      } else {
-        const result = await previewInvoiceAction(invoice, invoice.business)
-        if (!result.ok) throw new Error(result.error)
-        bytes = Uint8Array.from(atob(result.pdf), (character) => character.charCodeAt(0))
-      }
+      const bytes = await browserInvoicePdf(invoice)
       const pdfjs = await import("pdfjs-dist")
       if (!active) return
       objectUrl = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "application/pdf" }))
@@ -89,7 +79,7 @@ export function PdfViewer({ invoice }: { invoice: Invoice }) {
     }
     open().catch((error) => { if (active) setError(error instanceof Error ? error.message : "Could not open the PDF.") })
     return () => { active = false; if (loading) void loading.destroy().catch(() => {}); if (objectUrl) URL.revokeObjectURL(objectUrl) }
-  }, [signature, saved])
+  }, [signature])
 
   useEffect(() => {
     const element = container.current

@@ -1,19 +1,17 @@
-import "server-only"
+import { loadPdfFont, type PdfFontLoader } from "./pdf-fonts"
 import "regenerator-runtime/runtime.js"
 
-import { readFile } from "node:fs/promises"
-import { join } from "node:path"
 import fontkit from "@pdf-lib/fontkit"
 import { PDFDocument, rgb, type PDFFont } from "pdf-lib"
 
-import { displayDate, invoiceTotals, money, type Invoice } from "./schema"
+import { paymentDetails, displayDate, invoiceTotals, money, type Invoice } from "./schema"
 import { OZ_MONOGRAM_PATH } from "./brand"
 import { designedInvoicePdf } from "./pdf-layouts"
 
-/** Printable invoice, generated server-side; no private invoice has a public URL. */
-export async function invoicePdf(invoice: Invoice): Promise<Uint8Array> {
+/** Printable invoice, generated in the browser; no private invoice has a public URL. */
+export async function invoicePdf(invoice: Invoice, loadFont: PdfFontLoader = loadPdfFont): Promise<Uint8Array> {
   // Preserve existing invoices without a design field as the original composition.
-  if (invoice.design && invoice.design !== "signature") return designedInvoicePdf(invoice, invoice.design)
+  if (invoice.design && invoice.design !== "signature") return designedInvoicePdf(invoice, invoice.design, loadFont)
   const document = await PDFDocument.create()
   const stamp = new Date(invoice.createdAt)
   document.setCreationDate(stamp)
@@ -21,13 +19,12 @@ export async function invoicePdf(invoice: Invoice): Promise<Uint8Array> {
   document.setTitle(`${invoice.number} — ${invoice.business.name}`)
   document.setAuthor(invoice.business.name)
   document.registerFontkit(fontkit)
-  const fontDirectory = join(process.cwd(), "public/oz-studio/fonts")
-  const fallback = await document.embedFont(await readFile(join(fontDirectory, "NotoSans-Regular.ttf")), { subset: true })
-  const regular = await document.embedFont(await readFile(join(fontDirectory, "BricolageGrotesque-Regular.ttf")), { subset: true })
-  const bold = await document.embedFont(await readFile(join(fontDirectory, "BricolageGrotesque-Bold.ttf")), { subset: true })
-  const bengali = await document.embedFont(await readFile(join(fontDirectory, "NotoSansBengali-Regular.ttf")), { subset: true })
-  const serif = await document.embedFont(await readFile(join(fontDirectory, "InstrumentSerif-Italic.ttf")), { subset: true })
-  const mono = await document.embedFont(await readFile(join(fontDirectory, "JetBrainsMono-Regular.ttf")), { subset: true })
+  const fallback = await document.embedFont(await loadFont("NotoSans-Regular.ttf"), { subset: true })
+  const regular = await document.embedFont(await loadFont("BricolageGrotesque-Regular.ttf"), { subset: true })
+  const bold = await document.embedFont(await loadFont("BricolageGrotesque-Bold.ttf"), { subset: true })
+  const bengali = await document.embedFont(await loadFont("NotoSansBengali-Regular.ttf"), { subset: true })
+  const serif = await document.embedFont(await loadFont("InstrumentSerif-Italic.ttf"), { subset: true })
+  const mono = await document.embedFont(await loadFont("JetBrainsMono-Regular.ttf"), { subset: true })
   const supported = new Map([regular, bold, bengali, serif, mono, fallback].map((font) => [font, new Set(font.getCharacterSet())]))
   let page = document.addPage([595.28, 841.89])
   let y = 786
@@ -163,7 +160,7 @@ export async function invoicePdf(invoice: Invoice): Promise<Uint8Array> {
   const total = money(totals.total, invoice.currency)
   const totalSize = Math.min(24, 198 / bold.widthOfTextAtSize(total, 1))
   paint(total, 330, y - 53, totalSize, true, white)
-  const payment = invoice.business.paymentInstructions || "Add your payment instructions before issuing this invoice."
+  const payment = paymentDetails(invoice.business) || "Add your payment instructions before issuing this invoice."
   const paymentLines = wrapLines(payment, 235, 9.5)
   const noteLines = invoice.notes ? wrapLines(invoice.notes, 235, 9.5) : []
   const detailsHeight = 23 + paymentLines.length * 16.5 + (noteLines.length ? 35 + noteLines.length * 16.5 : 0)

@@ -1,20 +1,18 @@
-import "server-only"
+import { loadPdfFont, type PdfFontLoader } from "./pdf-fonts"
 import "regenerator-runtime/runtime.js"
 
-import { readFile } from "node:fs/promises"
-import { join } from "node:path"
 import fontkit from "@pdf-lib/fontkit"
 import { PDFDocument, rgb, type PDFFont, type RGB } from "pdf-lib"
 
 import { OZ_MONOGRAM_PATH } from "./brand"
 import { invoiceDesignName, type InvoiceDesign } from "./designs"
-import { displayDate, invoiceTotals, money, type Invoice } from "./schema"
+import { paymentDetails, displayDate, invoiceTotals, money, type Invoice } from "./schema"
 
 const W = 595.28
 const H = 841.89
 
 /** Independent compositions share typography, exact accounting data and overflow rules. */
-export async function designedInvoicePdf(invoice: Invoice, design: Exclude<InvoiceDesign, "signature">) {
+export async function designedInvoicePdf(invoice: Invoice, design: Exclude<InvoiceDesign, "signature">, loadFont: PdfFontLoader = loadPdfFont) {
   const doc = await PDFDocument.create()
   doc.registerFontkit(fontkit)
   const date = new Date(invoice.createdAt)
@@ -23,7 +21,7 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
   doc.setSubject(`OZ Studio / ${invoiceDesignName(design)}`)
   doc.setAuthor(invoice.business.name)
   doc.setCreator("OZ Studio invoice desk")
-  const font = async (name: string) => doc.embedFont(await readFile(join(process.cwd(), "public/oz-studio/fonts", name)), { subset: true })
+  const font = async (name: string) => doc.embedFont(await loadFont(name), { subset: true })
   const [body, bold, serif, mono, fallback, bengali] = await Promise.all([
     font("BricolageGrotesque-Regular.ttf"), font("BricolageGrotesque-Bold.ttf"), font("InstrumentSerif-Italic.ttf"),
     font("JetBrainsMono-Regular.ttf"), font("NotoSans-Regular.ttf"), font("NotoSansBengali-Regular.ttf"),
@@ -243,19 +241,24 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
     heading("02 / VOID DOCUMENT")
     flow("This invoice has been voided. No payment is requested.", width, 9.5, body, muted)
   } else {
-    const instructions = invoice.business.paymentInstructions || "Add payment instructions before issuing this invoice."
+    const instructions = paymentDetails(invoice.business) || "Add payment instructions before issuing this invoice."
     const paymentLines = wrap(instructions, width - 28, 9.5)
-    const panelHeight = 53 + paymentLines.length * 14
+    const panelHeight = 43 + paymentLines.length * 14
     // A short payment block stays together; long instructions retain normal pagination.
     if (panelHeight <= 150) {
       ensure(panelHeight + 10)
       rect(left, y, width, panelHeight, dark ? rgb(.045, .045, .045) : rgb(.96, .96, .96), rule)
       text("02 / PAYMENT DETAILS", left + 14, y + 13, 7.1, mono, muted)
-      paymentLines.forEach((value, index) => text(value, left + 14, y + 36 + index * 14, 9.5, body, fg))
+      paymentLines.forEach((value, index) => text(value, left + 14, y + 30 + index * 14, 9.5, body, fg))
       y += panelHeight + 10
     } else { heading("02 / PAYMENT DETAILS"); flow(instructions, width, 9.5, body, muted) }
   }
-  if (invoice.notes) { y += 12; heading("03 / A NOTE FROM THE STUDIO"); flow(invoice.notes, width, 9.5, body, muted) }
+  if (invoice.notes) {
+    y += 12
+    ensure(19 + Math.min(2, wrap(invoice.notes, width, 9.5).length) * 14.25)
+    heading("03 / A NOTE FROM THE STUDIO")
+    flow(invoice.notes, width, 9.5, body, muted)
+  }
 
   for (const [index, sheet] of doc.getPages().entries()) {
     page = sheet
