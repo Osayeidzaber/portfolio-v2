@@ -120,7 +120,9 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
   - [x] GitHub repository `Osayeidzaber/portfolio-v2` with setup and publishing README
   - [x] Enhanced repository README with Black Press cover, project previews, navigation, and architecture diagram
   - [ ] Vercel project, env vars, webhook, production password
-- [ ] 13. Next: "lite" mode for low-power phones to lift mobile Lighthouse (currently ~60)
+- [ ] 13. Performance follow-up: the visitor-controlled Fewer effects mode now
+       disables decorative WebGL and reduces motion. Re-measure mobile Lighthouse
+       before claiming a score improvement over the historical ~60 baseline.
 - [x] 14. Portrait hero composition, larger color carousel, Corso Velle V2 showcase,
        refreshed repository mappings, server-rendered README case studies with offline
        copies, useful browser tools + optional visual lab, experience and footer refresh.
@@ -174,6 +176,20 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        checks passed; 4 expected skips. Seven single-page samples and six long
        4â€“5-page fixtures checked for overflow; paid/void wording verified. Desktop
        and 375px QA covers thumbnails, keyboard navigation and full-screen controls.
+
+- [x] 20. Site and workspace refinement: responsive studio navigation, filterable
+       project index, technology captions, next-project links and reviewable enquiry
+       email drafts. Studio selection is editable per project without changing code;
+       hidden projects stay hidden. Portfolio editor adds destination cards, content
+       readiness checks, password visibility and interrupted-request handling.
+       Personal portfolio adds a persistent Fewer effects preference with static
+       WebGL alternatives. Invoice desk adds currency-separated monetary summaries,
+       overdue labels, sorting, filtered CSV export, draft reuse and unsaved-change
+       guards. No client portal, proposals, milestones or automatic emails added.
+       Validation: typecheck, lint, 81 unit tests, production build and 62 browser
+       checks; 4 expected skips. Local-only fixture QA also verifies ledger totals,
+       CSV contents, safe draft reuse, original-record preservation, navigation
+       guards and accessibility at 1440px and 375px. Fixtures removed after QA.
 
 ## 6. Environment variables
 

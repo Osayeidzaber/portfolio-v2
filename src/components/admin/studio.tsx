@@ -20,6 +20,7 @@ import { slugify } from "@/lib/projects"
 import { cn } from "@/lib/utils"
 
 import { ConfirmProvider, useConfirm } from "./confirm"
+import { OverviewTools } from "./overview-tools"
 import { Card, ErrorsContext, Panel } from "./fields"
 import {
   AchievementsPanel,
@@ -112,7 +113,8 @@ function StudioInner() {
 
   const load = useCallback(async () => {
     setBusy("load")
-    apply(await loadEditor())
+    try { apply(await loadEditor()) }
+    catch { setBusy(""); setLoadError("The connection was interrupted. Try loading the editor again.") }
   }, [apply])
 
   useEffect(() => {
@@ -122,7 +124,7 @@ function StudioInner() {
       apply(res)
       const fromHash = window.location.hash.slice(1) as Tab
       if (TABS.some((t) => t.id === fromHash)) setTab(fromHash)
-    })
+    }).catch(() => { if (live) { setBusy(""); setLoadError("The connection was interrupted. Try loading the editor again.") } })
     return () => {
       live = false
     }
@@ -204,15 +206,17 @@ function StudioInner() {
   const doSaveDraft = async () => {
     if (errorCount) return setToast({ kind: "error", text: `Fix ${errorCount} highlighted field${errorCount > 1 ? "s" : ""} first.` })
     setBusy("draft")
-    const res = await saveDraft(cleaned, state.draftSha)
-    setBusy("")
-    if (!res.ok) {
-      if (res.conflict) setConflict(true)
-      return setToast({ kind: "error", text: res.error })
-    }
-    setState({ ...state, draftSha: res.data.draftSha, hasDraft: true, draftDiffers: true })
-    setBaseline(JSON.stringify(cleaned))
-    setToast({ kind: "ok", text: "Draft saved. Preview it before publishing.", link: res.data.commitUrl || undefined })
+    try {
+      const res = await saveDraft(cleaned, state.draftSha)
+      setBusy("")
+      if (!res.ok) {
+        if (res.conflict) setConflict(true)
+        return setToast({ kind: "error", text: res.error })
+      }
+      setState({ ...state, draftSha: res.data.draftSha, hasDraft: true, draftDiffers: true })
+      setBaseline(JSON.stringify(cleaned))
+      setToast({ kind: "ok", text: "Draft saved. Preview it before publishing.", link: res.data.commitUrl || undefined })
+    } catch { setBusy(""); setToast({ kind: "error", text: "The connection was interrupted. Your edits are still here. Check the saved draft before retrying." }) }
   }
 
   const doPublish = async () => {
@@ -227,16 +231,18 @@ function StudioInner() {
     })
     if (!ok) return
     setBusy("publish")
-    const res = await publish(cleaned, state.publishedSha, state.draftSha, summarize(state.content, cleaned))
-    setBusy("")
-    if (!res.ok) {
-      if (res.conflict) setConflict(true)
-      return setToast({ kind: "error", text: res.error })
-    }
-    setState({ ...state, publishedSha: res.data.publishedSha, draftSha: null, hasDraft: false, draftDiffers: false })
-    setBaseline(JSON.stringify(cleaned))
-    setHistory(null)
-    setToast({ kind: "ok", text: `Published (${res.data.commit.slice(0, 7)}). Live in about a minute.`, link: res.data.commitUrl || undefined })
+    try {
+      const res = await publish(cleaned, state.publishedSha, state.draftSha, summarize(state.content, cleaned))
+      setBusy("")
+      if (!res.ok) {
+        if (res.conflict) setConflict(true)
+        return setToast({ kind: "error", text: res.error })
+      }
+      setState({ ...state, publishedSha: res.data.publishedSha, draftSha: null, hasDraft: false, draftDiffers: false })
+      setBaseline(JSON.stringify(cleaned))
+      setHistory(null)
+      setToast({ kind: "ok", text: `Published (${res.data.commit.slice(0, 7)}). Live in about a minute.`, link: res.data.commitUrl || undefined })
+    } catch { setBusy(""); setToast({ kind: "error", text: "The connection was interrupted. Check the live version before publishing again. Your edits are still here." }) }
   }
 
   const doDiscard = async () => {
@@ -284,7 +290,7 @@ function StudioInner() {
         <nav aria-label="Studio" className="flex flex-none flex-col border-b border-rule bg-ink md:sticky md:top-0 md:h-[100svh] md:w-64 md:border-b-0 md:border-r">
           <div className="flex items-center justify-between px-5 py-5">
             <span className="text-[20px] font-extrabold tracking-[-0.02em]">
-              OZ <span className="font-light text-dust">studio</span>
+              OZ <span className="font-light text-dust">/ portfolio</span>
             </span>
             <form action={logoutAction} className="md:hidden">
               <button type="submit" className="folio h-11 hover:!text-paper">
@@ -391,8 +397,10 @@ function StudioInner() {
           )}
 
           <main id="studio-main" tabIndex={-1} className="flex-1 px-[clamp(16px,4vw,40px)] py-8 outline-none">
+            <h1 className="sr-only">Portfolio editor</h1>
             {tab === "overview" && (
-              <Panel title={`Hello, ${content.profile.name.split(" ")[0]}`} description="Edits are saved to GitHub. Save a draft to preview, then publish.">
+              <Panel title={`Hello, ${content.profile.name.split(" ")[0]}`} description="Your content, studio selection and publishing controls, in one place.">
+                <OverviewTools content={content} onProjects={(index) => { setProject(index); go("projects") }} onProfile={() => go("profile")} />
                 {state.mode !== "github" && (
                   <Card className="border-paper">
                     <p className="text-[15px] leading-[1.55]">
@@ -426,9 +434,12 @@ function StudioInner() {
                       type="button"
                       className="pill pill-line h-10 px-4 text-[14px]"
                       onClick={async () => {
-                        await refreshGithub()
-                        await load()
-                        setToast({ kind: "ok", text: "Fetched the latest from GitHub." })
+                        if (dirty && !await confirm({ title: "Reload the editor?", body: "Refreshing replaces your unsaved edits. Save your draft first if you want to keep them.", confirm: "Reload" })) return
+                        try {
+                          const result = await refreshGithub()
+                          if (!result.ok) return setToast({ kind: "error", text: result.error })
+                          await load()
+                        } catch { setToast({ kind: "error", text: "Could not refresh GitHub. Your current edits are still here." }) }
                       }}
                     >
                       Refresh from GitHub

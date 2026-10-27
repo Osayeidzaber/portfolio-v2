@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useState, useSyncExternalStore } from "react"
+import { useReducedEffects } from "./preferences"
 
 const query = "(prefers-reduced-motion: reduce)"
 
 export function useReducedMotion(): boolean {
-  return useSyncExternalStore(
+  const reducedEffects = useReducedEffects()
+  const systemReduced = useSyncExternalStore(
     (cb) => {
       const mq = window.matchMedia(query)
       mq.addEventListener("change", cb)
@@ -14,6 +16,7 @@ export function useReducedMotion(): boolean {
     () => window.matchMedia(query).matches,
     () => false,
   )
+  return systemReduced || reducedEffects
 }
 
 export function useMediaQuery(q: string, serverValue = false): boolean {

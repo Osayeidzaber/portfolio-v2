@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import LetterSwapForward from "@/components/fancy/text/letter-swap-forward-anim"
 import { cn } from "@/lib/utils"
+import { EffectsToggle } from "./effects-toggle"
 
 export type NavItem = { id: string; label: string; folio: string }
 
@@ -134,9 +135,7 @@ export function Nav({
             </ul>
           </nav>
 
-          <a href={href("contact")} className="folio hidden !text-paper md:inline">
-            Say hello ↗
-          </a>
+          <div className="hidden md:block"><EffectsToggle /></div>
 
           <button
             ref={menuButton}
@@ -198,6 +197,7 @@ export function Nav({
               ))}
             </nav>
             <div className="flex flex-wrap justify-between gap-4">
+              <EffectsToggle />
               {socials.map((s) => (
                 <a key={s.url} href={s.url} className="folio py-3" target="_blank" rel="noreferrer">
                   {s.label} ↗

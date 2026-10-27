@@ -8,6 +8,7 @@ import LetterSwapPingPong from "@/components/fancy/text/letter-swap-pingpong-ani
 import { useReducedMotion } from "@/lib/motion/hooks"
 
 import type { NavItem } from "./nav"
+import { EffectsToggle } from "./effects-toggle"
 
 /*
  * The last scene: an index, a colophon and the name set at full bleed.
@@ -69,6 +70,7 @@ export function Footer({
           <span className="max-w-56 normal-case !tracking-normal text-sm leading-relaxed">Designed, built and continually tinkered with by {name}.</span>
           <Link href="/#play" className="flex min-h-11 items-center hover:!text-paper">Try the workbench ↗</Link>
           <Link href="/oz-studio" className="flex min-h-11 items-center hover:!text-paper">OZ Studio · Design & development ↗</Link>
+          <EffectsToggle />
         </div>
         <button
           type="button"

@@ -7,6 +7,7 @@ import { slugify } from "@/lib/projects"
 
 import { useConfirm } from "./confirm"
 import { Card, FileField, Panel, Select, TagInput, TextArea, TextField, Toggle } from "./fields"
+import { isStudioProject } from "@/lib/studio/portfolio"
 import { SortableList } from "./sortable"
 
 export type Mutate = (fn: (draft: SiteContent) => void) => void
@@ -268,6 +269,7 @@ export function ProjectsPanel({
 
             <div className="flex flex-wrap gap-6">
               <Toggle label="Featured" checked={p.featured} onChange={(v) => set((x) => void (x.featured = v))} />
+              <Toggle label="Show in OZ Studio portfolio" checked={isStudioProject(p)} onChange={(v) => set((x) => void (x.studio = v))} hint="Selected work on /oz-studio follows this project order. Hidden projects stay hidden everywhere." />
               <Toggle label="Hidden from the site" checked={p.hidden} onChange={(v) => set((x) => void (x.hidden = v))} />
             </div>
 

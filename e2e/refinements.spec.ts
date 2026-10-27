@@ -1,0 +1,105 @@
+import { existsSync } from "node:fs"
+import { loadEnvFile } from "node:process"
+import AxeBuilder from "@axe-core/playwright"
+import { expect, test } from "@playwright/test"
+import { createToken, SESSION_COOKIE } from "../src/lib/auth/token"
+
+if (existsSync(".env.local")) loadEnvFile(".env.local")
+
+test("studio filters work, mobile navigation stays available and enquiries remain reviewable", async ({ page }, info) => {
+  if (info.project.name === "mobile") await page.setViewportSize({ width: 375, height: 812 })
+  await page.goto("/oz-studio")
+  const navigation = page.getByRole("navigation", { name: "Studio navigation", exact: true })
+  await expect(navigation.getByRole("link", { name: "Work", exact: true })).toBeVisible()
+  await expect(navigation.getByRole("link", { name: "Practice", exact: true })).toBeVisible()
+  await page.getByRole("button", { name: "Shopify", exact: true }).click()
+  await expect(page.locator(".oz-project")).toHaveCount(1)
+  await expect(page.locator(".oz-project")).toContainText("Corso Velle")
+  await page.getByRole("button", { name: "All work", exact: true }).click()
+  await expect(page.locator(".oz-project")).toHaveCount(4)
+  await page.locator(".oz-enquiry summary").click()
+  await page.getByLabel("Your name", { exact: true }).fill("Preview Visitor")
+  await page.getByLabel("Your email", { exact: true }).fill("preview@example.com")
+  await page.getByLabel("A little about the idea", { exact: true }).fill("A preview brief for a carefully designed storefront.")
+  await page.getByRole("button", { name: "Prepare enquiry", exact: true }).click()
+  await expect(page.getByRole("status").filter({ hasText: "YOUR EMAIL DRAFT IS READY" })).toBeVisible()
+  const draft = page.getByRole("link", { name: "Open email draft", exact: false })
+  const href = await draft.getAttribute("href")
+  expect(href).toMatch(/^mailto:mail@zaber.tech\?subject=/)
+  expect(decodeURIComponent(href!)).toContain("Preview Visitor")
+  expect(decodeURIComponent(href!)).toContain("preview@example.com")
+  await page.getByLabel("A little about the idea", { exact: true }).fill("Changed brief")
+  await expect(draft).toHaveCount(0)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false)
+  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()
+  expect(axe.violations.map((violation) => violation.id)).toEqual([])
+  await page.screenshot({ path: info.outputPath("studio-enquiry.png"), fullPage: true })
+})
+
+test("fewer effects persists and removes the decorative WebGL canvas", async ({ page }) => {
+  await page.goto("/")
+  const control = page.locator("footer").getByRole("button", { name: "Use fewer visual effects", exact: true })
+  await control.click()
+  await expect(control).toHaveAttribute("aria-pressed", "true")
+  await expect(page.locator("html")).toHaveAttribute("data-effects", "reduced")
+  await page.locator("#top").scrollIntoViewIfNeeded()
+  await expect(page.locator("#top canvas")).toHaveCount(0)
+  await page.reload()
+  await expect(page.locator("html")).toHaveAttribute("data-effects", "reduced")
+  await expect(control).toHaveAttribute("aria-pressed", "true")
+  await control.click()
+  await expect(control).toHaveAttribute("aria-pressed", "false")
+  await expect(page.locator("html")).toHaveAttribute("data-effects", "full")
+})
+
+test("portfolio editor gives access to both portfolios and studio project curation", async ({ page, baseURL }, info) => {
+  const secret = process.env.SESSION_SECRET || ""
+  test.skip(secret.length < 32, "An admin session secret is required for authenticated browser QA.")
+  if (info.project.name === "mobile") await page.setViewportSize({ width: 375, height: 812 })
+  await page.context().addCookies([{ name: SESSION_COOKIE, value: createToken(secret), url: baseURL! }])
+  await page.goto("/admin")
+  await expect(page.getByRole("heading", { name: "Portfolio editor", exact: true })).toHaveCount(1)
+  await expect(page.locator(".admin-destinations>a")).toHaveCount(3)
+  await expect(page.locator(".admin-destinations")).toContainText("4 selected projects")
+  await page.screenshot({ path: info.outputPath("portfolio-editor.png"), fullPage: true })
+  await page.getByRole("button", { name: "Curate studio work", exact: false }).click()
+  const checkbox = page.getByRole("checkbox", { name: "Show in OZ Studio portfolio", exact: false })
+  await expect(checkbox).toBeChecked()
+  await page.getByText("Show in OZ Studio portfolio", { exact: true }).click()
+  await expect(checkbox).not.toBeChecked()
+  await page.getByRole("button", { name: "Overview", exact: true }).click()
+  await expect(page.locator(".admin-destinations")).toContainText("3 selected projects")
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false)
+  // Restore the in-memory edit; this test never saves or publishes content.
+  await page.getByRole("button", { name: "Curate studio work", exact: false }).click()
+  await page.getByText("Show in OZ Studio portfolio", { exact: true }).click()
+  await page.getByRole("button", { name: "Overview", exact: true }).click()
+  const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()
+  expect(axe.violations.map((violation) => violation.id)).toEqual([])
+})
+
+test("login supports a reviewable password field", async ({ page }) => {
+  await page.goto("/admin/login")
+  await page.getByLabel("Password", { exact: true }).fill("preview-password")
+  await page.getByRole("button", { name: "Show password", exact: true }).click()
+  await expect(page.getByLabel("Password", { exact: true })).toHaveAttribute("type", "text")
+  await page.getByRole("button", { name: "Hide password", exact: true }).click()
+  await expect(page.getByLabel("Password", { exact: true })).toHaveAttribute("type", "password")
+})
+
+test("studio contact has a direct email fallback without scripts", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false })
+  try {
+    const page = await context.newPage()
+    await page.goto(`${baseURL}/oz-studio`)
+    await page.locator(".oz-enquiry summary").click()
+    await expect(page.getByRole("button", { name: "Prepare enquiry", exact: false })).toBeDisabled()
+    await expect(page.locator(".oz-contact-email")).toHaveAttribute("href", /^mailto:mail@zaber.tech/)
+    await expect(page.getByText("Use the email link above to get in touch directly.", { exact: true })).toBeVisible()
+    await page.getByLabel("Your name", { exact: true }).fill("Preview without scripts")
+    await page.getByLabel("Your email", { exact: true }).fill("preview@example.com")
+    await page.getByLabel("A little about the idea", { exact: true }).fill("Preview brief without scripts")
+    await page.getByLabel("Your name", { exact: true }).press("Enter")
+    await expect(page).toHaveURL(`${baseURL}/oz-studio`)
+  } finally { await context.close() }
+})

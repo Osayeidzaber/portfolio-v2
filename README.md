@@ -231,11 +231,28 @@ the supplied studio identity, selected work, studio-branded case studies, servic
 and contact details. Its private invoice desk lives at `/admin/oz-studio`;
 `/oz-studio/admin` redirects there. It uses the existing admin sign-in.
 
+The studio has a mobile navigation bar, category filters and a guided project
+enquiry that prepares an email for the visitor to review and send. Select projects
+with **Show in OZ Studio portfolio** in the portfolio editor. The studio respects
+their order and hides projects marked hidden. The editor overview links both public
+portfolios and the invoice desk, with a short content-readiness checklist.
+
 The invoice desk focuses on invoices: custom numbering, billing details, line items,
 currency, discounts, a user-supplied tax rate, notes, and payment instructions. You
 can choose among seven invoice designs, inspect the actual PDF in an embedded viewer,
 download it, issue a saved draft,
 record full payment, or void an invoice. Issued invoice details are locked.
+
+The overview separates outstanding, overdue and paid amounts by currency. Search,
+status filters, sorting and a CSV export help manage the ledger. **Reuse** copies
+an invoice into a new unsaved draft with fresh dates and numbering; payment and
+email history remain with the original. The editor warns before leaving unsaved
+invoice changes. CSV exports quote values and neutralize spreadsheet formulas.
+
+The personal portfolio’s **Full effects / Fewer effects** control remembers the
+visitor’s choice in their browser. Fewer effects replaces decorative WebGL with
+static alternatives and reduces motion. System reduced-motion preferences remain
+respected in either mode.
 
 New invoices start in **Noir**, a full-black editorial layout. The design gallery
 also includes **Monolith** (bold graphic type), **Outline** (architectural frames),
@@ -300,10 +317,19 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm test:e2e
 
 Install the browser with `pnpm exec playwright install chromium` if needed.
 Browser tests start a production server on port **3100** by default. Set
-`E2E_ADMIN_PASSWORD` to include authenticated studio checks.
+`E2E_ADMIN_PASSWORD` to include the full password login/logout check. Editor and
+PDF checks can also use the configured local `SESSION_SECRET` without submitting
+a password.
 
 <details>
 <summary><strong>Verification history and known limitations</strong></summary>
+
+Site and workspace refinement: typecheck, lint, 81 unit tests, production build
+and 62 browser checks passed, with 4 expected skips. Coverage includes studio
+filters and enquiry drafts, contact without scripts, editable studio selection,
+reduced-effects persistence and case-study navigation. Local-only ledger fixtures
+also verified currency totals, filtered CSV downloads, draft reuse and unsaved
+navigation guards at 1440px and 375px. The fixtures were removed after QA.
 
 Invoice design collection: typecheck, lint, 77 unit tests, production build and
 52 browser checks passed, with 4 expected skips. All seven layouts were rendered

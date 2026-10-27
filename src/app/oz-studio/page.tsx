@@ -4,6 +4,10 @@ import Link from "next/link"
 
 import { getContent } from "@/lib/content/read"
 import { siteUrl } from "@/lib/env"
+import { StudioHeader } from "@/components/studio/header"
+import { ProjectCollection } from "@/components/studio/project-collection"
+import { ProjectEnquiry } from "@/components/studio/project-enquiry"
+import { studioProjects } from "@/lib/studio/portfolio"
 import "./theme.css"
 
 export const metadata: Metadata = {
@@ -22,13 +26,10 @@ const services = [
 
 export default async function OzStudioPage() {
   const content = await getContent()
-  const projects = ["corso-velle", "tajwater", "igac", "igacmun-session-iii"].map((slug) => content.projects.find((project) => project.slug === slug && !project.hidden)).filter((project) => Boolean(project))
+  const projects = studioProjects(content.projects)
   return <div className="oz-site">
     <a href="#oz-main" className="skip-link">Skip to studio</a>
-    <header className="oz-header">
-      <Link href="/oz-studio" className="oz-wordmark" aria-label="OZ Studio home">OZ<span>STUDIO</span><span className="oz-brand-dot" aria-hidden /></Link>
-      <nav aria-label="Studio navigation"><a href="#oz-work">Work</a><a href="#oz-services">Practice</a><a href="#oz-about">About</a><a href="#oz-contact" className="oz-nav-cta">Start a conversation ↗</a></nav>
-    </header>
+    <StudioHeader />
     <main id="oz-main">
       <section className="oz-hero" aria-labelledby="oz-title">
         <div className="oz-hero-top"><span className="oz-label">INDEPENDENT DESIGN & DEVELOPMENT</span><span className="oz-label">DHAKA / WORKING ON THE WEB</span></div>
@@ -38,12 +39,10 @@ export default async function OzStudioPage() {
         </div>
         <div className="oz-hero-bottom oz-label"><span>DESIGN WITH INTENT. BUILD WITH CARE.</span><span>SCROLL TO EXPLORE ↓</span></div>
       </section>
-      <section id="oz-work" className="oz-section" aria-labelledby="oz-work-title"><div className="oz-section-heading"><div><p className="oz-label">01 / SELECTED WORK</p><h2 id="oz-work-title">Proof in the <em>making.</em></h2></div><p>Selected projects by Osayeed.<br />The foundation of a new studio.</p></div><div className="oz-project-grid">
-        {projects.map((project, index) => project && <Link key={project.slug} href={`/oz-studio/work/${project.slug}`} className="oz-project"><div className="oz-project-image">{project.thumbnail ? <Image src={project.thumbnail} alt={`${project.title} website`} fill sizes="(max-width: 720px) 100vw, 50vw" unoptimized /> : <span>{project.title}</span>}<span className="oz-project-open" aria-hidden>↗</span></div><div className="oz-project-heading"><span className="oz-label">0{index + 1}</span><h3>{project.title}</h3><span className="oz-label">{project.category}</span></div><p>{project.description}</p></Link>)}
-      </div></section>
+      <section id="oz-work" className="oz-section" aria-labelledby="oz-work-title"><div className="oz-section-heading"><div><p className="oz-label">01 / SELECTED WORK</p><h2 id="oz-work-title">Proof in the <em>making.</em></h2></div><p>Selected projects by Osayeed.<br />The foundation of a new studio.</p></div><ProjectCollection projects={projects} /></section>
       <section id="oz-services" className="oz-section oz-practice" aria-labelledby="oz-services-title"><div className="oz-section-heading"><div><p className="oz-label">02 / THE PRACTICE</p><h2 id="oz-services-title">From first sketch<br />to <em>what’s next.</em></h2></div><p>Design and development, together.<br />One person close to the whole project.</p></div>{services.map((service) => <article className="oz-service" key={service.number}><span className="oz-label">/{service.number}</span><h3>{service.name}</h3><div><p>{service.description}</p><span className="oz-label">{service.tags}</span></div></article>)}</section>
       <section id="oz-about" className="oz-section oz-about" aria-labelledby="oz-about-title"><div><p className="oz-label">03 / THE PERSON BEHIND THE MARK</p><h2 id="oz-about-title">Independent<br />by <em>design.</em></h2></div><div className="oz-about-copy"><p>OZ Studio is my independent design and development practice. I’m Osayeed, a full-stack developer based in Dhaka, building across the web and Shopify.</p><p>I like being close to the whole thing: understanding what needs to work, shaping how it feels, and writing the code that brings it together. The studio gives that work a home of its own.</p><Link href="/" className="oz-text-link">Meet the person behind the studio ↗</Link><div className="oz-process"><span className="oz-label">HOW WE’LL WORK</span><p><strong>Understand.</strong> A conversation about the problem and the people.</p><p><strong>Shape.</strong> A clear direction, scope and plan.</p><p><strong>Build.</strong> Thoughtful design, working software, regular check-ins.</p><p><strong>Launch.</strong> The details checked, the work handed over.</p></div></div></section>
-      <section id="oz-contact" className="oz-contact" aria-labelledby="oz-contact-title"><p className="oz-label">04 / THE NEXT THING STARTS HERE</p><h2 id="oz-contact-title">Something<br />on your <em>mind?</em></h2><div className="oz-contact-bottom"><p>A new business. A better storefront.<br />An idea you’re ready to build. Let’s talk.</p><a href={`mailto:${content.profile.email}?subject=OZ%20Studio%20project%20enquiry`} className="oz-contact-email">{content.profile.email}<span aria-hidden>↗</span></a></div></section>
+      <section id="oz-contact" className="oz-contact" aria-labelledby="oz-contact-title"><p className="oz-label">04 / THE NEXT THING STARTS HERE</p><h2 id="oz-contact-title">Something<br />on your <em>mind?</em></h2><div className="oz-contact-bottom"><p>A new business. A better storefront.<br />An idea you’re ready to build. Let’s talk.</p><a href={`mailto:${content.profile.email}?subject=OZ%20Studio%20project%20enquiry`} className="oz-contact-email">{content.profile.email}<span aria-hidden>↗</span></a></div><ProjectEnquiry email={content.profile.email} /></section>
     </main>
     <footer className="oz-footer"><Link href="/oz-studio" className="oz-wordmark">OZ<span>STUDIO</span></Link><p>An independent practice by Osayeed Zaber.</p><nav aria-label="Studio footer"><Link href="/">Personal portfolio ↗</Link><Link href="/admin/oz-studio">Studio workspace ↗</Link></nav></footer>
   </div>

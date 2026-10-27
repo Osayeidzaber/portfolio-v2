@@ -300,3 +300,19 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Owner controls and the portfolio editor use the same restrained Black Press grid. */
+html[data-effects=reduced] { scroll-behavior:auto; }
+html[data-effects=reduced] *,html[data-effects=reduced] *::before,html[data-effects=reduced] *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+.admin-destinations { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.admin-destinations>a { display:flex; flex-direction:column; gap:18px; padding:24px; border:1px solid var(--edge); border-radius:14px; background:var(--lift); }
+.admin-destinations>a:hover { border-color:var(--paper); }
+.admin-destinations strong { display:flex; justify-content:space-between; gap:12px; font-size:24px; font-weight:500; letter-spacing:-.7px; }
+.admin-destinations>a>span:last-child { font-size:12px; line-height:1.7; color:var(--mist); }
+.admin-health { display:grid; grid-template-columns:1fr 1fr; gap:24px; border-top:1px solid var(--rule); padding-top:22px; }
+.admin-health>div { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+.admin-health strong { font-size:17px; font-weight:500; }
+.admin-attention { display:flex; flex-direction:column; border-top:1px solid var(--rule); }
+.admin-attention button { display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; padding:12px 0; border-bottom:1px solid var(--rule); }
+@media(max-width:1100px) { .admin-destinations { grid-template-columns:1fr; } }
+@media(max-width:640px) { .admin-destinations>a { padding:20px; gap:12px; } .admin-health { grid-template-columns:1fr; } }

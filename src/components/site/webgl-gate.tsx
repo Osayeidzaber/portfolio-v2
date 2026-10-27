@@ -4,6 +4,7 @@ import { Component, useEffect, useRef, useState, useSyncExternalStore, type Reac
 
 import { detectWebGL, useIdleReady, useReducedMotion } from "@/lib/motion/hooks"
 import { cn } from "@/lib/utils"
+import { useReducedEffects } from "@/lib/motion/preferences"
 
 /*
  * Wraps every WebGL effect:
@@ -48,6 +49,7 @@ export function WebGLGate({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
+  const reducedEffects = useReducedEffects()
   const idle = useIdleReady()
   // null on the server and during hydration, then the cached probe result.
   const supported = useSyncExternalStore<boolean | null>(() => () => {}, detectWebGL, () => null)
@@ -87,7 +89,7 @@ export function WebGLGate({
     return () => el.removeEventListener("webglcontextlost", onLost, true)
   }, [near, losses])
 
-  const live = supported && losses < 3 && (motionSafe || !reduced) && (!defer || idle)
+  const live = supported && !reducedEffects && losses < 3 && (motionSafe || !reduced) && (!defer || idle)
 
   return (
     <div ref={ref} className={cn("relative", className)}>

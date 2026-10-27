@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 
 import { invoiceEmail } from "@/lib/studio/invoice-document"
 import { invoiceInputSchema, invoiceTotals, money, toMinor, type Invoice, type InvoiceInput, type StudioData } from "@/lib/studio/schema"
@@ -9,24 +9,26 @@ import { PdfViewer } from "./pdf-viewer"
 import { DesignPicker } from "./design-picker"
 import { invoiceDesigns, invoiceDesignName, type InvoiceDesign } from "@/lib/studio/designs"
 
-export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, emailReady, sender, onSave, onSend, onIssue, onStatus, onClose }: {
-  data: StudioData; invoice: Invoice | null; today: string; busy: boolean; persistenceEnabled: boolean; emailReady: boolean; sender: string
+export function InvoiceEditor({ data, invoice, initial, today, busy, persistenceEnabled, emailReady, sender, onSave, onSend, onIssue, onStatus, onClose, onUnsavedChange }: {
+  data: StudioData; invoice: Invoice | null; initial?: InvoiceInput; today: string; busy: boolean; persistenceEnabled: boolean; emailReady: boolean; sender: string
   onSave: (value: InvoiceInput) => void; onSend: (id: string) => void; onIssue: (id: string) => void; onStatus: (id: string, status: "paid" | "void") => void; onClose: () => void
+  onUnsavedChange?: (value: boolean) => void
 }) {
+  const source = invoice ?? initial
   const [mode, setMode] = useState<"edit" | "preview" | "pdf" | "email">(invoice?.status && invoice.status !== "draft" ? "pdf" : "edit")
   const [error, setError] = useState("")
   const [reviewed, setReviewed] = useState(false)
-  const [design, setDesign] = useState<InvoiceDesign>(invoice?.design ?? (invoice ? "signature" : "noir"))
-  const [title, setTitle] = useState(invoice?.title ?? "")
-  const [client, setClient] = useState(invoice?.client ?? { name: "", company: "", email: "", address: "" })
+  const [design, setDesign] = useState<InvoiceDesign>(source?.design ?? (invoice ? "signature" : "noir"))
+  const [title, setTitle] = useState(source?.title ?? "")
+  const [client, setClient] = useState(source?.client ?? { name: "", company: "", email: "", address: "" })
   const [number, setNumber] = useState(invoice?.number ?? `OZ-${String(data.nextInvoice).padStart(4, "0")}`)
-  const [issueDate, setIssueDate] = useState(invoice?.issueDate ?? today)
-  const [dueDate, setDueDate] = useState(invoice?.dueDate ?? today)
-  const [currency, setCurrency] = useState(invoice?.currency ?? data.settings.currency)
-  const [items, setItems] = useState((invoice?.items ?? [{ description: "", quantity: 1, unitPrice: 0 }]).map((item) => ({ description: item.description, quantity: String(item.quantity), price: (item.unitPrice / 100).toFixed(2) })))
-  const [discount, setDiscount] = useState(((invoice?.discount ?? 0) / 100).toFixed(2))
-  const [tax, setTax] = useState(String((invoice?.taxBasisPoints ?? 0) / 100))
-  const [notes, setNotes] = useState(invoice?.notes ?? data.settings.invoiceNote)
+  const [issueDate, setIssueDate] = useState(source?.issueDate ?? today)
+  const [dueDate, setDueDate] = useState(source?.dueDate ?? today)
+  const [currency, setCurrency] = useState(source?.currency ?? data.settings.currency)
+  const [items, setItems] = useState((source?.items ?? [{ description: "", quantity: 1, unitPrice: 0 }]).map((item) => ({ description: item.description, quantity: String(item.quantity), price: (item.unitPrice / 100).toFixed(2) })))
+  const [discount, setDiscount] = useState(((source?.discount ?? 0) / 100).toFixed(2))
+  const [tax, setTax] = useState(String((source?.taxBasisPoints ?? 0) / 100))
+  const [notes, setNotes] = useState(source?.notes ?? data.settings.invoiceNote)
   const locked = invoice && invoice.status !== "draft"
   function value(): InvoiceInput {
     return invoiceInputSchema.parse({ ...(invoice ? { id: invoice.id } : {}), title, number, design, client, issueDate, dueDate, currency, items: items.map((item) => ({ description: item.description, quantity: Number(item.quantity), unitPrice: toMinor(item.price) })), discount: toMinor(discount), taxBasisPoints: toMinor(tax), notes })
@@ -44,7 +46,16 @@ export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, 
   let document: Invoice | null = null
   try { document = preview() } catch { /* Incomplete drafts remain editable. */ }
   const dirty = !locked && (!invoice || !document || JSON.stringify(invoiceInputSchema.parse(document)) !== JSON.stringify(invoiceInputSchema.parse(invoice)) || JSON.stringify(document.business) !== JSON.stringify(invoice.business))
-  const close = () => { if (!dirty || window.confirm("Leave this invoice without saving your latest changes?")) onClose() }
+  const editSignature = JSON.stringify({ title, client, number, design, issueDate, dueDate, currency, items, discount, tax, notes })
+  const [startingSignature] = useState(editSignature)
+  const unsaved = Boolean(!locked && (invoice ? dirty : initial || editSignature !== startingSignature))
+  useEffect(() => {
+    onUnsavedChange?.(unsaved)
+    const warn = (event: BeforeUnloadEvent) => { if (unsaved) event.preventDefault() }
+    window.addEventListener("beforeunload", warn)
+    return () => { window.removeEventListener("beforeunload", warn); onUnsavedChange?.(false) }
+  }, [unsaved, onUnsavedChange])
+  const close = () => { if (!unsaved || window.confirm("Leave this invoice without saving your latest changes?")) onClose() }
   const submit = (event: FormEvent) => { event.preventDefault(); try { const input = value(); invoiceTotals(input); setError(""); onSave(input) } catch (error) { setError(explain(error)) } }
   const switchMode = (next: typeof mode) => {
     if (next !== "edit") { try { preview() } catch (error) { setError(explain(error)); return } }
@@ -54,6 +65,7 @@ export function InvoiceEditor({ data, invoice, today, busy, persistenceEnabled, 
     <button className="oz-small-button" onClick={close} type="button">← All invoices</button>
     <div className="oz-desk-heading"><div><p className="oz-label">ACCOUNTS / {invoice?.number ?? "NEW DRAFT"}</p><h1>{invoice ? invoice.number : "Create an invoice."}</h1><p>{locked ? "Issued records are locked. Review the saved document and manage its payment status." : "Write the scope, check the numbers, then save your draft. Sending is a separate step."}</p></div>{invoice && <span className={`oz-badge oz-badge-${invoice.status}`}>{invoice.status}</span>}</div>
     {error && <p role="alert" className="oz-notice">{error}</p>}
+    {initial && !invoice && <p className="oz-notice">Details reused in a new, unsaved draft. Check the invoice number, dates and services before saving. No payment or email history was copied.</p>}
     <div className="oz-form-switch" role="group" aria-label="Invoice view">
       {!locked && <button type="button" aria-pressed={mode === "edit"} onClick={() => switchMode("edit")}>Details</button>}
       <button type="button" aria-pressed={mode === "preview"} onClick={() => switchMode("preview")}>Invoice preview</button>

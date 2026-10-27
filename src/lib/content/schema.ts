@@ -65,6 +65,7 @@ export const projectSchema = z.object({
   thumbnail: path,
   gallery: z.array(z.object({ src: path, alt: z.string().max(160) })).max(12),
   featured: z.boolean(),
+  studio: z.boolean().optional(),
   hidden: z.boolean(),
 })
 
