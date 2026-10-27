@@ -81,8 +81,32 @@ test("invoice desk previews a custom PDF without saving or emailing", async ({ p
   await page.getByRole("link", { name: "Download preview PDF", exact: true }).click()
   const file = await (await download).path()
   expect(readFileSync(file!).subarray(0, 5).toString()).toBe("%PDF-")
+  const expand = page.getByRole("button", { name: "Full screen ↗", exact: true })
+  if (await expand.isVisible()) {
+    await expand.click()
+    await expect(page.getByRole("button", { name: "Exit full screen ↙", exact: true })).toBeVisible()
+    await page.getByRole("button", { name: "Exit full screen ↙", exact: true }).click()
+  }
   expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false)
   await page.screenshot({ path: info.outputPath("oz-invoice-pdf-viewer.png"), fullPage: true })
+  // Exercise page navigation on a genuinely generated multipage invoice.
+  await page.getByRole("button", { name: "Details", exact: true }).click()
+  for (let index = 2; index <= 12; index++) {
+    await page.getByRole("button", { name: "+ Add line item", exact: true }).click()
+    await page.getByLabel(`Description ${index}`, { exact: true }).fill(`Preview service ${index}: design, implementation and documentation`)
+  }
+  await page.getByRole("button", { name: "PDF viewer", exact: true }).click()
+  const thumbnails = page.getByRole("navigation", { name: "Invoice pages", exact: true })
+  await expect(thumbnails).toBeVisible({ timeout: 30_000 })
+  await thumbnails.getByRole("button", { name: "View PDF page 2", exact: true }).click()
+  await expect(thumbnails.getByRole("button", { name: "View PDF page 2", exact: true })).toHaveAttribute("aria-current", "page")
+  await expect(page.locator(".oz-pdf-canvas canvas")).toHaveAttribute("aria-label", /Invoice page 2 of/)
+  await expect(page.locator(".oz-pdf-canvas canvas")).toHaveAttribute("data-rendered", "true")
+  await page.getByRole("button", { name: "Previous PDF page", exact: true }).focus()
+  await page.keyboard.press("ArrowLeft")
+  await expect(thumbnails.getByRole("button", { name: "View PDF page 1", exact: true })).toHaveAttribute("aria-current", "page")
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)).toBe(false)
+  await page.screenshot({ path: info.outputPath("oz-invoice-multipage.png"), fullPage: true })
 })
 
 test("studio project pages keep the studio identity", async ({ page }) => {

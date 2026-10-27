@@ -97,7 +97,8 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
   }
   function newPage() {
     page = doc.addPage([W, H]); background(); brand(37)
-    text(invoice.number, right, 43, 8, mono, muted, "right")
+    text(invoice.number, right, 36, fit(invoice.number, 8, width - 120, mono), mono, muted, "right")
+    text("INVOICE / CONTINUED", right, 54, 6.5, mono, muted, "right")
     line(83); y = 106
   }
   function ensure(height: number) { if (y + height > 779) newPage() }
@@ -111,7 +112,9 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
   const fit = (value: string, size: number, max: number, face: PDFFont) => Math.min(size, max / measure(value, 1, face))
   const totalLabel = invoice.status === "paid" ? "TOTAL PAID" : invoice.status === "void" ? "VOID INVOICE" : "TOTAL DUE"
   background(); brand()
-  text(status, right, 37, 7, mono, muted, "right")
+  const badgeWidth = measure(status, 6.5, mono) + 16
+  rect(right - badgeWidth, 32, badgeWidth, 17, invoice.status === "paid" ? fg : undefined, invoice.status === "paid" ? undefined : rule)
+  text(status, right - 8, 36, 6.5, mono, invoice.status === "paid" ? bg : muted, "right")
   text(invoice.number, right, 56, fit(invoice.number, 9, 210, mono), mono, fg, "right")
 
   if (design === "noir") {
@@ -147,7 +150,7 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
 
   // Date metadata has a fixed-height row; long parties fall back to paginated text.
   ensure(57)
-  const metadata = [["ISSUED", displayDate(invoice.issueDate)], ["DUE DATE", displayDate(invoice.dueDate)], ["CURRENCY", invoice.currency]]
+  const metadata = [[invoice.status === "draft" ? "INVOICE DATE" : "ISSUED", displayDate(invoice.issueDate)], ["DUE DATE", displayDate(invoice.dueDate)], ["CURRENCY", invoice.currency]]
   const cell = width / 3
   if (design === "outline") rect(left, y - 10, width, 54, undefined, rule)
   metadata.forEach(([label, value], index) => { const x = left + index * cell + (design === "outline" ? 10 : 0); text(label, x, y, 7, mono, muted); text(value, x, y + 17, compact ? 10 : 11, body) })
@@ -183,7 +186,7 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
   }
   ensure(92); tableHeader()
   for (const [index, item] of invoice.items.entries()) {
-    const itemWidth = compact ? width - 230 : width - 154
+    const itemWidth = compact ? width - 230 : width - 177
     const size = compact ? 9.5 : 10.5
     const rows = wrap(item.description, itemWidth, size)
     const height = rows.length * 16 + (compact ? 19 : 24)
@@ -200,11 +203,14 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
   }
 
   // The complete summary stays together; notes use the remaining space or continue.
-  ensure(153)
+  const summaryRows: Array<[string, number]> = [["Subtotal", totals.subtotal]]
+  if (totals.discount) summaryRows.push(["Discount", totals.discount])
+  if (invoice.taxBasisPoints) summaryRows.push([`Tax (${invoice.taxBasisPoints / 100}%)`, totals.tax])
+  ensure(101 + summaryRows.length * 19)
   y += 12
   const summaryY = y
   const summaryX = Math.max(left, right - 218)
-  for (const [label, value] of [["Subtotal", totals.subtotal], ["Discount", totals.discount], [`Tax (${invoice.taxBasisPoints / 100}%)`, totals.tax]] as const) {
+  for (const [label, value] of summaryRows) {
     text(label, summaryX, y, 8.5, mono, muted); text(amount(value), right, y, 8.5, mono, fg, "right"); y += 19
   }
   y += 9
@@ -230,14 +236,32 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
     text("BILLED WITH CLARITY.", left, summaryY + 42, 6.5, mono, muted)
   }
   y += 80
-  heading("02 / PAYMENT DETAILS")
-  flow(invoice.business.paymentInstructions || "Add payment instructions before issuing this invoice.", width, 9.5, body, muted)
+  if (invoice.status === "paid") {
+    heading("02 / PAYMENT RECEIVED")
+    flow(invoice.paidAt ? `Full payment recorded on ${displayDate(invoice.paidAt)}. Thank you.` : "Full payment recorded. Thank you.", width, 9.5, body, muted)
+  } else if (invoice.status === "void") {
+    heading("02 / VOID DOCUMENT")
+    flow("This invoice has been voided. No payment is requested.", width, 9.5, body, muted)
+  } else {
+    const instructions = invoice.business.paymentInstructions || "Add payment instructions before issuing this invoice."
+    const paymentLines = wrap(instructions, width - 28, 9.5)
+    const panelHeight = 53 + paymentLines.length * 14
+    // A short payment block stays together; long instructions retain normal pagination.
+    if (panelHeight <= 150) {
+      ensure(panelHeight + 10)
+      rect(left, y, width, panelHeight, dark ? rgb(.045, .045, .045) : rgb(.96, .96, .96), rule)
+      text("02 / PAYMENT DETAILS", left + 14, y + 13, 7.1, mono, muted)
+      paymentLines.forEach((value, index) => text(value, left + 14, y + 36 + index * 14, 9.5, body, fg))
+      y += panelHeight + 10
+    } else { heading("02 / PAYMENT DETAILS"); flow(instructions, width, 9.5, body, muted) }
+  }
   if (invoice.notes) { y += 12; heading("03 / A NOTE FROM THE STUDIO"); flow(invoice.notes, width, 9.5, body, muted) }
 
   for (const [index, sheet] of doc.getPages().entries()) {
     page = sheet
     line(800)
-    text(`OZ STUDIO / ${invoice.number}`, left, 812, 6.5, mono, muted)
+    const footer = `${invoice.business.name.toUpperCase()} / ${invoice.number}`
+    text(footer, left, 812, fit(footer, 6.5, width - 90, mono), mono, muted)
     text(`${String(index + 1).padStart(2, "0")} — ${String(doc.getPageCount()).padStart(2, "0")}`, right, 812, 6.5, mono, muted, "right")
   }
   return doc.save()

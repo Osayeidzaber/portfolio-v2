@@ -166,6 +166,15 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        persistence/immutability checks passed. Seven sample PDFs fit one page with
        no out-of-page text in the visual audit.
 
+- [x] 19. Invoice refinement: framed status labels, quieter zero-tax/discount totals,
+       payment panels and paid/void-specific copy; fitted business footers and
+       continuation headers. PDF viewer adds page thumbnails, arrow-key navigation,
+       document details and browser-supported full-screen viewing.
+       Validation: typecheck, lint, 77 unit tests, production build and 52 browser
+       checks passed; 4 expected skips. Seven single-page samples and six long
+       4â€“5-page fixtures checked for overflow; paid/void wording verified. Desktop
+       and 375px QA covers thumbnails, keyboard navigation and full-screen controls.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,
