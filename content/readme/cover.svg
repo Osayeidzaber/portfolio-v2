@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">Osayeed Zaber — Portfolio V2</title>
+  <desc id="desc">Black Press editorial cover: white portfolio typography, fine grid lines, and concentric rings on a black canvas.</desc>
+  <rect width="1600" height="620" fill="#000"/>
+  <g fill="none" stroke="#1f1f1f">
+    <path d="M64 96H1536M64 524H1536M1012 96V524"/>
+    <circle cx="1280" cy="310" r="187"/><circle cx="1280" cy="310" r="145"/>
+    <circle cx="1280" cy="310" r="103"/><circle cx="1280" cy="310" r="61"/>
+    <path d="M1064 310H1496M1280 96V524"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#f2f2f2">
+    <text x="64" y="64" font-family="monospace" font-size="18" letter-spacing="3">OZ / OSAYEED ZABER</text>
+    <text x="1536" y="64" text-anchor="end" font-family="monospace" font-size="18" letter-spacing="3" fill="#bdbdbd">VOL. 02</text>
+    <text x="56" y="285" font-size="156" font-weight="800" letter-spacing="-9">PORTFOLIO</text>
+    <text x="64" y="416" font-family="Georgia, serif" font-style="italic" font-size="116" letter-spacing="-4">Code. Type. Motion.</text>
+    <text x="64" y="478" font-size="23" fill="#bdbdbd">A personal portfolio, powered by GitHub.</text>
+    <text x="1280" y="340" text-anchor="middle" font-size="84" font-weight="700" letter-spacing="-4">V2</text>
+    <text x="64" y="573" font-family="monospace" font-size="17" letter-spacing="2" fill="#bdbdbd">BLACK PRESS / NEXT.JS / WEBGL</text>
+    <text x="1536" y="573" text-anchor="end" font-family="monospace" font-size="17" letter-spacing="2" fill="#bdbdbd">DHAKA, BANGLADESH</text>
+  </g>
+</svg>

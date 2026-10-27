@@ -118,6 +118,7 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
 - [x] 11. README (setup, env, publishing flow), security headers in `next.config.ts`, final audit
 - [ ] 12. Owner setup:
   - [x] GitHub repository `Osayeidzaber/portfolio-v2` with setup and publishing README
+  - [x] Enhanced repository README with Black Press cover, project previews, navigation, and architecture diagram
   - [ ] Vercel project, env vars, webhook, production password
 - [ ] 13. Next: "lite" mode for low-power phones to lift mobile Lighthouse (currently ~60)
 - [x] 14. Portrait hero composition, larger color carousel, Corso Velle V2 showcase,
