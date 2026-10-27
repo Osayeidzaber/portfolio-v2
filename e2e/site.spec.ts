@@ -3,6 +3,42 @@ import { expect, test } from "@playwright/test"
 
 const chapters = ["top", "about", "work", "toolkit", "ledger", "experience", "play", "contact"]
 
+test("hero CTA remains native and the portrait keeps its original colors", async ({ page }) => {
+  await page.goto("/")
+  const cta = page.locator('#top a[href="#work"]')
+  await expect(cta).toBeVisible()
+  await expect(cta.locator("canvas")).toHaveCount(0)
+  await expect(page.locator('#about img[alt^="Portrait of"]')).toHaveCSS("filter", "none")
+})
+
+test("primary nav indicator stays active through the intermediate chapters", async ({ page, isMobile }) => {
+  test.skip(isMobile, "desktop compact header indicator")
+  await page.goto("/", { waitUntil: "networkidle" })
+  for (const [id, label] of [["work", "Work"], ["toolkit", "Work"], ["ledger", "Ledger"], ["experience", "Ledger"], ["play", "Tools"]]) {
+    await page.locator(`#${id}`).evaluate((element) => window.scrollTo({ top: element.getBoundingClientRect().top + scrollY - 110, behavior: "instant" }))
+    await expect(page.getByRole("navigation", { name: "Primary", exact: true }).getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "true")
+  }
+})
+
+test("carousel responds to keys and preserves its selection after scrolling away", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" })
+  await page.locator("#about").scrollIntoViewIfNeeded()
+  await page.locator("[data-carousel-stage]").scrollIntoViewIfNeeded()
+  const gallery = page.getByRole("region", { name: "Image carousel", exact: true })
+  await expect(gallery.locator("canvas")).toHaveCount(1)
+  const title = page.locator("#work article h3")
+  const original = await title.textContent()
+  await gallery.focus()
+  await gallery.press("ArrowRight")
+  await expect(title).not.toHaveText(original!)
+  await page.waitForTimeout(700)
+  const selected = await title.textContent()
+  await page.locator("#contact").scrollIntoViewIfNeeded()
+  await page.locator("[data-carousel-stage]").scrollIntoViewIfNeeded()
+  await expect(title).toHaveText(selected!)
+  await expect(gallery.locator("canvas")).toHaveCount(1)
+})
+
 test("standalone Minecraft inventory opens its tools and calculates useful results", async ({ page }) => {
   await page.goto("/minecraft")
   await page.locator("#tools").scrollIntoViewIfNeeded()

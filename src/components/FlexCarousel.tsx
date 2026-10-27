@@ -1311,7 +1311,9 @@ const FlexCarousel = ({
       hasFocus = false;
     };
     const onVisibility = () => {
-      if (!document.hidden) start();
+      // patched: redraw restored tabs instead of keeping a stale GPU backbuffer
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else { dirty = true; start(); }
     };
 
     container.addEventListener('pointerdown', onPointerDown);
@@ -1329,6 +1331,8 @@ const FlexCarousel = ({
     resizeObserver.observe(container);
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      // patched: repaint when the gallery returns from offscreen, even at rest
+      if (visible) dirty = true;
       start();
     });
     intersectionObserver.observe(container);
