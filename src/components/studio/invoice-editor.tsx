@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 
 import { invoiceEmail } from "@/lib/studio/invoice-document"
 import { invoiceInputSchema, invoiceTotals, money, toMinor, type Invoice, type InvoiceInput, type StudioData, type PaymentRecord, type EmailComposition } from "@/lib/studio/schema"
@@ -21,7 +21,7 @@ import { InvoiceEmailStatus } from "./email-status"
 
 export function InvoiceEditor({ data, invoice, initial, today, busy, persistenceEnabled, emailReady, sender, onSave, onSend, onIssue, onStatus, onClose, onUnsavedChange, onCheckEmail, initialMode, initialEmail }: {
   data: StudioData; invoice: Invoice | null; initial?: InvoiceInput; today: string; busy: boolean; persistenceEnabled: boolean; emailReady: boolean; sender: string
-  onSave: (value: InvoiceInput, next?: "email", emailDraft?: EmailComposition) => void; onSend: (id: string, pdf?: string, composition?: EmailComposition) => void; onIssue: (id: string) => void; onStatus: (id: string, status: "paid" | "void", payment?: PaymentRecord) => void; onClose: () => void
+  onSave: (value: InvoiceInput, next?: "email", emailDraft?: EmailComposition) => void; onSend: (id: string, pdf?: string, composition?: EmailComposition) => Promise<{ ok: true } | { ok: false; error: string }>; onIssue: (id: string) => void; onStatus: (id: string, status: "paid" | "void", payment?: PaymentRecord) => void; onClose: () => void
   initialMode?: "email"
   initialEmail?: EmailComposition
   onCheckEmail?: (id: string) => void
@@ -31,8 +31,9 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
   const source = invoice ?? initial
   const [mode, setMode] = useState<"edit" | "preview" | "pdf" | "email">(initialMode ?? (invoice?.status && invoice.status !== "draft" ? "pdf" : "edit"))
   const [error, setError] = useState("")
-  const [reviewed, setReviewed] = useState(false)
-  const [preparingEmail, setPreparingEmail] = useState(false)
+  const [sendStage, setSendStage] = useState<"idle" | "confirming" | "preparing" | "sending" | "accepted" | "failed">("idle")
+  const [sendError, setSendError] = useState("")
+  const sendInFlight = useRef(false)
   const [emailSubject, setEmailSubject] = useState(invoice?.emailAttempt?.subject ?? initialEmail?.subject ?? "")
   const [emailMessage, setEmailMessage] = useState(invoice?.emailAttempt?.message ?? initialEmail?.message ?? "")
   const [design, setDesign] = useState<InvoiceDesign>(source?.design ?? (invoice ? "signature" : "noir"))
@@ -53,18 +54,35 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
     setTitle(fields.title); setNumber(fields.number); setDesign(fields.design); setClient(fields.client)
     setIssueDate(fields.issueDate); setDueDate(fields.dueDate); setCurrency(fields.currency)
     setItems(fields.items); setDiscount(fields.discount); setTax(fields.tax); setNotes(fields.notes)
-    setEmailSubject(fields.emailSubject); setEmailMessage(fields.emailMessage); setReviewed(false)
+    setEmailSubject(fields.emailSubject); setEmailMessage(fields.emailMessage)
   }
   const composition = { subject: emailSubject.trim() || `${invoice?.business.name || data.settings.name} — Invoice ${number}`, message: emailMessage }
 
   async function send() {
-    if (!invoice || preparingEmail) return
-    setPreparingEmail(true); setError("")
+    if (!invoice || sendInFlight.current || busy) return
+    setSendError("")
+    if (!emailReady) { setSendError("Connect a verified email sender in Settings before sending this invoice."); setSendStage("failed"); return }
+    if (dirty && !locked) { setSendError("Save your latest changes before sending. Return to Details and use Save & continue."); setSendStage("failed"); return }
+    sendInFlight.current = true
+    setSendStage("confirming")
     try {
-      const attachment = invoice.emailAttempt ? undefined : pdfBase64(await browserInvoicePdf({ ...invoice, status: "issued" }))
-      onSend(invoice.id, attachment, { subject: emailSubject.trim() || `${invoice.business.name} — Invoice ${invoice.number}`, message: emailMessage })
-    } catch (error) { setError(error instanceof Error ? error.message : "Could not prepare the PDF attachment. Please retry.") }
-    finally { setPreparingEmail(false) }
+      const retry = Boolean(invoice.emailAttempt)
+      const approved = await confirm({
+        title: retry ? `Retry email for ${invoice.number}?` : `Send invoice ${invoice.number}?`,
+        body: retry ? `Retry the original saved email to ${invoice.client.email}, including its PDF attachment? The saved request is reused to prevent duplicate submissions.` : `Send ${invoice.number} to ${invoice.client.email}? Total: ${money(invoiceTotals(invoice).total, invoice.currency)}. The email includes ${invoice.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf and your payment instructions. Sending locks the invoice details.`,
+        confirm: retry ? "Retry saved email" : "Send invoice",
+      })
+      if (!approved) { setSendStage("idle"); return }
+      setSendStage(retry ? "sending" : "preparing")
+      const attachment = retry ? undefined : pdfBase64(await browserInvoicePdf({ ...invoice, status: "issued" }))
+      setSendStage("sending")
+      const result = await onSend(invoice.id, attachment, { subject: emailSubject.trim() || `${invoice.business.name} — Invoice ${invoice.number}`, message: emailMessage })
+      if (!result.ok) { setSendError(result.error); setSendStage("failed"); return }
+      setSendStage("accepted")
+    } catch (error) {
+      setSendError(error instanceof Error ? error.message : "The email could not be submitted. Reload to check the saved send status before retrying.")
+      setSendStage("failed")
+    } finally { sendInFlight.current = false }
   }
   function value(): InvoiceInput {
     return invoiceInputSchema.parse({ ...(invoice ? { id: invoice.id } : {}), title, number, design, client, issueDate, dueDate, currency, items: items.map((item) => ({ description: item.description, quantity: Number(item.quantity), unitPrice: toMinor(item.price) })), discount: toMinor(discount), taxBasisPoints: toMinor(tax), notes })
@@ -115,7 +133,7 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
       <DesignPicker value={design} onChange={setDesign} />
       <label>Project / invoice title<input required maxLength={120} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="For example, storefront design & development" /></label>
       <div className="oz-form-grid"><label>Invoice number<input required maxLength={40} value={number} onChange={(event) => setNumber(event.target.value)} /></label><label>Currency<select value={currency} onChange={(event) => setCurrency(event.target.value as typeof currency)}>{["BDT", "USD", "CAD", "EUR", "GBP"].map((item) => <option key={item}>{item}</option>)}</select></label><label>Issue date<input type="date" required value={issueDate} onChange={(event) => setIssueDate(event.target.value)} /></label><label>Due date<input type="date" required min={issueDate} value={dueDate} onChange={(event) => setDueDate(event.target.value)} /></label></div>
-      <h2>Bill to</h2><ClientPicker clients={clients} current={client} onChange={(next) => { setClient(next); setReviewed(false) }} /><div className="oz-form-grid"><label>Client name<input required maxLength={100} value={client.name} onChange={(event) => setClient({ ...client, name: event.target.value })} /></label><label>Company (optional)<input maxLength={100} value={client.company} onChange={(event) => setClient({ ...client, company: event.target.value })} /></label></div><label>Client email<input required type="email" maxLength={254} value={client.email} onChange={(event) => setClient({ ...client, email: event.target.value })} /></label><label>Client billing address<textarea maxLength={500} value={client.address} onChange={(event) => setClient({ ...client, address: event.target.value })} /></label>
+      <h2>Bill to</h2><ClientPicker clients={clients} current={client} onChange={(next) => { setClient(next) }} /><div className="oz-form-grid"><label>Client name<input required maxLength={100} value={client.name} onChange={(event) => setClient({ ...client, name: event.target.value })} /></label><label>Company (optional)<input maxLength={100} value={client.company} onChange={(event) => setClient({ ...client, company: event.target.value })} /></label></div><label>Client email<input required type="email" maxLength={254} value={client.email} onChange={(event) => setClient({ ...client, email: event.target.value })} /></label><label>Client billing address<textarea maxLength={500} value={client.address} onChange={(event) => setClient({ ...client, address: event.target.value })} /></label>
       <h2>Services & line items</h2><p className="oz-form-hint">Rates are in {currency}. Quantities are whole units; enter a separate line for each service or deliverable.</p>
       {presets.length > 0 && <label>Add a saved service ({currency})<select defaultValue="" disabled={items.length >= 20} onChange={(event) => { const service = presets[Number(event.target.value)]; if (event.target.value !== "" && service) { const row = { description: service.description, quantity: String(service.quantity), price: (service.unitPrice / 100).toFixed(2) }; setItems(items.length === 1 && !items[0].description && Number(items[0].price) === 0 ? [row] : [...items, row]) } event.target.value = "" }}><option value="">Choose a saved service…</option>{presets.map((service, index) => <option key={index} value={index}>{service.name} · {money(service.unitPrice, service.currency)}</option>)}</select></label>}
       {items.map((item, index) => <div className="oz-line-item" key={index}><label>Description {index + 1}<input required maxLength={180} value={item.description} onChange={(event) => setItems(items.map((line, i) => i === index ? { ...line, description: event.target.value } : line))} /></label><label>Quantity {index + 1}<input type="number" min={1} max={10000} step={1} required value={item.quantity} onChange={(event) => setItems(items.map((line, i) => i === index ? { ...line, quantity: event.target.value } : line))} /></label><label>Rate {index + 1}<input type="text" inputMode="decimal" required value={item.price} onChange={(event) => setItems(items.map((line, i) => i === index ? { ...line, price: event.target.value } : line))} /></label><button type="button" className="oz-remove" disabled={items.length === 1} aria-label={`Remove line item ${index + 1}`} onClick={() => setItems(items.filter((_, i) => i !== index))}>×</button></div>)}
@@ -131,7 +149,7 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
       <div className="oz-design-bar">{locked ? <p className="oz-form-hint">Saved design: <strong>{invoiceDesignName(invoice.design)}</strong></p> : <label>Invoice design<select aria-label="PDF invoice design" value={design} onChange={(event) => setDesign(event.target.value as InvoiceDesign)}>{invoiceDesigns.map((item) => <option value={item.id} key={item.id}>{item.name} · {item.dark ? "Dark" : "Paper"}</option>)}</select></label>}<p className="oz-form-hint">{locked ? "The issued invoice keeps its selected design." : "Switch layouts to compare the actual PDFs. Save your draft to keep your choice."}</p></div>
       <PdfViewer key={JSON.stringify(document)} invoice={document} />
     </>}
-    {mode === "email" && document && <>{!invoice?.emailAttempt && <div className="oz-form oz-panel oz-email-compose"><label>Email subject<input required maxLength={180} value={composition.subject} onChange={(event) => { setEmailSubject(event.target.value); setReviewed(false) }} /></label><label>Personal message (optional)<textarea maxLength={2000} value={emailMessage} onChange={(event) => { setEmailMessage(event.target.value); setReviewed(false) }} placeholder="A short personal note for this client. Invoice totals and payment details are included automatically." /></label></div>}<p className="oz-form-hint" style={{ marginBottom: 12 }}>To: {document.client.email} · Subject: {invoice?.emailAttempt?.subject || composition.subject}</p><div className="oz-email-attachment"><span className="oz-label">PDF ATTACHMENT</span><strong>{document.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf</strong><span>{invoiceDesignName(document.design)} design · Generated in your browser and attached when you send.</span></div><details className="oz-email-pdf"><summary>Review PDF attachment</summary><PdfViewer key={JSON.stringify(document)} invoice={{ ...document, status: document.status === "draft" ? "issued" : document.status }} /></details><iframe className="oz-mail-preview" title="Invoice email preview" sandbox="" srcDoc={invoiceEmail(document, sender || "billing@example.com", "/oz-studio/logo-email.png", invoice?.emailAttempt ? { subject: invoice.emailAttempt.subject || `${document.business.name} — Invoice ${document.number}`, message: invoice.emailAttempt.message || "" } : composition).html} /></>}
+    {mode === "email" && document && <>{!invoice?.emailAttempt && <div className="oz-form oz-panel oz-email-compose"><label>Email subject<input required maxLength={180} value={composition.subject} onChange={(event) => { setEmailSubject(event.target.value) }} /></label><label>Personal message (optional)<textarea maxLength={2000} value={emailMessage} onChange={(event) => { setEmailMessage(event.target.value) }} placeholder="A short personal note for this client. Invoice totals and payment details are included automatically." /></label></div>}<p className="oz-form-hint" style={{ marginBottom: 12 }}>To: {document.client.email} · Subject: {invoice?.emailAttempt?.subject || composition.subject}</p><div className="oz-email-attachment"><span className="oz-label">PDF ATTACHMENT</span><strong>{document.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf</strong><span>{invoiceDesignName(document.design)} design · Generated in your browser and attached when you send.</span></div><details className="oz-email-pdf"><summary>Review PDF attachment</summary><PdfViewer key={JSON.stringify(document)} invoice={{ ...document, status: document.status === "draft" ? "issued" : document.status }} /></details><iframe className="oz-mail-preview" title="Invoice email preview" sandbox="" srcDoc={invoiceEmail(document, sender || "billing@example.com", "/oz-studio/logo-email.png", invoice?.emailAttempt ? { subject: invoice.emailAttempt.subject || `${document.business.name} — Invoice ${document.number}`, message: invoice.emailAttempt.message || "" } : composition).html} /></>}
     {mode !== "edit" && <div className="oz-panel oz-review">
       {invoice ? <>
         <InvoiceEmailStatus invoice={invoice} />{invoice.emailAttempt?.acceptedAt && onCheckEmail && <button type="button" className="oz-button" disabled={busy || !emailReady} onClick={() => onCheckEmail(invoice.id)}>Check email delivery</button>}
@@ -141,9 +159,13 @@ export function InvoiceEditor({ data, invoice, initial, today, busy, persistence
           {!emailReady && <p className="oz-notice" style={{ marginTop: 20 }}>Connect a verified email sender in Settings to enable delivery. Preview and PDF download remain available.</p>}
           {invoice.emailAttempt && <p className="oz-notice" style={{ marginTop: 20 }}>This invoice has a pending send. Retrying uses the original saved request to avoid duplicates within the provider’s retry window.</p>}
           {dirty && !locked && <p className="oz-notice" style={{ marginTop: 20 }}>Save your latest changes before sending. The send action always uses the saved invoice.</p>}
-          <label className="oz-check" style={{ marginTop: 20 }}><input type="checkbox" checked={reviewed} onChange={(event) => setReviewed(event.target.checked)} />I have checked the saved recipient, dates, payment instructions and amounts.</label>
-          <button className="oz-button oz-button-light" disabled={!reviewed || !emailReady || busy || preparingEmail || Boolean(dirty && !locked)} onClick={() => void send()}>{preparingEmail ? "Preparing attachment…" : busy ? "Submitting…" : invoice.emailAttempt ? "Retry pending send" : `Send ${invoice.number} to client`}</button>
+          <p className="oz-form-hint" style={{ margin: "20px 0 12px" }}>Click Send to review the recipient, total and PDF attachment in the confirmation dialog.</p>
+          <button type="button" className="oz-button oz-button-light" disabled={busy || sendStage === "confirming" || sendStage === "preparing" || sendStage === "sending"} onClick={() => void send()}>{sendStage === "preparing" ? "Preparing PDF attachment…" : sendStage === "sending" ? "Sending invoice…" : busy ? "Please wait…" : sendStage === "confirming" ? "Review confirmation…" : invoice.emailAttempt ? "Retry pending send" : `Send ${invoice.number} to client`}</button>
         </>}
+        {sendStage === "preparing" && <p className="oz-notice" role="status">Preparing the invoice PDF in your browser…</p>}
+        {sendStage === "sending" && <p className="oz-notice" role="status">Submitting the email and PDF attachment. Please wait for confirmation.</p>}
+        {sendStage === "accepted" && <p className="oz-notice" role="status">Resend accepted the invoice email with its PDF attachment. The saved email receipt shows the message ID.</p>}
+        {sendError && <p className="oz-notice" role="alert">{sendError}</p>}
       </> : <><h2>Save before sending.</h2><p className="oz-form-hint">Preview your document, return to Details, and save the draft. You can review the saved invoice before emailing it.</p><button className="oz-button" onClick={() => switchMode("edit")}>Back to details</button></>}
     </div>}
   </div>

@@ -229,6 +229,15 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        client replacement/cancel/Escape and successful/failed save progression;
        desktop and 375px checks verify the in-page dialog. No live email sent.
 
+- [x] 24. Send opens an in-page confirmation with saved recipient, total and PDF;
+       removes the silent checkbox-disabled state, awaits submission, and displays
+       preparation, provider acceptance and errors beside the Send controls.
+       PDF font requests time out instead of leaving attachment preparation stuck.
+       Validation: typecheck, lint, 109 unit/component tests, production build and
+       64 browser checks passed; 4 expected skips. Mocked sends cover confirmation,
+       cancellation, provider failures, attachment failures and missing configuration.
+       No real client email sent while debugging; local admin responds on port 3000.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,

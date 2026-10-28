@@ -6,7 +6,7 @@ const fonts = new Map<string, Promise<Uint8Array>>()
 export const loadPdfFont: PdfFontLoader = (name) => {
   let pending = fonts.get(name)
   if (!pending) {
-    pending = fetch(`/oz-studio/fonts/${encodeURIComponent(name)}`).then(async (response) => {
+    pending = fetch(`/oz-studio/fonts/${encodeURIComponent(name)}`, { signal: AbortSignal.timeout(20_000) }).then(async (response) => {
       if (!response.ok) throw new Error("Could not load the invoice typefaces. Check your connection and retry.")
       return new Uint8Array(await response.arrayBuffer())
     }).catch((error) => { fonts.delete(name); throw error })
