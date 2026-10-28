@@ -5,8 +5,9 @@ import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from
 
 import { checkEmailStatusAction, archiveInvoicesAction, restoreArchiveAction, saveServicesAction, changeInvoiceStatus, issueInvoiceAction, loadWorkspace, saveBusinessAction, saveInvoiceAction, sendInvoiceAction, type WorkspaceResult } from "@/app/admin/oz-studio/actions"
 import { logoutAction } from "@/app/admin/actions"
-import { paymentDetails, displayDate, emptyStudio, invoiceTotals, money, type Business, type PaymentMethod, type Invoice, type InvoiceInput } from "@/lib/studio/schema"
+import { paymentDetails, displayDate, emptyStudio, invoiceTotals, money, type Business, type PaymentMethod, type Invoice, type InvoiceInput, type EmailComposition } from "@/lib/studio/schema"
 import type { StudioSnapshot } from "@/lib/studio/store"
+import { ConfirmProvider, useConfirm } from "@/components/admin/confirm"
 import { DataTools } from "./data-tools"
 import { ServicePresets } from "./service-presets"
 import { clearAllInvoiceRecovery, clearInvoiceRecovery } from "@/lib/studio/recovery"
@@ -20,13 +21,16 @@ type Tab = "overview" | "invoices" | "settings"
 const tabs: Array<{ id: Tab; label: string }> = [{ id: "overview", label: "Overview" }, { id: "invoices", label: "Invoices" }, { id: "settings", label: "Settings" }]
 type Loaded = Extract<Awaited<ReturnType<typeof loadWorkspace>>, { ok: true }>
 
-export function Workspace() {
+export function Workspace() { return <ConfirmProvider><WorkspaceInner /></ConfirmProvider> }
+
+function WorkspaceInner() {
+  const confirm = useConfirm()
   const [state, setState] = useState<Loaded | null>(null)
   const [tab, setTab] = useState<Tab>("overview")
   const [previewOnly, setPreviewOnly] = useState(false)
   const [busy, setBusy] = useState(true)
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null)
-  const [editor, setEditor] = useState<{ id: string | null; initial?: InvoiceInput } | null>(null)
+  const [editor, setEditor] = useState<{ id: string | null; initial?: InvoiceInput; mode?: "email"; revision?: number; emailDraft?: EmailComposition } | null>(null)
   const [unsaved, setUnsaved] = useState(false)
   const [sort, setSort] = useState("recent")
   const [search, setSearch] = useState("")
@@ -50,7 +54,7 @@ export function Workspace() {
     }).catch(() => { if (active) setMessage({ text: "The workspace could not be loaded. Reload to try again.", error: true }) }).finally(() => { if (active) setBusy(false) })
     return () => { active = false }
   }, [])
-  const go = (next: Tab) => { if (unsaved && !window.confirm("Leave this invoice without saving your latest changes?")) return; setTab(next); setEditor(null); setSearch(""); setStatus("all"); setMessage(null) }
+  const go = async (next: Tab) => { if (unsaved && !(await confirm({ title: "Leave this invoice?", body: "Your latest changes have not been saved to the ledger.", confirm: "Leave without saving" }))) return; setTab(next); setEditor(null); setSearch(""); setStatus("all"); setMessage(null) }
   async function action(request: () => Promise<WorkspaceResult>, success: string, after?: (snapshot: StudioSnapshot) => void) {
     setBusy(true); setMessage(null)
     try {
@@ -64,7 +68,7 @@ export function Workspace() {
   }
   const snapshot = state?.snapshot
   const data = snapshot?.data
-  const saveInvoice = (input: InvoiceInput) => void action(() => saveInvoiceAction(input, snapshot!.sha), "Draft saved. Review the invoice before sending.", (saved) => { try { clearInvoiceRecovery(localStorage, input.id) } catch {} setEditor({ id: input.id || saved.data.invoices[saved.data.invoices.length - 1].id }) })
+  const saveInvoice = (input: InvoiceInput, next?: "email", emailDraft?: EmailComposition) => void action(() => saveInvoiceAction(input, snapshot!.sha), next === "email" ? "Draft saved. Review the email and PDF before sending." : "Draft saved. Review the invoice before sending.", (saved) => { try { clearInvoiceRecovery(localStorage, input.id) } catch {} setEditor((previous) => ({ id: input.id || saved.data.invoices[saved.data.invoices.length - 1].id, mode: next, revision: (previous?.revision ?? 0) + 1, emailDraft })) })
   const selectedInvoice = editor?.id ? data?.invoices.find((item) => item.id === editor.id) ?? null : null
   const filtered = data?.invoices.filter((invoice) => (status === "all" || (status === "overdue" ? invoice.status === "issued" && invoice.dueDate < today : invoice.status === status)) && `${invoice.number} ${invoice.title} ${invoice.client.name} ${invoice.client.company}`.toLowerCase().includes(search.toLowerCase())) ?? []
   const sorted = [...filtered].sort((a, b) => sort === "due" ? a.dueDate.localeCompare(b.dueDate) : sort === "client" ? (a.client.company || a.client.name).localeCompare(b.client.company || b.client.name) : b.createdAt.localeCompare(a.createdAt))
@@ -79,7 +83,7 @@ export function Workspace() {
       {previewOnly && <p className="oz-notice">PDF designer mode. You can preview and download a custom invoice; this draft is not saved. Connect private storage to save records or send email.</p>}
       {message && <div className="oz-notice" role={message.error ? "alert" : "status"}><button type="button" aria-label="Dismiss message" onClick={() => setMessage(null)}>×</button>{message.text}{message.error && <div><button className="oz-small-button" disabled={busy} onClick={load}>Reload workspace</button></div>}</div>}
       {!state ? <div className="oz-panel"><h1 style={{ fontSize: 32 }}>Your work, on paper.</h1><p role="status">{busy ? "Opening invoice desk…" : "The workspace could not be loaded. Try reloading above."}</p></div> : state.mode === "unconfigured" && !previewOnly ? <><Heading label="START HERE" title="Your invoice desk awaits." description="Your public studio is ready. Connect private storage to save and send invoices securely." /><Setup emailReady={state.email.ready} onPreview={() => { setState({ ...state, snapshot: { data: emptyStudio(), sha: null } }); setPreviewOnly(true); setTab("invoices"); setEditor({ id: null }) }} /></> : data && <>
-        {editor ? <InvoiceEditor key={editor.id || "new-invoice"} data={data} invoice={selectedInvoice} initial={editor.initial} onUnsavedChange={setUnsaved} today={today} busy={busy} persistenceEnabled={!previewOnly} emailReady={state.email.ready && !previewOnly} sender={state.email.sender} onCheckEmail={(id) => void action(() => checkEmailStatusAction(id, snapshot!.sha), "Latest email status checked with Resend.")} onSave={saveInvoice} onSend={(id, pdf, composition) => void action(() => sendInvoiceAction(id, snapshot!.sha, pdf, composition), "Invoice accepted by the email provider. Track delivery in your provider dashboard.")} onIssue={(id) => void action(() => issueInvoiceAction(id, snapshot!.sha), "Invoice issued. You can download it, send it, or record payment.")} onStatus={(id, next, payment) => void action(() => changeInvoiceStatus(id, next, snapshot!.sha, payment), next === "paid" ? "Full payment recorded." : "Invoice voided.")} onClose={() => setEditor(null)} /> : <>
+        {editor ? <InvoiceEditor key={`${editor.id || "new-invoice"}-${editor.mode || "edit"}-${editor.revision || 0}`} initialEmail={editor.emailDraft} initialMode={editor.mode} data={data} invoice={selectedInvoice} initial={editor.initial} onUnsavedChange={setUnsaved} today={today} busy={busy} persistenceEnabled={!previewOnly} emailReady={state.email.ready && !previewOnly} sender={state.email.sender} onCheckEmail={(id) => void action(() => checkEmailStatusAction(id, snapshot!.sha), "Latest email status checked with Resend.")} onSave={saveInvoice} onSend={(id, pdf, composition) => void action(() => sendInvoiceAction(id, snapshot!.sha, pdf, composition), "Invoice accepted by the email provider. Track delivery in your provider dashboard.")} onIssue={(id) => void action(() => issueInvoiceAction(id, snapshot!.sha), "Invoice issued. You can download it, send it, or record payment.")} onStatus={(id, next, payment) => void action(() => changeInvoiceStatus(id, next, snapshot!.sha, payment), next === "paid" ? "Full payment recorded." : "Invoice voided.")} onClose={() => setEditor(null)} /> : <>
           {tab === "overview" && <><Heading label="THE BIG PICTURE" title="Good work. Clear accounts." description="Create a custom invoice, check the PDF, and send it when it is ready." action={<button className="oz-button oz-button-light" onClick={create}>+ Create invoice</button>} />
             <FinanceSummary invoices={data.invoices} today={today} defaultCurrency={data.settings.currency} /><div className="oz-metrics"><Metric title="Drafts" value={String(data.invoices.filter((item) => item.status === "draft").length)} detail="Saved drafts awaiting your review." /><Metric title="Outstanding" value={String(data.invoices.filter((item) => item.status === "issued").length)} detail="Issued invoices not yet recorded as fully paid." /><Metric title="Paid" value={String(data.invoices.filter((item) => item.status === "paid").length)} detail="Invoices with full payment recorded." /></div>
             <div className="oz-desk-grid"><section className="oz-panel"><h2>Recent invoices</h2>{data.invoices.length ? [...data.invoices].reverse().slice(0, 5).map((invoice) => <InvoiceRow key={invoice.id} invoice={invoice} today={today} onDuplicate={() => { setTab("invoices"); setEditor({ id: null, initial: draftFromInvoice(invoice, today) }) }} onOpen={() => { setTab("invoices"); setEditor({ id: invoice.id }) }} />) : <Empty title="Your first invoice starts here." description="Add the billing details and services. Check your custom PDF before anything is sent." action={<button className="oz-button" onClick={create}>+ Create your first invoice</button>} />}</section><section className="oz-panel"><h2>A small, deliberate workflow.</h2><div className="oz-workflow"><p><span className="oz-label">01 / CREATE</span><br />Your client, your services, your terms.</p><p><span className="oz-label">02 / PREVIEW</span><br />Check the actual PDF in the viewer.</p><p><span className="oz-label">03 / ISSUE & SEND</span><br />Download it or send a branded email.</p></div><button className="oz-small-button" onClick={() => go("settings")}>Your business & payment details →</button></section></div>

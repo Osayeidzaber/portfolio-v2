@@ -218,6 +218,17 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        browser PDF generation and accessible settings. Archive/payment/provider
        actions use isolated fixtures and mocks; no live emails sent.
 
+- [x] 23. Invoice workspace confirmations move into the existing accessible in-page
+       dialog; selected clients are snapshotted before confirmation so acceptance
+       fills all billing fields and cancellation preserves current entries.
+       Save & continue advances to email review only after a successful draft save;
+       preview-only sessions can continue to an email preview without sending.
+       Email drafts survive repeat visits to Details and continuing again.
+       Validation: typecheck, lint, 105 unit/component tests, production build and
+       64 browser checks passed; 4 expected skips. Component coverage verifies
+       client replacement/cancel/Escape and successful/failed save progression;
+       desktop and 375px checks verify the in-page dialog. No live email sent.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,

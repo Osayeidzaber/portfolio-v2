@@ -262,6 +262,9 @@ The invoice desk also includes previous-client autofill (using the latest existi
 billing record), currency-specific service presets, and payment date/method/reference
 records. Service presets live in Settings and never alter existing invoice lines.
 Payment references are included in CSV exports.
+The form’s **Save & continue** button saves successfully before opening email
+review. Sending remains a separate explicit action. Invoice workspace confirmations
+use an in-page dialog, including replacing billing details with a previous client.
 
 **Device recovery is opt-in.** In the invoice editor, enable **Keep a recovery copy
 on this device** to preserve incomplete typing across a refresh. Restore is explicit;
