@@ -30,6 +30,14 @@ function setup(initial = original, choices = [{ ...selected }]) {
 }
 
 describe("previous-client confirmation", () => {
+  it("filters clients by email and company before choosing", () => {
+    setup(original, [{ ...selected }, { name: "Another", company: "Other studio", email: "other@example.com", address: "" }])
+    fireEvent.change(screen.getByLabelText("Find a previous client"), { target: { value: "Other studio" } })
+    const options = screen.getAllByRole("option")
+    expect(options).toHaveLength(2)
+    expect(options[1].textContent).toContain("Other studio")
+    expect(screen.queryByRole("option", { name: /Selected company/ })).toBeNull()
+  })
   it("fills every billing field after confirming the snapshotted selection", async () => {
     const { choose, changed, choices } = setup()
     choose()

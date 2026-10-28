@@ -238,6 +238,18 @@ Replacements (documented, Pro-only, 401 from registry): Aceternity **Shaders** â
        cancellation, provider failures, attachment failures and missing configuration.
        No real client email sent while debugging; local admin responds on port 3000.
 
+- [x] 25. Invoice admin refinement across speed, presentation and records: quick
+       action search, searchable clients/services, clearer navigation and settings,
+       a focused email/send layout, defaults and draft styling controls, Paper/Noir
+       emails, recorded action history, browser-generated payment receipts, and
+       currency-separated monthly payment reports/exports. Existing issued snapshots
+       stay locked. No portfolio, FAQ, portal or background automation changes.
+       Validation: typecheck, lint, 115 unit/component tests, production build and
+       66 browser checks passed; 4 expected skips. Final focused desktop/mobile
+       checks also verify month-aligned reports and the PDF viewer. Styled invoices
+       and receipts were rendered and visually checked with Bengali text and
+       bounded footer spacing. No live email sent; dev admin responds on port 3000.
+
 ## 6. Environment variables
 
 Standalone Minecraft app: `/minecraft` lives outside `(site)` and uses its own header,

@@ -36,6 +36,7 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
   const right = W - (design === "ledger" ? 38 : 44)
   const width = right - left
   const compact = design === "ledger"
+  const showRates = invoice.styling?.showRates !== false
   let page = doc.addPage([W, H])
   let y = 0
 
@@ -177,14 +178,14 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
 
   const tableHeader = () => {
     text("01 / SERVICES", left, y, 7.3, mono, muted)
-    if (compact) { text("QTY", right - 206, y, 7, mono, muted); text("RATE", right - 103, y, 7, mono, muted, "right") }
+    if (compact && showRates) { text("QTY", right - 206, y, 7, mono, muted); text("RATE", right - 103, y, 7, mono, muted, "right") }
     text("AMOUNT", right, y, 7.3, mono, muted, "right")
     line(y + 19, left, right, design === "monolith" ? fg : rule, design === "monolith" ? 1.2 : .6)
     y += 32
   }
   ensure(92); tableHeader()
   for (const [index, item] of invoice.items.entries()) {
-    const itemWidth = compact ? width - 230 : width - 177
+    const itemWidth = compact && showRates ? width - 230 : width - 177
     const size = compact ? 9.5 : 10.5
     const rows = wrap(item.description, itemWidth, size)
     const height = rows.length * 16 + (compact ? 19 : 24)
@@ -193,10 +194,10 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
     if (!compact) text(String(index + 1).padStart(2, "0"), left, y + 2, 6.5, mono, muted)
     rows.forEach((row, i) => text(row, left + (compact ? 0 : 23), start + i * 16, size, body))
     text(amount(item.unitPrice * item.quantity), right, start, fit(amount(item.unitPrice * item.quantity), size, 130, bold), bold, fg, "right")
-    if (compact) {
+    if (compact && showRates) {
       text(String(item.quantity), right - 206, start, 9, mono, muted)
       text(amount(item.unitPrice), right - 103, start, fit(amount(item.unitPrice), 8.5, 87, mono), mono, muted, "right")
-    } else text(`${item.quantity} × ${amount(item.unitPrice)}`, left + 23, start + rows.length * 16 + 2, 7.5, mono, muted)
+    } else if (showRates) text(`${item.quantity} × ${amount(item.unitPrice)}`, left + 23, start + rows.length * 16 + 2, 7.5, mono, muted)
     y += height; line(y - 10)
   }
 
@@ -262,10 +263,10 @@ export async function designedInvoicePdf(invoice: Invoice, design: Exclude<Invoi
 
   for (const [index, sheet] of doc.getPages().entries()) {
     page = sheet
-    line(800)
-    const footer = `${invoice.business.name.toUpperCase()} / ${invoice.number}`
-    text(footer, left, 812, fit(footer, 6.5, width - 90, mono), mono, muted)
-    text(`${String(index + 1).padStart(2, "0")} — ${String(doc.getPageCount()).padStart(2, "0")}`, right, 812, 6.5, mono, muted, "right")
+    line(791)
+    const footer = invoice.styling?.footer || `${invoice.business.name.toUpperCase()} / ${invoice.number}`
+    text(footer, left, 803, fit(footer, 6.5, width - 90, mono), mono, muted)
+    text(`${String(index + 1).padStart(2, "0")} — ${String(doc.getPageCount()).padStart(2, "0")}`, right, 803, 6.5, mono, muted, "right")
   }
   return doc.save()
 }

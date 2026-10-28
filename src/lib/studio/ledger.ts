@@ -12,7 +12,7 @@ export function ledgerSummary(invoices: Invoice[], today: string, currency: Curr
 
 /** Reuse the work without carrying over identity, payment or email state. */
 export function draftFromInvoice(invoice: Invoice, today: string): InvoiceInput {
-  return { title: invoice.title, design: invoice.design ?? "signature", client: { ...invoice.client }, issueDate: today, dueDate: today, currency: invoice.currency, items: invoice.items.map((item) => ({ ...item })), discount: invoice.discount, taxBasisPoints: invoice.taxBasisPoints, notes: invoice.notes }
+  return { title: invoice.title, design: invoice.design ?? "signature", ...(invoice.styling ? { styling: { ...invoice.styling } } : {}), client: { ...invoice.client }, issueDate: today, dueDate: today, currency: invoice.currency, items: invoice.items.map((item) => ({ ...item })), discount: invoice.discount, taxBasisPoints: invoice.taxBasisPoints, notes: invoice.notes }
 }
 
 export function invoiceCsv(invoices: Invoice[]) {

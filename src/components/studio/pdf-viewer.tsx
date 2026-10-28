@@ -33,7 +33,8 @@ function PageThumbnail({ pdf, number, selected, onSelect }: { pdf: PDFDocumentPr
 }
 
 /** Render the actual PDF ourselves, including on browsers without a native PDF plug-in. */
-export function PdfViewer({ invoice }: { invoice: Invoice }) {
+export function PdfViewer({ invoice, kind = "invoice" }: { invoice: Invoice; kind?: "invoice" | "receipt" }) {
+  const documentLabel = kind === "receipt" ? "Receipt" : "Invoice"
   const [url, setUrl] = useState("")
   const [error, setError] = useState("")
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null)
@@ -67,7 +68,7 @@ export function PdfViewer({ invoice }: { invoice: Invoice }) {
     let loading: PDFDocumentLoadingTask | undefined
     async function open() {
       const invoice = JSON.parse(signature) as Invoice
-      const bytes = await browserInvoicePdf(invoice)
+      const bytes = await browserInvoicePdf(invoice, kind)
       const pdfjs = await import("pdfjs-dist")
       if (!active) return
       objectUrl = URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "application/pdf" }))
@@ -79,7 +80,7 @@ export function PdfViewer({ invoice }: { invoice: Invoice }) {
     }
     open().catch((error) => { if (active) setError(error instanceof Error ? error.message : "Could not open the PDF.") })
     return () => { active = false; if (loading) void loading.destroy().catch(() => {}); if (objectUrl) URL.revokeObjectURL(objectUrl) }
-  }, [signature])
+  }, [signature, kind])
 
   useEffect(() => {
     const element = container.current
@@ -113,23 +114,23 @@ export function PdfViewer({ invoice }: { invoice: Invoice }) {
     return () => { active = false; render?.cancel() }
   }, [pdf, pageNumber, zoom, width])
 
-  return <section ref={viewer} className="oz-pdf-stage" aria-label="PDF preview" onKeyDown={(event) => {
+  return <section ref={viewer} className="oz-pdf-stage" aria-label={kind === "receipt" ? "Receipt PDF preview" : "PDF preview"} onKeyDown={(event) => {
     if (!pdf || event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement) return
     if (event.key === "ArrowRight") { event.preventDefault(); setPageNumber((value) => Math.min(pdf.numPages, value + 1)) }
     if (event.key === "ArrowLeft") { event.preventDefault(); setPageNumber((value) => Math.max(1, value - 1)) }
   }}>
-    <div className="oz-pdf-caption"><span className="oz-label">{invoiceDesignName(invoice.design)} / A4</span><span className="oz-label">{pdf ? `${pdf.numPages} ${pdf.numPages === 1 ? "PAGE" : "PAGES"}` : "PREPARING DOCUMENT"}</span></div>
+    <div className="oz-pdf-caption"><span className="oz-label">{kind === "receipt" ? "Payment receipt" : invoiceDesignName(invoice.design)} / A4</span><span className="oz-label">{pdf ? `${pdf.numPages} ${pdf.numPages === 1 ? "PAGE" : "PAGES"}` : "PREPARING DOCUMENT"}</span></div>
     <div className="oz-pdf-toolbar">
-      <p className="oz-form-hint">{invoice.status === "draft" ? "Live PDF preview · Draft, not yet issued" : `${invoice.number} · Saved invoice`}</p>
+      <p className="oz-form-hint">{kind === "receipt" ? `${invoice.number} · Payment receipt` : invoice.status === "draft" ? "Live PDF preview · Draft, not yet issued" : `${invoice.number} · Saved invoice`}</p>
       <div className="oz-row-actions">
-        {url && <><a href={url} className="oz-button" download={`${invoice.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf`}>{invoice.status === "draft" ? "Download preview PDF" : "Download PDF"}</a><a href={url} className="oz-small-button" target="_blank" rel="noreferrer">Open / print ↗</a></>}
+        {url && <><a href={url} className="oz-button" download={`${kind === "receipt" ? "Receipt-" : ""}${invoice.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf`}>{kind === "receipt" ? "Download receipt PDF" : invoice.status === "draft" ? "Download preview PDF" : "Download PDF"}</a><a href={url} className="oz-small-button" target="_blank" rel="noreferrer">Open / print ↗</a></>}
         {canExpand && <button type="button" className="oz-small-button" onClick={toggleExpanded}>{expanded ? "Exit full screen ↙" : "Full screen ↗"}</button>}
       </div>
     </div>
     <div className="oz-pdf-controls" role="group" aria-label="PDF controls"><div><button type="button" aria-label="Previous PDF page" disabled={!pdf || pageNumber <= 1} onClick={() => setPageNumber(pageNumber - 1)}>←</button><span aria-live="polite">Page {pageNumber} / {pdf?.numPages || "—"}</span><button type="button" aria-label="Next PDF page" disabled={!pdf || pageNumber >= pdf.numPages} onClick={() => setPageNumber(pageNumber + 1)}>→</button></div><div><button type="button" aria-label="Zoom out" disabled={!pdf || zoom <= 0.5} onClick={() => setZoom(Math.max(0.5, zoom - 0.25))}>−</button><span>{Math.round(zoom * 100)}%</span><button type="button" aria-label="Zoom in" disabled={!pdf || zoom >= 2} onClick={() => setZoom(Math.min(2, zoom + 0.25))}>+</button><button type="button" className="oz-pdf-fit" disabled={!pdf} onClick={() => setZoom(1)}>Fit</button></div></div>
     {error && <p className="oz-notice" role="alert">{error}</p>}
-    {pdf && pdf.numPages > 1 && <nav className="oz-pdf-thumbnails" aria-label="Invoice pages">{Array.from({ length: pdf.numPages }, (_, index) => <PageThumbnail key={index} pdf={pdf} number={index + 1} selected={pageNumber === index + 1} onSelect={() => setPageNumber(index + 1)} />)}</nav>}
-    <div ref={container} className="oz-pdf-canvas">{!pdf && !error && <p role="status">Building your invoice PDF…</p>}<canvas ref={canvas} role="img" aria-label={`Invoice page ${pageNumber} of ${pdf?.numPages || 1}`} data-design={invoice.design || "signature"} data-rendered={rendered} hidden={!pdf} /></div>
-    <p className="oz-form-hint" style={{ marginTop: 12 }}>This is the actual generated PDF. Use the invoice preview tab for its accessible text and table view.</p>
+    {pdf && pdf.numPages > 1 && <nav className="oz-pdf-thumbnails" aria-label={`${documentLabel} pages`}>{Array.from({ length: pdf.numPages }, (_, index) => <PageThumbnail key={index} pdf={pdf} number={index + 1} selected={pageNumber === index + 1} onSelect={() => setPageNumber(index + 1)} />)}</nav>}
+    <div ref={container} className="oz-pdf-canvas">{!pdf && !error && <p role="status">Building your {documentLabel.toLowerCase()} PDF…</p>}<canvas ref={canvas} role="img" aria-label={`${documentLabel} page ${pageNumber} of ${pdf?.numPages || 1}`} data-design={invoice.design || "signature"} data-rendered={rendered} hidden={!pdf} /></div>
+    <p className="oz-form-hint" style={{ marginTop: 12 }}>{kind === "receipt" ? "This receipt uses the saved invoice and payment record. Activity shows the payment date, method and reference." : "This is the actual generated PDF. Use the invoice preview tab for its accessible text and table view."}</p>
   </section>
 }

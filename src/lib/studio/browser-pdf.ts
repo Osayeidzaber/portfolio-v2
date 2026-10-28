@@ -4,11 +4,11 @@ import type { Invoice } from "./schema"
 let signature = ""
 let pending: Promise<Uint8Array> | undefined
 
-export async function browserInvoicePdf(invoice: Invoice): Promise<Uint8Array> {
-  const next = JSON.stringify(invoice)
+export async function browserInvoicePdf(invoice: Invoice, kind: "invoice" | "receipt" = "invoice"): Promise<Uint8Array> {
+  const next = kind + JSON.stringify(invoice)
   if (!pending || signature !== next) {
     signature = next
-    const operation = import("./pdf").then(({ invoicePdf }) => invoicePdf(invoice))
+    const operation = kind === "receipt" ? import("./receipt-pdf").then(({ receiptPdf }) => receiptPdf(invoice)) : import("./pdf").then(({ invoicePdf }) => invoicePdf(invoice))
     pending = operation
     operation.catch(() => { if (pending === operation) pending = undefined })
   }

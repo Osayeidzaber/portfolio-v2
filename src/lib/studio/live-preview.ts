@@ -1,10 +1,10 @@
-import { invoiceTotals, toMinor, type Business, type Invoice, type Currency } from "./schema"
+import { invoiceTotals, toMinor, type Business, type Invoice, type Currency, type InvoiceStyling } from "./schema"
 import type { InvoiceDesign } from "./designs"
 
 export type LiveInvoiceFields = {
   title: string; number: string; design: InvoiceDesign; issueDate: string; dueDate: string; currency: Currency
   client: Invoice["client"]; items: Array<{ description: string; quantity: string; price: string }>
-  discount: string; tax: string; notes: string
+  discount: string; tax: string; notes: string; styling?: InvoiceStyling
 }
 
 /** A display-only draft can be incomplete. Saving and issuing still use the strict schema. */

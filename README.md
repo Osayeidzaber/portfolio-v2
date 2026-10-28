@@ -268,6 +268,31 @@ confirmation with the recipient, total and PDF filename. Progress and submission
 errors appear beside Send; acceptance is recorded only after the server confirms it. Invoice workspace confirmations
 use an in-page dialog, including replacing billing details with a previous client.
 
+The desk has **Quick actions** (Ctrl/Cmd+K) to find invoices by client or number and
+jump to creation, reports or settings. Previous clients and saved services are
+searchable without a server request. The email review uses a compact send panel,
+with separate expandable PDF and email previews.
+
+**Design controls:** Settings sets the default invoice design, Paper/Noir email
+appearance and quantity/rate visibility for new drafts. Each draft can override
+rate visibility and add a short footer. These choices update the accessible preview,
+PDF and summary email, and lock when issued. Email appearance can be selected while
+composing; pending retries retain their original HTML and attachment.
+
+**Reports** separates invoiced totals, full payments recorded in a selected month,
+and currently unpaid invoices from that month. Currencies remain separate. The
+six-month chart ends at the selected month and uses actual recorded payments and offers matching text values;
+monthly payment records can be exported to CSV. Legacy entries use their full-payment
+recording date when an explicit payment date is unavailable. Records missing both
+dates are excluded from monthly totals and identified in the report. Archived records
+are excluded; these reports do not reconstruct historical balances.
+
+**Activity** shows recorded draft saves, issuing, provider acceptance, full payment
+and voiding, with Dhaka timestamps. The most recent 40 action events are retained;
+older records show only events supported by their existing metadata. Paid invoices
+also have a **Payment receipt** view and download, generated in the browser from the
+locked invoice and payment record. Receipts do not trigger an email.
+
 **Device recovery is opt-in.** In the invoice editor, enable **Keep a recovery copy
 on this device** to preserve incomplete typing across a refresh. Restore is explicit;
 it does not write to the private ledger. Copies contain billing information, expire

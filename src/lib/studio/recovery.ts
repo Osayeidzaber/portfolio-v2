@@ -1,9 +1,10 @@
 import { z } from "zod"
 import { invoiceDesignIds } from "./designs"
-import { currencySchema } from "./schema"
+import { currencySchema, invoiceStylingSchema } from "./schema"
 
 const raw = (max: number) => z.string().max(max)
 export const recoveryFieldsSchema = z.object({
+  styling: invoiceStylingSchema.optional(), emailTheme: z.enum(["paper", "dark"]).optional(),
   title: raw(120), number: raw(40), design: z.enum(invoiceDesignIds), issueDate: raw(10), dueDate: raw(10), currency: currencySchema,
   client: z.object({ name: raw(100), company: raw(100), email: raw(254), address: raw(500) }),
   items: z.array(z.object({ description: raw(180), quantity: raw(100), price: raw(100) })).min(1).max(20),

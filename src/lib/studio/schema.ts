@@ -13,15 +13,21 @@ export const businessSchema = z.object({
   name: text(100).min(1), email: z.email().max(254), address: text(500),
   currency: currencySchema, paymentInstructions: text(1200), invoiceNote: text(1200),
   paymentMethods: z.array(paymentMethodSchema).max(5).optional(),
+  defaultDesign: z.enum(invoiceDesignIds).optional(),
+  defaultEmailTheme: z.enum(["paper", "dark"]).optional(),
+  defaultShowRates: z.boolean().optional(),
 })
 export const billingSchema = z.object({ name: text(100).min(1), company: text(100), email: z.email().max(254), address: text(500) })
 export const lineSchema = z.object({ description: text(180).min(1), quantity: z.number().int().min(1).max(10_000), unitPrice: minor })
 export const servicePresetSchema = lineSchema.extend({ name: text(80).min(1), currency: currencySchema })
-export const emailCompositionSchema = z.object({ subject: text(180).min(1).refine((value) => !/[\r\n]/.test(value), "Keep the subject on one line."), message: text(2000) })
+export const emailCompositionSchema = z.object({ subject: text(180).min(1).refine((value) => !/[\r\n]/.test(value), "Keep the subject on one line."), message: text(2000), theme: z.enum(["paper", "dark"]).optional() })
+export const invoiceStylingSchema = z.object({ showRates: z.boolean(), footer: text(140) })
+export const activitySchema = z.object({ type: z.enum(["draft_saved", "issued", "email_accepted", "payment_recorded", "voided"]), at: z.iso.datetime() })
 export const paymentRecordSchema = z.object({ date: z.iso.date(), method: text(80).min(1), reference: text(160) })
 export const invoiceInputSchema = z.object({
   id: z.uuid().optional(), client: billingSchema, title: text(120).min(1),
   design: z.enum(invoiceDesignIds).optional(),
+  styling: invoiceStylingSchema.optional(),
   number: z.string().trim().regex(/^[A-Za-z0-9][A-Za-z0-9/\-]{0,39}$/, "Use up to 40 letters, numbers, slashes or hyphens for the invoice number.").optional(),
   issueDate: z.iso.date(), dueDate: z.iso.date(), currency: currencySchema,
   items: z.array(lineSchema).min(1).max(20), discount: minor,
@@ -39,10 +45,12 @@ export const invoiceSchema = invoiceInputSchema.safeExtend({
   business: businessSchema,
   paidAt: z.iso.datetime().optional(),
   payment: paymentRecordSchema.optional(),
+  activity: z.array(activitySchema).max(40).optional(),
   emailAttempt: z.object({
     key: z.uuid(), startedAt: z.iso.datetime(), acceptedAt: z.iso.datetime().optional(),
     providerId: z.string().optional(), payload: emailPayloadSchema.optional(),
     subject: text(180).optional(), message: text(2000).optional(),
+    theme: z.enum(["paper", "dark"]).optional(),
     delivery: z.object({ event: text(40).min(1), checkedAt: z.iso.datetime() }).optional(),
   }).optional(),
 })
@@ -56,6 +64,7 @@ export const invoiceArchiveSchema = z.object({ version: z.literal(1), kind: z.li
 export type ServicePreset = z.infer<typeof servicePresetSchema>
 export type PaymentRecord = z.infer<typeof paymentRecordSchema>
 export type EmailComposition = z.infer<typeof emailCompositionSchema>
+export type InvoiceStyling = z.infer<typeof invoiceStylingSchema>
 
 export type Business = z.infer<typeof businessSchema>
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>
@@ -70,6 +79,10 @@ export type InvoiceInput = z.infer<typeof invoiceInputSchema>
 export type StudioData = z.infer<typeof studioSchema>
 export type Currency = z.infer<typeof currencySchema>
 export type EmailPayload = z.infer<typeof emailPayloadSchema>
+
+export function recordActivity(invoice: Invoice, type: z.infer<typeof activitySchema>["type"], at: string) {
+  invoice.activity = [...(invoice.activity ?? []), { type, at }].slice(-40)
+}
 
 export function emptyStudio(): StudioData {
   return {
@@ -117,10 +130,13 @@ export function saveInvoice(data: StudioData, raw: unknown, id: string, createdA
   const invoice: Invoice = {
     ...input, id: existing?.id ?? id,
     number,
-    design: input.design ?? existing?.design ?? (existing ? "signature" : "noir"),
+    design: input.design ?? existing?.design ?? (existing ? "signature" : data.settings.defaultDesign ?? "noir"),
+    ...(input.styling || existing?.styling ? { styling: input.styling ?? existing?.styling } : {}),
+    ...(existing?.activity ? { activity: [...existing.activity] } : {}),
     createdAt: existing?.createdAt ?? createdAt,
     status: "draft", client: { ...input.client }, business: { ...data.settings, ...(data.settings.paymentMethods ? { paymentMethods: data.settings.paymentMethods.map((method) => ({ ...method })) } : {}) },
   }
+  recordActivity(invoice, "draft_saved", createdAt)
   if (existing) data.invoices[data.invoices.indexOf(existing)] = invoice
   else { data.invoices.push(invoice); data.nextInvoice += 1 }
   return invoice

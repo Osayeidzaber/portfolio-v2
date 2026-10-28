@@ -6,7 +6,7 @@ import { z } from "zod"
 import { isAuthenticated } from "@/lib/auth/session"
 import { emailConfiguration, deliverInvoiceEmail, retrieveEmailStatus } from "@/lib/studio/email"
 import { invoiceEmail } from "@/lib/studio/invoice-document"
-import { paymentDetails, businessSchema, servicePresetSchema, paymentRecordSchema, emailCompositionSchema, saveInvoice, type Invoice } from "@/lib/studio/schema"
+import { recordActivity, paymentDetails, businessSchema, servicePresetSchema, paymentRecordSchema, emailCompositionSchema, saveInvoice, type Invoice } from "@/lib/studio/schema"
 import { archiveInvoices, restoreArchive } from "@/lib/studio/workflows"
 import { readStudio, writeStudio, studioStorageMode, StudioConflict, type StudioSnapshot } from "@/lib/studio/store"
 import { siteUrl } from "@/lib/env"
@@ -64,6 +64,7 @@ export async function changeInvoiceStatus(id: string, status: "paid" | "void", s
     }
     invoice.status = next
     if (next === "paid") invoice.paidAt = new Date().toISOString()
+    recordActivity(invoice, next === "paid" ? "payment_recorded" : "voided", new Date().toISOString())
     return { ok: true, snapshot: await writeStudio(data, sha) }
   } catch (error) { return fail(error) }
 }
@@ -87,9 +88,10 @@ export async function sendInvoiceAction(id: string, sha: string | null, attachme
       if (bytes.toString("base64") !== content || bytes.subarray(0, 5).toString() !== "%PDF-" || !bytes.subarray(-1024).toString().includes("%%EOF")) throw new Error("The attachment is not a complete PDF. Reopen the PDF viewer and retry.")
       invoice.emailAttempt = {
         key: randomUUID(), startedAt: new Date().toISOString(),
-        ...(copy ? { subject: copy.subject, message: copy.message } : {}),
+        ...(copy ? { subject: copy.subject, message: copy.message, ...(copy.theme ? { theme: copy.theme } : {}) } : {}),
         payload: { ...invoiceEmail(invoice, email.sender, `${siteUrl}/oz-studio/logo-email.png`, copy), attachments: [{ filename: `${invoice.number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf`, content }] },
       }
+      if (invoice.status === "draft") recordActivity(invoice, "issued", new Date().toISOString())
       invoice.status = "issued"
       claimed = await writeStudio(snapshot.data, snapshot.sha)
     } else claimed = snapshot
@@ -102,6 +104,7 @@ export async function sendInvoiceAction(id: string, sha: string | null, attachme
     if (!target?.emailAttempt || target.emailAttempt.key !== attempt.key) throw new Error("The provider accepted the email, but the record changed. Reload and reconcile the pending send.")
     target.emailAttempt.acceptedAt = new Date().toISOString()
     target.emailAttempt.providerId = messageId
+    recordActivity(target, "email_accepted", target.emailAttempt.acceptedAt)
     delete target.emailAttempt.payload // Keep the exact request only while a safe retry may be needed.
     return { ok: true, snapshot: await writeStudio(latest.data, latest.sha) }
   } catch (error) {
@@ -153,6 +156,7 @@ export async function issueInvoiceAction(id: string, sha: string | null): Promis
     if (!invoice || invoice.status !== "draft") throw new Error("Choose a saved draft to issue.")
     if (!paymentDetails(invoice.business).trim()) throw new Error("Add payment instructions in Settings and save the draft again before issuing.")
     invoice.status = "issued"
+    recordActivity(invoice, "issued", new Date().toISOString())
     return { ok: true, snapshot: await writeStudio(data, sha) }
   } catch (error) { return fail(error) }
 }

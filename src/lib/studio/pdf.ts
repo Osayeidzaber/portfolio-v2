@@ -143,7 +143,7 @@ export async function invoicePdf(invoice: Invoice, loadFont: PdfFontLoader = loa
     for (const [lineIndex, text] of description.entries()) paint(text, 78, rowTop - lineIndex * 18, 10.5)
     right(money(item.quantity * item.unitPrice, invoice.currency), rowTop, 10.5, true)
     y -= description.length * 18
-    paint(`${item.quantity} × ${money(item.unitPrice, invoice.currency)}`, 78, y - 1, 8.5, false, grey)
+    if (invoice.styling?.showRates !== false) paint(`${item.quantity} × ${money(item.unitPrice, invoice.currency)}`, 78, y - 1, 8.5, false, grey)
     page.drawLine({ start: { x: 48, y: y - 21 }, end: { x: 547, y: y - 21 }, thickness: 0.5, color: rgb(0.82, 0.82, 0.82) })
     y -= 37
   }
@@ -182,7 +182,10 @@ export async function invoicePdf(invoice: Invoice, loadFont: PdfFontLoader = loa
 
   for (const [index, sheet] of document.getPages().entries()) {
     sheet.drawLine({ start: { x: 48, y: 47 }, end: { x: 547, y: 47 }, color: rgb(0.8, 0.8, 0.8), thickness: 0.5 })
-    sheet.drawText("OZ STUDIO  /  " + invoice.number, { x: 48, y: 29, size: 7.5, font: mono, color: grey })
+    const footer = invoice.styling?.footer || "OZ STUDIO  /  " + invoice.number
+    const footerSize = Math.min(7.5, 405 / widthOf(footer, 1))
+    let footerX = 48
+    for (const run of runs(safe(footer))) { sheet.drawText(run.text, { x: footerX, y: 29, size: footerSize, font: run.font, color: grey }); footerX += run.font.widthOfTextAtSize(run.text, footerSize) }
     const folio = `${String(index + 1).padStart(2, "0")} / ${String(document.getPageCount()).padStart(2, "0")}`
     sheet.drawText(folio, { x: 547 - mono.widthOfTextAtSize(folio, 7.5), y: 29, size: 7.5, font: mono, color: grey })
   }
